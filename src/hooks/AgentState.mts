@@ -2,11 +2,31 @@ import { useStore } from "../../../src/common/store/store-hooks.mts";
 import { PageStore } from "../../../src/sdsystem/common/store/page.mts";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 
-export function useAgentState(agentSID: string) {
+export function useAgentState(agentSID: string): {
+    sid: string,
+    ssid: string,
+    title: string,
+    lastError: string,
+    isWebview: boolean,
+    isCurrentUser: boolean,
+    progress: number,   
+    executingNodeTitle: string,
+    queueSize: number,
+} {
     const agent = photoshopPageStoreMap.getStore(agentSID);
     const { state: workflowAgentState } = useStore(agent as PageStore, ['/']);
     if (!workflowAgentState) {
-        return {};
+        return {
+            sid: '',
+            ssid: '',
+            title: '',
+            lastError: '',
+            isWebview: false,
+            isCurrentUser: false,
+            progress: 0,
+            executingNodeTitle: '',
+            queueSize: 0,
+        };
     }
 
     return {

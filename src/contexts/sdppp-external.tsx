@@ -78,7 +78,7 @@ function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
             if (autoRunning) {
                 if (autoRunning.type == 'workflow') {
                     if (workflowAgent && !workflowAgent.data.executingNodeTitle) {
-                        runWorkflow(autoRunning.value, 1);
+                        runWorkflow(autoRunning.value, workflowAgent.data.sid, 1);
                         setTimeout(() => {
                             autoRunningCooldown = false
                         }, 1000)

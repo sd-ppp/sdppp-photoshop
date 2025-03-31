@@ -55,7 +55,25 @@ function useFetchWorkflows(backendURL: string, comfyMultiUser: boolean, workflow
 }
 
 
-export function useSDPPPWorkflowList() {
+export function useSDPPPWorkflowList(): {
+    workflows: {
+        [path: string]: {
+            path: string,
+            content: any,
+            error: string | ''
+        }
+    },
+    isLoadingWorkflows: boolean,    
+    workflowsError: string,
+    refetchWorkflows: () => void,
+    afterPropsUpdate4s: boolean,
+    currentViewingDirectory: string,
+    setCurrentViewingDirectory: (currentViewingDirectory: string) => void,
+    showingList: {
+        path: string,
+        isDir: boolean
+    }[]
+} {
     const { backendURL, comfyMultiUser, workflowAgent } = useSDPPPInternalContext();
     const { workflowAgentSID } = useSDPPPExternalContext();
     const [afterPropsUpdate4s, setAfterPropsUpdate4s] = useState(true);
