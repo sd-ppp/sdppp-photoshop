@@ -14,7 +14,7 @@ const photoshopInternalConfig = {
     entryPoints: {
         'photoshop-internal': join(__dirname, '../src/global.mts')
     },
-    outdir: join(projectRoot, 'plugins/photoshop'),
+    outdir: join(projectRoot, 'plugins/photoshop/dist'),
     external: ['uxp', 'photoshop', 'os', 'fs', 'react', 'react-dom/client', 'jimp', 'socket.io-client', 'react/jsx-runtime', 'buffer'],
     plugins: [
         externalGlobalPlugin.externalGlobalPlugin({

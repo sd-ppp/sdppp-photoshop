@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useStore } from "../../../src/common/store/store-hooks.mts";
 import i18n from "../../../src/common/i18n.mts";
 import { PageStore } from "../../../src/sdsystem/common/store/page.mts";
+import { sdpppX } from "../../../src/plugins/photoshop/sdpppX.mts";
 
 function useFetchWorkflows(backendURL: string, comfyMultiUser: boolean, workflowagent: PageStore) {
     const { state: userData } = useStore(photoshopStore, ['/comfyUserToken'])
@@ -128,7 +129,7 @@ export function useSDPPPWorkflowList(): {
         finalErrorMessage = i18n("Workflow list loading failed: {0}", workflowsError.message);
     if (!showingList.length)
         finalErrorMessage = i18n("Workflow list is empty, please save a workflow by Comfy's lastest UI");
-    if (!(globalThis as any).sdppp.MU && comfyMultiUser)
+    if (!sdpppX.MU && comfyMultiUser)
         finalErrorMessage = i18n('Workflow List of ComfyUI with --multi-user is only available for sponsors');
     if (isLoadingWorkflows)
         finalErrorMessage = "Loading";

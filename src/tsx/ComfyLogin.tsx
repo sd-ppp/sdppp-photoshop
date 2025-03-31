@@ -6,6 +6,7 @@ import { useSDPPPExternalContext } from "../contexts/sdppp-external"
 import { useSDPPPComfyCaller } from "../hooks/ComfyCaller.mts"
 import { useStore } from "../../../src/common/store/store-hooks.mts"
 import i18n from "../../../src/common/i18n.mts"
+import { sdpppX } from "../../../src/plugins/photoshop/sdpppX.mts"
 
 interface LoginProps {
     onRequestLogin?: () => void,
@@ -29,7 +30,7 @@ interface ComfyLoginProps {
     onRequestLogin?: () => void,
 }
 export function ComfyMultiUserLogin(props: ComfyLoginProps) {
-    const enableMU = (globalThis as any).sdppp.MU;
+    const enableMU = sdpppX.MU;
     const { state: photoshopStoreData } = useStore(photoshopStore, ['/comfyUserToken'])
     const { logout } = useSDPPPComfyCaller();
     const { workflowAgent } = useSDPPPInternalContext();
