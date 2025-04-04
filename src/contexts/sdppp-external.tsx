@@ -53,7 +53,7 @@ function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
     const webviewContext = useSDPPPWebview();
     const internalContext = useSDPPPInternalContext();
 
-    if (sdpppX.testPaths) {
+    if (sdpppX.registerTestCase) {
         (globalThis as any).sdppp_debugPhotoshopInternalContext = internalContext;
         (globalThis as any).sdppp_debugPhotoshopWebviewContext = webviewContext;
     }
@@ -71,16 +71,19 @@ function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
         lastErrorMessage,
     } = internalContext
     const {
-        tryDoLivePainting
+        setShouldTriggerLivePainting
     } = useLivePainting();
 
     useEffect(() => {
-        photoshopStore.subscribe('/canvasStateID', tryDoLivePainting);
+        const callback = () => {
+            setShouldTriggerLivePainting(true);
+        }
+        photoshopStore.subscribe('/canvasStateID', callback);
 
         return () => {
-            photoshopStore.unsubscribe(tryDoLivePainting);
+            photoshopStore.unsubscribe(callback);
         }
-    }, [tryDoLivePainting])
+    }, [setShouldTriggerLivePainting])
 
     return <SDPPPExternalContext.Provider value={{
         connectOrDisconnect: doConnectOrDisconnect,

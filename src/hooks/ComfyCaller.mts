@@ -3,7 +3,6 @@ import { useSDPPPExternalContext } from "../contexts/sdppp-external";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 import { useWorkflowRunHooks } from "./WidgetTable.mts";
-import { useLivePainting } from "./livePainting.mts";
 
 export function useSDPPPComfyCaller(): {
     lastOpenedWorkflow: string;
@@ -96,26 +95,26 @@ export function useSDPPPComfyCaller(): {
             overwrite: true
         })
     }, [socket]);
-    
+
+    const runPage = useCallback(async (agentSID?: string, size: number = 1) => {
+        if (!agentSID && !workflowAgentSID) return;
+        await triggerBeforeWorkflowRun();
+        await pageInstanceRun(agentSID || workflowAgentSID, size);
+    }, [pageInstanceRun, workflowAgentSID, triggerBeforeWorkflowRun]);
+
+    const runWorkflow = useCallback(async (workflowPath: string, agentSID?: string, size: number = 1) => {
+        if (!agentSID && !workflowAgentSID) return;
+        await openWorkflow(agentSID || workflowAgentSID, workflowPath);
+        await runPage(agentSID || workflowAgentSID, size);
+    }, [openWorkflow, runPage, workflowAgentSID]);
 
     return {
         lastOpenedWorkflow,
         openWorkflow,
         reopenWorkflow,
         saveWorkflow,
-        runPage: useCallback(async (agentSID?: string, size: number = 1) => {
-            if (!agentSID && !workflowAgentSID) return;
-            await pageInstanceRun(agentSID || workflowAgentSID, size);
-        }, [pageInstanceRun, workflowAgentSID]),
-        runWorkflow: useCallback(async (workflowPath: string, agentSID?: string, size?: number) => {
-            await triggerBeforeWorkflowRun();
-            if (!agentSID && !workflowAgentSID) return;
-            await openWorkflow(agentSID || workflowAgentSID, workflowPath);
-            await pageInstanceRun(
-                agentSID || workflowAgentSID,
-                size
-            );
-        }, [triggerBeforeWorkflowRun, openWorkflow, pageInstanceRun, workflowAgentSID]),
+        runPage,
+        runWorkflow,
         callForPSDExtract,
         logout,
         uploadImage

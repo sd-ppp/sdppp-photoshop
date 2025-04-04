@@ -2,7 +2,6 @@ export class ComfyApis {
 
     public static async fetchWorkflows(comfyURL: string, usertokens?: string): Promise<string[]> {
         const url = new URL('./api/userdata', comfyURL);
-        console.log('url', url)
         url.searchParams.append('dir', 'workflows');
         url.searchParams.append('recurse', 'true');
         url.searchParams.append('split', 'false');

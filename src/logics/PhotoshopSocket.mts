@@ -60,7 +60,6 @@ export class PhotoshopSocket extends (SocketMixin(
             }
         })
         this.socket.on('disconnect', (...args: any[]) => {
-            console.log('disconnect', args)
             setConnectState('disconnected');
             setComfyMultiUser(false);
             photoshopStore.setComfyUserToken('');

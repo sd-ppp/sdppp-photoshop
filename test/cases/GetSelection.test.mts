@@ -44,7 +44,6 @@ describe('GetSelection', async () => {
                 height: 4
             }
         })
-        console.log(result)
         // const result = await getLayerInfo({
         //     document_identify: makeDocumentIdentify(app.activeDocument?.id, app.activeDocument?.name),
         //     layer_identify: SpeicialIDManager.get_SPECIAL_LAYER_SELECTED_LAYER()

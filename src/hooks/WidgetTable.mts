@@ -11,23 +11,29 @@ export function useWidgetTable() {
     } = useSDPPPInternalContext();
 
     const [form, setForm] = useState<SDPPPGraphForm[]>([]);
+    const [localForm, setLocalForm] = useState<SDPPPGraphForm[]>([]);
 
-    const {state} = useStore(workflowAgent, '/currentForm');
+    useEffect(() => {
+        if (isDiffFromRemote(localForm, form)) {
+            setLocalForm(form);
+        }
+    }, [form]);
+
+    const { state } = useStore(workflowAgent, '/currentForm');
     useEffect(() => {
         state?.currentForm && setForm(state.currentForm);
     }, [state]);
 
     const setWidgetValue = useCallback(async (nodeID: number, widgetIndex: number, value: any) => {
         if (!workflowAgent) { throw new Error('workflowAgent not found'); }
-        const currentForm = workflowAgent.data.currentForm;
-
-        for (let i = 0; i < currentForm.length; i++) {
-            if (currentForm[i].id === nodeID) {
-                currentForm[i].widgets[widgetIndex].value = value;
-                storeWidgetValue(currentForm[i].title, widgetIndex, value, currentForm[i].widgets[widgetIndex].outputType);
+        for (let i = 0; i < localForm.length; i++) {
+            if (localForm[i].id === nodeID) {
+                localForm[i].widgets[widgetIndex].value = value;
+                storeWidgetValue(localForm[i].title, widgetIndex, value, localForm[i].widgets[widgetIndex].outputType);
                 break;
             }
         }
+        setLocalForm([...localForm]);
         await socket?.setWidgetValue(workflowAgent, {
             values: [{
                 nodeID,
@@ -35,11 +41,10 @@ export function useWidgetTable() {
                 value
             }]
         });
-        workflowAgent.setCurrentForm(workflowAgent.data.currentForm);
-    }, [workflowAgent, socket]);
+    }, [workflowAgent, socket, localForm]);
 
     return {
-        form,
+        form: localForm,
         setWidgetValue
     }
 }
@@ -59,32 +64,34 @@ export function useWorkflowRunHooks() {
     }, [beforeWorkflowRunHooks, setBeforeWorkflowRunHooks]);
 
 
-    const triggerBeforeWorkflowRun = useCallback(() => {
-        beforeWorkflowRunHooks.forEach(hook => hook());
+    const triggerBeforeWorkflowRun = useCallback(async () => {
+        for (let i = 0; i < beforeWorkflowRunHooks.length; i++) {
+            await beforeWorkflowRunHooks[i]();
+        }
     }, [beforeWorkflowRunHooks]);
-    
+
     return {
         addBeforeWorkflowRunHook,
         removeBeforeWorkflowRunHook,
         triggerBeforeWorkflowRun,
     }
 }
-// function isDiffFromRemote(remoteForm: SDPPPGraphForm[] = []) {
-//     if (!workflowAgent) { return false; }
-//     const currentForm = workflowAgent.data.currentForm;
-    
-//     if (currentForm.length !== remoteForm.length) {
-//         return true;
-//     }
-//     for (let i = 0; i < currentForm.length; i++) {
-//         if (currentForm[i].id !== remoteForm[i].id) {
-//             return true;
-//         }
-//         for (let j = 0; j < currentForm[i].widgets.length; j++) {
-//             if (currentForm[i].widgets[j].value !== remoteForm[i].widgets[j].value) {
-//                 return true;
-//             }
-//         }
-//     }
-//     return false;
-// }
+function isDiffFromRemote(localForm: SDPPPGraphForm[], remoteForm: SDPPPGraphForm[] = []) {
+    if (localForm.length !== remoteForm.length) {
+        // console.log('found diff: length', localForm.length, remoteForm.length)
+        return true;
+    }
+    for (let i = 0; i < localForm.length; i++) {
+        if (localForm[i].id !== remoteForm[i].id) {
+            // console.log('found diff: id', i, localForm[i].id, remoteForm[i].id)
+            return true;
+        }
+        for (let j = 0; j < localForm[i].widgets.length; j++) {
+            if (localForm[i].widgets[j].value !== remoteForm[i].widgets[j].value) {
+                // console.log('found diff: widget value', i, j, localForm[i].widgets[j].value, remoteForm[i].widgets[j].value)
+                return true;
+            }
+        }
+    }
+    return false;
+}
