@@ -9,6 +9,7 @@ import { useCallback } from "react"
 import { SDPPPGraphForm } from "../../../src/common/types"
 import WorkflowEdit from "../../../src/plugins/common/tsx/WorkflowEdit"
 import i18n from "../../../src/common/i18n.mts"
+import { useLivePainting } from "../hooks/livePainting.mts"
 
 
 export function WorkflowEditPhotoshop() {
@@ -21,12 +22,16 @@ export function WorkflowEditPhotoshop() {
         form: widgetTableForm,
         setWidgetValue
     } = useWidgetTable();
+    const {
+        tryDoLivePainting
+    } = useLivePainting();
 
     const hasSamplePSD = !!workflowAgent?.data.hasPSDNodes;
 
     const onWidgetChange = useCallback(async (nodeid: number, widgetIndex: number, value: any, originNodeData: SDPPPGraphForm) => {
         await setWidgetValue(nodeid, widgetIndex, value);
-    }, [setWidgetValue]);
+        tryDoLivePainting();    
+    }, [setWidgetValue, tryDoLivePainting]);
 
     const onWidgetRender = useCallback((
         context: {

@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSDPPPComfyCaller } from "../entry.mts";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 import { PhotoshopStore } from "../../../src/plugins/common/store/photoshop.mts";
+import { useLivePainting } from "../hooks/livePainting.mts";
 
 export interface SDPPPExternalContextType {
     connectOrDisconnect: () => void,
@@ -62,46 +63,20 @@ function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
         setAutoRunning,
         workflowAgent,
         setWorkflowAgentSID,
-        connectState,
         doConnectOrDisconnect,
         lastErrorMessage,
     } = internalContext
     const {
-        runPage,    
-        runWorkflow,
-    } = useSDPPPComfyCaller();
+        tryDoLivePainting
+    } = useLivePainting();
 
-    let autoRunningCooldown = false;
     useEffect(() => {
-        const callback = async (cur: PhotoshopStore, prev: PhotoshopStore) => {
-            if (autoRunningCooldown) return;
-            if (autoRunning) {
-                if (autoRunning.type == 'workflow') {
-                    if (workflowAgent && !workflowAgent.data.executingNodeTitle) {
-                        runWorkflow(autoRunning.value, workflowAgent.data.sid, 1);
-                        setTimeout(() => {
-                            autoRunningCooldown = false
-                        }, 1000)
-                    }
-
-                } else if (autoRunning.type == 'page') {
-                    const pageStore = photoshopPageStoreMap.getStore(autoRunning.value);
-                    if (pageStore && !pageStore.data.executingNodeTitle) {
-                        autoRunningCooldown = true
-                        runPage(autoRunning.value);
-                        setTimeout(() => {
-                            autoRunningCooldown = false
-                        }, 1000)
-                    }
-                }
-            }
-        }
-        photoshopStore.subscribe('/canvasStateID', callback);
+        photoshopStore.subscribe('/canvasStateID', tryDoLivePainting);
 
         return () => {
-            photoshopStore.unsubscribe(callback);
+            photoshopStore.unsubscribe(tryDoLivePainting);
         }
-    }, [autoRunning, workflowAgent, runPage, runWorkflow])
+    }, [tryDoLivePainting])
 
     return <SDPPPExternalContext.Provider value={{
         connectOrDisconnect: doConnectOrDisconnect,

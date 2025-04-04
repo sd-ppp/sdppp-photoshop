@@ -6,7 +6,7 @@ import ModeSelect from "./sub-widgets/ModeSelect";
 import QuickSetter from './sub-widgets/QuickSetter';
 import { useSDPPPInternalContext } from '../../contexts/sdppp-internal';
 import { useSDPPPComfyCaller } from '../../entry.mts';
-import { useWidgetTable, useWorkflowRunHooks } from '../../hooks/WidgetTable.mts';
+import { useWorkflowRunHooks } from '../../hooks/WidgetTable.mts';
 import { makeid, SpeicialIDManager } from '../../logics/util.mts';
 import { getSelectedLayerIdentify } from '../../logics/util.mts';
 import i18n from '../../../../src/common/i18n.mts';

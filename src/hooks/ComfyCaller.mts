@@ -3,6 +3,7 @@ import { useSDPPPExternalContext } from "../contexts/sdppp-external";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 import { useWorkflowRunHooks } from "./WidgetTable.mts";
+import { useLivePainting } from "./livePainting.mts";
 
 export function useSDPPPComfyCaller(): {
     lastOpenedWorkflow: string;
@@ -95,6 +96,7 @@ export function useSDPPPComfyCaller(): {
             overwrite: true
         })
     }, [socket]);
+    
 
     return {
         lastOpenedWorkflow,

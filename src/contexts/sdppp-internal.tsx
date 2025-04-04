@@ -57,7 +57,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
     const [beforeWorkflowRunHooks, setBeforeWorkflowRunHooks] = useState<(()=> {})[]>([]);
 
     function setBackendURL(backendURL: SDPPPInternalContextType['backendURL']) {
-        _setBackendURL(backendURL.split('?')[0].split('#')[0].replace(/\/*$/, '').trim());
+        _setBackendURL(backendURL.split('?')[0].split('#')[0].trim());
     }
     useEffect(() => {
         localStorage.setItem('backendURL', backendURL);
