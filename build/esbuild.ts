@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import esbuild from "esbuild";
 import JavaScriptObfuscator from 'javascript-obfuscator'
 import type { Format, Loader } from "esbuild";
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const photoshopInternalConfig = {
@@ -39,6 +39,13 @@ const photoshopInternalConfig = {
 export function buildPhotoshopInternal() {
     return esbuild.build(photoshopInternalConfig)
         .then((result) => {
+            // 读取LICENSE文件
+            const licensePath = join(projectRoot, 'LICENSE');
+            const licenseContent = readFileSync(licensePath, 'utf-8');
+            const licenseHeader = `/* @LICENSE
+${licenseContent}*/
+`;
+
             result.outputFiles?.forEach(outputFile => {
                 let content = outputFile.text
                 if (isProduction) {
@@ -48,7 +55,9 @@ export function buildPhotoshopInternal() {
                     content = obfuscationResult.getObfuscatedCode()
                 }
 
+                // 添加开源许可声明到文件顶部
+                content = licenseHeader + content;
                 writeFileSync(outputFile.path, content)
             })
-        })
+        }) 
 }
