@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { useStore } from "../../../src/common/store/store-hooks.mts";
 import i18n from "../../../src/common/i18n.mts";
 import { PageStore } from "../../../src/sdsystem/common/store/page.mts";
-import { sdpppX } from "../../../src/plugins/photoshop/sdpppX.mts";
+import { sdpppX } from "../../../src/common/sdpppX.mts";
 
 function useFetchWorkflows(backendURL: string, comfyMultiUser: boolean, workflowagent: PageStore) {
     const { state: userData } = useStore(photoshopStore, ['/comfyUserToken'])

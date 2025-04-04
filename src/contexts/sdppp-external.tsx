@@ -7,6 +7,7 @@ import { useSDPPPComfyCaller } from "../entry.mts";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 import { PhotoshopStore } from "../../../src/plugins/common/store/photoshop.mts";
 import { useLivePainting } from "../hooks/livePainting.mts";
+import { sdpppX } from "../../../src/common/sdpppX.mts";
 
 export interface SDPPPExternalContextType {
     connectOrDisconnect: () => void,
@@ -51,8 +52,11 @@ export function useSDPPPExternalContext() {
 function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
     const webviewContext = useSDPPPWebview();
     const internalContext = useSDPPPInternalContext();
-    (globalThis as any).sdppp_debugPhotoshopInternalContext = internalContext;
-    (globalThis as any).sdppp_debugPhotoshopWebviewContext = webviewContext;
+
+    if (sdpppX.testPaths) {
+        (globalThis as any).sdppp_debugPhotoshopInternalContext = internalContext;
+        (globalThis as any).sdppp_debugPhotoshopWebviewContext = webviewContext;
+    }
 
     const {
         showWebviewDialog,

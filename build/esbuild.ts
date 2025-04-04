@@ -1,4 +1,4 @@
-import { commonConfig, isProduction, projectRoot, SDPPPTestResolvePlugin } from "../../src/build/lib.esbuild.ts"
+import { commonConfig, isProduction, projectRoot, SDPPPTestResolvePlugin, typescriptSrcRoot } from "../../src/build/lib.esbuild.ts"
 import { dirname, join } from "path"
 import externalGlobalPlugin from "esbuild-plugin-external-global";
 import { fileURLToPath } from "url";
@@ -25,7 +25,7 @@ const photoshopInternalConfig = {
             'socket.io-client': 'window.socketIO',
             'buffer': 'window.Buffer'
         }),
-        SDPPPTestResolvePlugin
+        SDPPPTestResolvePlugin(join(typescriptSrcRoot, '../photoshop-internal/test/entry.mts'))
     ],
     sourcemap: false,
     minify: isProduction,

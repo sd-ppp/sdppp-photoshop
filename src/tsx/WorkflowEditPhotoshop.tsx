@@ -10,6 +10,7 @@ import { SDPPPGraphForm } from "../../../src/common/types"
 import WorkflowEdit from "../../../src/plugins/common/tsx/WorkflowEdit"
 import i18n from "../../../src/common/i18n.mts"
 import { useLivePainting } from "../hooks/livePainting.mts"
+import { useTraceUpdate } from "../../../src/common/tsx/util.mts"
 
 
 export function WorkflowEditPhotoshop() {
@@ -23,15 +24,15 @@ export function WorkflowEditPhotoshop() {
         setWidgetValue
     } = useWidgetTable();
     const {
-        tryDoLivePainting
+        setShouldTriggerLivePainting
     } = useLivePainting();
 
     const hasSamplePSD = !!workflowAgent?.data.hasPSDNodes;
 
     const onWidgetChange = useCallback(async (nodeid: number, widgetIndex: number, value: any, originNodeData: SDPPPGraphForm) => {
         await setWidgetValue(nodeid, widgetIndex, value);
-        tryDoLivePainting();    
-    }, [setWidgetValue, tryDoLivePainting]);
+        setShouldTriggerLivePainting(true);
+    }, [setWidgetValue, setShouldTriggerLivePainting]);
 
     const onWidgetRender = useCallback((
         context: {
@@ -42,6 +43,7 @@ export function WorkflowEditPhotoshop() {
         widget: SDPPPGraphForm['widgets'][number],
         widgetIndex: number
     ) => {
+        
         if (widget.outputType == 'PS_DOCUMENT') {
             context.result.push(
                 <DocumentWidget

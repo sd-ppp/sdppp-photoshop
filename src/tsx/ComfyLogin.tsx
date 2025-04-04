@@ -6,7 +6,7 @@ import { useSDPPPExternalContext } from "../contexts/sdppp-external"
 import { useSDPPPComfyCaller } from "../hooks/ComfyCaller.mts"
 import { useStore } from "../../../src/common/store/store-hooks.mts"
 import i18n from "../../../src/common/i18n.mts"
-import { sdpppX } from "../../../src/plugins/photoshop/sdpppX.mts"
+import { sdpppX } from "../../../src/common/sdpppX.mts"
 
 interface LoginProps {
     onRequestLogin?: () => void,

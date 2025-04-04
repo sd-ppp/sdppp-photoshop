@@ -1,9 +1,13 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
 import { useSDPPPComfyCaller } from "./ComfyCaller.mts";
 import { photoshopPageStoreMap } from "../logics/ModelDefines.mts";
 
 export function useLivePainting() {
+    const [shouldTriggerLivePainting, setShouldTriggerLivePainting] = useState(false);
+    const [autoRunningCooldown, setAutoRunningCooldown] = useState(false);
+    const cooldownTimeout = useRef<NodeJS.Timeout | null>(null);
+
     const {
         autoRunning,
         workflowAgent
@@ -14,31 +18,40 @@ export function useLivePainting() {
         runPage
     } = useSDPPPComfyCaller();
 
-    let autoRunningCooldown = false;
-    const tryDoLivePainting = useCallback(async () => {
-        if (autoRunningCooldown) return;
-        if (autoRunning) {
+    useEffect(() => {
+        if (autoRunning && shouldTriggerLivePainting && !autoRunningCooldown) {
+            setShouldTriggerLivePainting(false);
             if (autoRunning.type == 'workflow') {
                 if (workflowAgent && !workflowAgent.data.executingNodeTitle) {
                     runWorkflow(autoRunning.value, workflowAgent.data.sid, 1);
-                    setTimeout(() => {
-                        autoRunningCooldown = false
+                    cooldownTimeout.current = setTimeout(() => {
+                        setAutoRunningCooldown(false);
                     }, 1000)
                 }
 
             } else if (autoRunning.type == 'page') {
                 const pageStore = photoshopPageStoreMap.getStore(autoRunning.value);
                 if (pageStore && !pageStore.data.executingNodeTitle) {
-                    autoRunningCooldown = true
+                    setAutoRunningCooldown(true);
                     runPage(autoRunning.value);
-                    setTimeout(() => {
-                        autoRunningCooldown = false
+                    cooldownTimeout.current = setTimeout(() => {
+                        setAutoRunningCooldown(false);
                     }, 1000)
                 }
             }
         }
-    }, [autoRunning, workflowAgent, runWorkflow, runPage]);
+    }, [shouldTriggerLivePainting, autoRunningCooldown, autoRunning, workflowAgent, runWorkflow, runPage]);
+
+    useEffect(() => {
+        return () => {
+            if (cooldownTimeout.current) {
+                clearTimeout(cooldownTimeout.current);
+            }
+        };
+    }, []);
+
+
     return {
-        tryDoLivePainting
+        setShouldTriggerLivePainting
     }
 }

@@ -1,4 +1,6 @@
 import './logics/PhotoshopModel.mts'
+import 'sdppp-test/photoshop'
+
 import { AddressBar } from './tsx/AddressBar.tsx';
 import { WorkflowEditPhotoshop } from './tsx/WorkflowEditPhotoshop.tsx';
 
