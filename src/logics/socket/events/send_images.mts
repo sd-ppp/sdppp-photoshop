@@ -7,10 +7,8 @@ import { runNextModalState } from "../../modalStateWrapper.mjs";
 import { SDPPPBounds, SpeicialIDManager, findInAllSubLayer, getLayerID, parseDocumentIdentify } from '../../util.mts';
 
 export interface ImageBlobParams {
-    width: number,
-    height: number,
     components: number,
-    buffer: Blob | ArrayBuffer
+    pngData: Blob
 }
 
 export interface sendImagesActions {
@@ -88,14 +86,7 @@ export default async function sendImages(params: sendImagesActions['params']) {
                 return await Jimp.read(imageURLs[index]);
 
             } else if (imageBlobs) {
-                const buffer = imageBlobs[index].buffer instanceof Blob ? 
-                    await (imageBlobs[index].buffer as Blob).arrayBuffer() : 
-                    imageBlobs[index].buffer
-                return new Jimp({
-                    data: Buffer.from(buffer),
-                    width: imageBlobs[index].width,
-                    height: imageBlobs[index].height,
-                })
+                return await Jimp.read(await imageBlobs[index].pngData.arrayBuffer())
 
             }
         }))

@@ -5,7 +5,7 @@ import type { Layer } from "photoshop/dom/Layer";
 import i18n from "../../../../../src/common/i18n.mts";
 import { runNextModalState } from "../../modalStateWrapper.mjs";
 import { SDPPPBounds, SpeicialIDManager, getLayerID, getRasterizedLayer, parseDocumentIdentify, unTrimImageData } from '../../util.mjs';
-import { Jimp } from "jimp";
+import { Jimp, JimpInstance, JimpMime } from "jimp";
 import type { Bounds } from "photoshop/dom/objects/Bounds";
 
 export interface PixelsAndSize<T> {
@@ -31,7 +31,7 @@ function fixAlphaChannel(pixelDataWithSize: PixelsAndSize<Uint8Array>): PixelsAn
         throw new Error(i18n('unsupported channel counts: {0}', pixelDataWithSize.dataFromAPI.length / (pixelDataWithSize.width * pixelDataWithSize.height)));
     }
     const uint8Data = new Uint8Array(pixelDataWithSize.width * pixelDataWithSize.height * 4);
-    
+
     for (let i = 0; i < pixelDataWithSize.width * pixelDataWithSize.height; i++) {
         uint8Data[i * 4] = pixelDataWithSize.dataFromAPI[i * 3];
         uint8Data[i * 4 + 1] = pixelDataWithSize.dataFromAPI[i * 3 + 1];
@@ -48,7 +48,7 @@ function fixAlphaChannel(pixelDataWithSize: PixelsAndSize<Uint8Array>): PixelsAn
 
 export function alignPixelBit(pixelAndSize: PixelsAndSize<Uint8Array | Uint16Array | Float32Array>): PixelsAndSize<Uint8Array> {
     if (pixelAndSize.dataFromAPI instanceof Uint8Array) {
-        return pixelAndSize as PixelsAndSize<Uint8Array>; 
+        return pixelAndSize as PixelsAndSize<Uint8Array>;
     }
     const { dataFromAPI, width, height } = pixelAndSize;
     const uint8Data = new Uint8Array(dataFromAPI.length);
@@ -148,13 +148,11 @@ export interface getImageActions {
         max_wh?: number,
     },
     result: {
-        blob: Uint8Array | null,
-        width: number,
-        height: number,
+        pngData: Uint8Array | null
     }
 }
 
-export default async function getImage(params: getImageActions['params']): Promise<getImageActions['result']> {
+async function getJimpImage(params: getImageActions['params']): Promise<JimpInstance> {
     const documentIdentify = params.document_identify
     let document = parseDocumentIdentify(documentIdentify);
     if (!document) throw new Error(i18n('document {0} not found', documentIdentify));
@@ -192,11 +190,12 @@ export default async function getImage(params: getImageActions['params']): Promi
 
     const returnData: {
         pixelData: Uint8Array | null,
-        layerOpacity: number
+        width: number,
+        height: number
     } = {
         pixelData: null,
-        // maskData: null,
-        layerOpacity: 100
+        width: 0,
+        height: 0,
     }
 
     let mergedLayer: Layer | null = null;
@@ -212,8 +211,6 @@ export default async function getImage(params: getImageActions['params']): Promi
         let [layer, isGroup] = await getRasterizedLayer(document, layerID);
         if (isGroup) mergedLayer = layer;
         if (mergedLayer != null) { restorer.add(() => { (mergedLayer as Layer).delete(); }) }
-
-        returnData.layerOpacity = layer?.opacity ?? 100;
 
         [pixelDataFromAPI, maskDataFromAPI] = await Promise.all([
             getPixelsData(document, layer, desireBounds),
@@ -245,27 +242,31 @@ export default async function getImage(params: getImageActions['params']): Promi
     }
     // handle layer data with mask
     returnData.pixelData = applyLayerDataWithTransparent(returnData.pixelData, maskData)
+    returnData.width = desireBounds.width;
+    returnData.height = desireBounds.height;
 
+    // do resize
+    const jimpImage = new Jimp({
+        data: Buffer.from(returnData.pixelData),
+        width: desireBounds.width,
+        height: desireBounds.height,
+    });
     if (params.max_wh && (
         desireBounds.width > params.max_wh || desireBounds.height > params.max_wh
     )) {
-        // do resize
-        const jimpImage = new Jimp({
-            data: Buffer.from(returnData.pixelData),
-            width: desireBounds.width,
-            height: desireBounds.height,
-        });
         const scaleRatio = params.max_wh / Math.max(desireBounds.width, desireBounds.height);
         jimpImage.scale(scaleRatio);
-        return {
-            blob: jimpImage.bitmap.data,
-            width: jimpImage.bitmap.width,
-            height: jimpImage.bitmap.height,
-        }
     }
+
+    return jimpImage
+}
+
+async function getImage(params: getImageActions['params']): Promise<getImageActions['result']> {
+    const jimpImage = await getJimpImage(params);
     return {
-        blob: returnData.pixelData,
-        width: desireBounds.width,
-        height: desireBounds.height,
+        pngData: new Uint8Array(await jimpImage.getBuffer(JimpMime.png)),
     }
 }
+getImage.getJimpImage = getJimpImage
+
+export default getImage

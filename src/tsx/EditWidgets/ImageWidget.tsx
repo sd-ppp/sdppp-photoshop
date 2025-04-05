@@ -133,15 +133,10 @@ export function ImageWidget(props: ImageWidgetProps) {
 export async function getLayerImage(layerIdentify: string): Promise<JimpInstance | null> {
     if (!app.activeDocument) return null
     try {
-        const image = await getImage({
+        return await getImage.getJimpImage({
             document_identify: makeDocumentIdentify(app.activeDocument.id, app.activeDocument.name),
             layer_identify: layerIdentify,
         })
-        return new Jimp({
-            data: image.blob as any,
-            width: image.width,
-            height: image.height
-        });
     } catch (e) {
         console.error(e)
         throw e;
