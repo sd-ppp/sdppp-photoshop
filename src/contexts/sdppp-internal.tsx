@@ -66,6 +66,8 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
         if (connectState === 'connected') {
             setLastErrorMessage('')
             setSrc(`${backendURL}`);
+        } else {
+            setSrc('')
         }
     }, [connectState]);
 

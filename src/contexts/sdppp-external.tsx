@@ -3,9 +3,7 @@ import { SDPPPInternalContextProvider, useSDPPPInternalContext } from "./sdppp-i
 import { SDPPPWebviewProvider, useSDPPPWebview } from "./webview";
 import SDPPPErrorBoundary from "../tsx/SDPPPErrorBoundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useSDPPPComfyCaller } from "../entry.mts";
-import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
-import { PhotoshopStore } from "../../../src/plugins/common/store/photoshop.mts";
+import { photoshopStore } from "../logics/ModelDefines.mts";
 import { useLivePainting } from "../hooks/livePainting.mts";
 import { sdpppX } from "../../../src/common/sdpppX.mts";
 
