@@ -9,6 +9,7 @@ import getSelection, { getSelectionActions } from "./events/get_selection.mjs";
 import getText, { getTextActions } from "./events/get_text_from_layer.mjs";
 import PSD, { PSDActions } from "./events/psd.mjs";
 import sendImages, { sendImagesActions } from "./events/send_images.mjs";
+import sendText, { sendTextActions } from "./events/send_text_to_layer.mts";
 
 interface PhotoshopCalleePayload {
     action: keyof PhotoshopCalleeActions;
@@ -21,6 +22,7 @@ export interface PhotoshopCalleeActions {
     sendImages: sendImagesActions;
     getSelection: getSelectionActions;
     getText: getTextActions;
+    sendText: sendTextActions;
     getLayerInfo: getLayerInfoActions;
     getDocumentInfo: getDocumentInfoActions;
     getLinkedLayers: LayerReducerActions;
@@ -52,6 +54,8 @@ export function PhotoshopCalleeSocket(SocketClass: SocketConstructor<Socket>) {
                         res = await getSelection(params as getSelectionActions['params']);
                     } else if (action === 'getText') {
                         res = await getText(params as getTextActions['params']);
+                    } else if (action === 'sendText') {
+                        res = await sendText(params as sendTextActions['params']);
                     } else if (action === 'getLayerInfo') {
                         res = await getLayerInfo(params as getLayerInfoActions['params']);
                     } else if (action === 'getDocumentInfo') {
