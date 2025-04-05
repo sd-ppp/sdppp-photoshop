@@ -118,10 +118,16 @@ function internalUseSDPPPWebview() {
     }
   }, []);
 
+  let [prevSettedSrc, setPrevSettedSrc] = useState<string>('');
   useEffect(() => {
     if (!src) return;
-    hiddenWebview?.setAttribute('src', src);
-    dialogWebview?.setAttribute('src', src);
+    setPrevSettedSrc(src);
+    if (prevSettedSrc === src) {
+      resetWebview();
+    } else {
+      hiddenWebview?.setAttribute('src', src);
+      dialogWebview?.setAttribute('src', src);
+    }
   }, [src]);
 
   const resetWebview = useCallback(() => {
@@ -132,6 +138,7 @@ function internalUseSDPPPWebview() {
     setHiddenWebview(createdHiddenWebview)
     const currentSrc = src;
     setSrc('');
+    setPrevSettedSrc('')
     setTimeout(() => {
       setSrc(currentSrc);
     }, 300)
