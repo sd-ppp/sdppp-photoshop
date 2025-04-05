@@ -18,6 +18,12 @@ export function useSDPPPComfyCaller(): {
         type: string;
         subfolder: string;
     } | undefined>;
+    interrupt: () => Promise<void>;
+    clearQueue: () => Promise<void>;
+    reboot: () => Promise<{
+        success: boolean,
+        error?: string
+    } | undefined>;
 } {
     const {
         socket,
@@ -108,6 +114,21 @@ export function useSDPPPComfyCaller(): {
         await runPage(agentSID || workflowAgentSID, size);
     }, [openWorkflow, runPage, workflowAgentSID]);
 
+    const interrupt = useCallback(async () => {
+        if (!workflowAgentSID) return;
+        await socket?.interrupt(workflowAgentSID);
+    }, [socket, workflowAgentSID]);
+
+    const clearQueue = useCallback(async () => {
+        if (!workflowAgentSID) return;
+        await socket?.clearQueue(workflowAgentSID);
+    }, [socket, workflowAgentSID]);
+
+    const reboot = useCallback(async () => {
+        if (!workflowAgentSID) return;
+        return await socket?.reboot(workflowAgentSID);
+    }, [socket, workflowAgentSID]);
+
     return {
         lastOpenedWorkflow,
         openWorkflow,
@@ -117,6 +138,9 @@ export function useSDPPPComfyCaller(): {
         runWorkflow,
         callForPSDExtract,
         logout,
-        uploadImage
+        uploadImage,
+        interrupt,
+        clearQueue,
+        reboot
     }
 }
