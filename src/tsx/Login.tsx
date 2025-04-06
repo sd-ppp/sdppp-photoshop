@@ -3,7 +3,7 @@ import i18n from "../../../src/common/i18n.mts";
 import { useSDPPPLoginContext } from "../contexts/login.tsx";
 
 export function Login() {
-    const { login, loginStyle } = useSDPPPLoginContext()
+    const { login, loginStyle, loginBannerTop, loginBannerBottom } = useSDPPPLoginContext()
 
     const [username, setUsername] = useState(localStorage.getItem('last-username') || '');
     const [password, setPassword] = useState('');
@@ -11,10 +11,7 @@ export function Login() {
 
     return (
         <div className="login-container">
-            <div className="login-container-login-title">
-                <img src="./icons/logo.png" alt="logo" />
-                <h3>沐沐AI</h3>
-            </div>
+            {loginBannerTop}
             <div className="login-container-login">
                 <div className="login-form">
                     {
@@ -73,6 +70,7 @@ export function Login() {
                     </button>
                 </div>
             </div>
+            {loginBannerBottom}
         </div>
     )
 }

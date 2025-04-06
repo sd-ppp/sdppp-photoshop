@@ -23,6 +23,8 @@ export type UserInfoResult = {
 
 interface LogixContextType {
     loginStyle: 'invitation' | 'password' | 'none',
+    loginBannerTop: ReactNode | null,
+    loginBannerBottom: ReactNode | null,
     isLogin: boolean,
     logout: () => void,
     login: (username: string, password: string) => Promise<LoginResult>,
@@ -31,9 +33,17 @@ interface LogixContextType {
 export const SDPPPLoginContext = createContext({} as LogixContextType);
 
 export function SDPPPLoginProvider({
-    children, loginAppID, loginStyle
+    children, 
+    loginAppID, 
+    loginStyle,
+    loginBannerTop,
+    loginBannerBottom,
 }: {
-    children: ReactNode, loginAppID: string, loginStyle?: 'invitation' | 'password'
+    children: ReactNode, 
+    loginAppID: string, 
+    loginStyle?: 'invitation' | 'password',
+    loginBannerTop?: ReactNode,
+    loginBannerBottom?: ReactNode,
 }) {
     const [isLogin, setIsLogin] = useState(!loginAppID);
 
@@ -207,6 +217,8 @@ export function SDPPPLoginProvider({
 
     return <SDPPPLoginContext.Provider value={{
         loginStyle: loginStyle || 'none',
+        loginBannerBottom: loginBannerBottom || null,
+        loginBannerTop: loginBannerTop || null,
         isLogin,
         logout: () => {
             localStorage.removeItem('token')
