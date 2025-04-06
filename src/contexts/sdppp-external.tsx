@@ -30,16 +30,20 @@ export function SDPPPProvider({
     children,
     loginAppID,
     loginStyle,
+    loginBannerTop,
+    loginBannerBottom,
  }: { 
     children: React.ReactNode,
     loginAppID: string,
     loginStyle: 'invitation' | 'password',
+    loginBannerTop?: React.ReactNode,
+    loginBannerBottom?: React.ReactNode,
  }) {
     const queryClient = new QueryClient();
     return <QueryClientProvider client={queryClient}>
         <SDPPPErrorBoundary>
             <SDPPPWebviewProvider>
-                <SDPPPLoginProvider loginAppID={loginAppID} loginStyle={loginStyle}>
+                <SDPPPLoginProvider loginAppID={loginAppID} loginStyle={loginStyle} loginBannerTop={loginBannerTop} loginBannerBottom={loginBannerBottom}>
                     <SDPPPInternalContextProvider>
                         <SDPPPExternalProvider>
                             {children}

@@ -1,9 +1,8 @@
-import { photoshopStore } from "../logics/ModelDefines.mts";
+import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 import { useQuery } from "@tanstack/react-query";
-import { ComfyApis } from "../logics/apis.mts";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
 import { useSDPPPExternalContext } from "../contexts/sdppp-external";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useStore } from "../../../src/common/store/store-hooks.mts";
 import i18n from "../../../src/common/i18n.mts";
 import { PageStore } from "../../../src/sdsystem/common/store/page.mts";
@@ -11,47 +10,61 @@ import { sdpppX } from "../../../src/common/sdpppX.mts";
 
 function useFetchWorkflows(backendURL: string, comfyMultiUser: boolean, workflowagent: PageStore) {
     const { state: userData } = useStore(photoshopStore, ['/comfyUserToken'])
-    const { data, isLoading, error, refetch } = useQuery({
-        queryKey: ['workflows', backendURL],
-        queryFn: async () => {
-            if (comfyMultiUser && !workflowagent.data.comfyUserToken) {
-                const error = new Error(i18n('--multi-user activated, Not Login!'))
-                error.name = 'NotLoginError'
-                throw error
-            }
-            const workflows = await ComfyApis.fetchWorkflows(backendURL, workflowagent.data.comfyUserToken);
-            return workflows.reduce((acc: any, path: string) => {
-                acc[path] = { path: path, content: null, error: '' }
-                return acc
-            }, {})
-        },
-        retry: (failureCount, error) => {
-            // Don't retry for authentication errors (multi-user not logged in)
-            if (error instanceof Error && error.name === 'NotLoginError') {
-                return false;
-            }
-            // Default retry behavior for other errors (3 times)
-            return failureCount < 3;
-        },
-        staleTime: 5000,
-    });
-    useEffect(() => {
-        if (userData?.comfyUserToken) {
-            refetch();
+    const { socket, workflowAgentSID } = useSDPPPInternalContext();
+    const [listData, setListData] = useState<{
+        [path: string]: {
+            path: string,
+            content: any,
+            error: string | ''
         }
+    }>({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
+
+    const listWorkflows = useCallback(async (agentSID?: string) => {
+        if (!agentSID && !workflowAgentSID) {
+            setListData({});
+            return;
+        }
+        setIsLoading(true);
+        const workflowAgent = photoshopPageStoreMap.getStore(agentSID || workflowAgentSID);
+        try {
+            const workflows = await socket?.listWorkflows(workflowAgent || null) || [];
+            if ('error' in workflows) {
+                setError(new Error(workflows.error));
+                setIsLoading(false);
+                return;
+            }
+            setIsLoading(false);
+
+            setListData(
+                workflows
+                    .reduce((acc: any, path: string) => {
+                        acc[path] = { path: path, content: null, error: '' }
+                        return acc
+                    }, {})
+            )
+        } catch (e) {
+            setIsLoading(false);
+            setError(e as Error);
+        }
+    }, [socket, workflowAgentSID]);
+
+    useEffect(() => {
+        if (backendURL)
+            listWorkflows()
+    }, [backendURL]);
+
+    useEffect(() => {
+        if (userData?.comfyUserToken)
+            listWorkflows();
     }, [userData])
 
     return {
-        data: data as {
-            [path: string]: {
-                path: string,
-                content: any,
-                error: string | ''
-            }
-        },
+        data: listData,
         isLoading,
         error,
-        refetch
+        refetch: listWorkflows
     };
 }
 
@@ -64,7 +77,7 @@ export function useSDPPPWorkflowList(): {
             error: string | ''
         }
     },
-    isLoadingWorkflows: boolean,    
+    isLoadingWorkflows: boolean,
     workflowsError: string,
     refetchWorkflows: () => void,
     afterPropsUpdate4s: boolean,
@@ -102,7 +115,7 @@ export function useSDPPPWorkflowList(): {
         path: string,
         isDir: boolean
     }[] = [];
-    
+
     if (!isLoadingWorkflows && !workflowsError && workflows) {
         Object.keys(workflows).forEach((path) => {
             if (path.startsWith(currentViewingDirectory)) {
@@ -114,10 +127,10 @@ export function useSDPPPWorkflowList(): {
                 }
             }
         })
-        showingList = showingList.filter((item, index, self) => 
+        showingList = showingList.filter((item, index, self) =>
             self.findIndex((t) => t.path == item.path) === index);
     }
-    
+
 
     let finalErrorMessage = '';
     if (workflowsError) {
@@ -125,10 +138,10 @@ export function useSDPPPWorkflowList(): {
     }
     // if (!workflowAgentState.sid && !afterPropsUpdate4s)
     //     listReplacer = <sp-label class="list-error-label">{i18n('Webview initialize failed. Please report to me via Discord/Github with your ComfyURL, Operate System')}</sp-label>;
-    if (workflowsError)
-        finalErrorMessage = i18n("Workflow list loading failed: {0}", workflowsError.message);
     if (!showingList.length)
         finalErrorMessage = i18n("Workflow list is empty, please save a workflow by Comfy's lastest UI");
+    if (workflowsError)
+        finalErrorMessage = i18n("Workflow list loading failed: {0}", workflowsError.message);
     if (!sdpppX.MU && comfyMultiUser)
         finalErrorMessage = i18n('Workflow List of ComfyUI with --multi-user is only available for sponsors');
     if (isLoadingWorkflows)
