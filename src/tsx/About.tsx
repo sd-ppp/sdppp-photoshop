@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 import i18n from "../../../src/common/i18n.mts";
-
+import { useSDPPPLoginContext } from '../contexts/login';
 export let aboutComponentShowTimeSum = 0;
 let lastStartTime = 0;
 
 export function About() {
     const persistentDivRef = useRef<HTMLDivElement>(null);
+    const { loginStyle } = useSDPPPLoginContext();
 
     useEffect(() => {
         let detectedMinHeight = Infinity;
@@ -54,7 +55,7 @@ export function About() {
 
     return <div className="about-card" style={{ position: 'relative' }}>
         {
-            true
+            loginStyle === 'none'
                 ? (
                     <>
                         <div className="about-card-sections about-card-title">

@@ -4,6 +4,8 @@ import { About } from "./About";
 import { AddressBar } from "./AddressBar";
 import { WorkflowEditPhotoshop } from "./WorkflowEditPhotoshop";
 import SDPPPErrorBoundary from "./SDPPPErrorBoundary";
+import { useSDPPPLoginContext } from "../contexts/login";
+import { Login } from "./Login";
 
 interface SDPPPProps {
     renderContent: (
@@ -24,10 +26,16 @@ export function SDPPP({
         return renderContent(connectState, AddressBar, WorkflowEditPhotoshop);
     }, [connectState]);
 
+    const { isLogin } = useSDPPPLoginContext();
+
     return (
         <>
             <SDPPPErrorBoundary>    
-                {renderedContent}
+                {
+                    isLogin ?
+                        renderedContent :
+                        <Login />
+                }
             </SDPPPErrorBoundary>
             {connectState != 'connected' && <About />}
         </>

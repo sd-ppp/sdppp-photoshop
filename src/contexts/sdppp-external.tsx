@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { SDPPPInternalContextProvider, useSDPPPInternalContext } from "./sdppp-internal";
 import { SDPPPWebviewProvider, useSDPPPWebview } from "./webview";
 import SDPPPErrorBoundary from "../tsx/SDPPPErrorBoundary";
@@ -6,8 +6,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { photoshopStore } from "../logics/ModelDefines.mts";
 import { useLivePainting } from "../hooks/livePainting.mts";
 import { sdpppX } from "../../../src/common/sdpppX.mts";
+import { SDPPPLoginProvider, useSDPPPLoginContext } from "./login";
 
 export interface SDPPPExternalContextType {
+    logout: () => void,
+
     connectOrDisconnect: () => void,
     lastConnectErrorMessage: string,
     setAutoRunning: (autoRunning: { type: 'workflow' | 'page', value: string } | null) => void,
@@ -23,16 +26,26 @@ export interface SDPPPExternalContextType {
 
 export const SDPPPExternalContext = createContext({} as SDPPPExternalContextType);
 
-export function SDPPPProvider({ children }: { children: React.ReactNode }) {
+export function SDPPPProvider({ 
+    children,
+    loginAppID,
+    loginStyle,
+ }: { 
+    children: React.ReactNode,
+    loginAppID: string,
+    loginStyle: 'invitation' | 'password',
+ }) {
     const queryClient = new QueryClient();
     return <QueryClientProvider client={queryClient}>
         <SDPPPErrorBoundary>
             <SDPPPWebviewProvider>
-                <SDPPPInternalContextProvider>
-                    <SDPPPExternalProvider>
-                        {children}
-                    </SDPPPExternalProvider>
-                </SDPPPInternalContextProvider>
+                <SDPPPLoginProvider loginAppID={loginAppID} loginStyle={loginStyle}>
+                    <SDPPPInternalContextProvider>
+                        <SDPPPExternalProvider>
+                            {children}
+                        </SDPPPExternalProvider>
+                    </SDPPPInternalContextProvider>
+                </SDPPPLoginProvider>
             </SDPPPWebviewProvider>
         </SDPPPErrorBoundary>
     </QueryClientProvider>
@@ -50,6 +63,7 @@ export function useSDPPPExternalContext() {
 function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
     const webviewContext = useSDPPPWebview();
     const internalContext = useSDPPPInternalContext();
+    const { logout } = useSDPPPLoginContext();
 
     if (sdpppX.registerTestCase) {
         (globalThis as any).sdppp_debugPhotoshopInternalContext = internalContext;
@@ -84,6 +98,8 @@ function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
     }, [setShouldTriggerLivePainting])
 
     return <SDPPPExternalContext.Provider value={{
+        logout: logout,
+
         connectOrDisconnect: doConnectOrDisconnect,
         lastConnectErrorMessage: lastErrorMessage,
 
