@@ -44,6 +44,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
         setSrc,
         webviewAgentSID,
         prevWebviewAgentSID,
+        resetWebview,
     } = useSDPPPWebview();
 
     const [connectState, setConnectState] = useState<SDPPPInternalContextType['connectState']>('disconnected');
@@ -121,8 +122,8 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
     }, [workflowAgentSID]);
 
     useEffect(() => {
-        if (!workflowAgentSID) {
-            setWorkflowAgentSID(webviewAgentSID || '');
+        if (!workflowAgentSID && webviewAgentSID) {
+            setWorkflowAgentSID(webviewAgentSID);
         }
     }, [workflowAgentSID, webviewAgentSID]);
 

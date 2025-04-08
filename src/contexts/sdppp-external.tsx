@@ -18,7 +18,7 @@ export interface SDPPPExternalContextType {
     workflowAgentSID: string,
     setWorkflowAgentSID: (workflowAgentSID: string) => void,
 
-    showWebviewDialog: () => void;
+    toggleWebviewDialog: () => void;
 }
 
 export const SDPPPExternalContext = createContext({} as SDPPPExternalContextType);
@@ -57,7 +57,7 @@ function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
     }
 
     const {
-        showWebviewDialog,
+        toggleWebviewDialog,
         webviewAgentSID,
     } = webviewContext
     const {
@@ -95,7 +95,7 @@ function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
         workflowAgentSID: workflowAgent?.data.sid || "",
         setWorkflowAgentSID: setWorkflowAgentSID,
 
-        showWebviewDialog: showWebviewDialog,
+        toggleWebviewDialog,
     }}>
         {children}
     </SDPPPExternalContext.Provider>;

@@ -3,7 +3,7 @@ import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mt
 
 // 创建Context
 interface WebviewContextType {
-  showWebviewDialog: () => void;
+  toggleWebviewDialog: () => void;
   setSrc: (src: string) => void;
   resetWebview: () => void
 
@@ -46,7 +46,7 @@ export function SDPPPWebviewProvider({ children }: { children: ReactNode }) {
       prevWebviewAgentSID: webviewState.prevWebviewAgentSID,
       setWebviewAgentSID: webviewState.setWebviewAgentSID,
 
-      showWebviewDialog: webviewState.showWebviewDialog,
+      toggleWebviewDialog: webviewState.toggleWebviewDialog,
       setSrc: webviewState.setSrc,
       resetWebview: webviewState.resetWebview,
     }}>
@@ -82,6 +82,7 @@ function internalUseSDPPPWebview() {
     const callback = () => {
       setDialogShowing(false);
       setWebviewAgentSID(prevWebviewAgentSID)
+      resetWebview(); // actually it just need to reload the workflow, think about better solution later
     }
     dialog?.addEventListener('close', callback)
     return () => {
@@ -144,16 +145,21 @@ function internalUseSDPPPWebview() {
     }, 300)
   }, [hiddenWebview, src])
 
-  const showWebviewDialog = useCallback(() => {
-    dialog?.show();
-    setDialogShowing(true);
-  }, [dialog])
+  const toggleWebviewDialog = useCallback(() => {
+    if (dialogShowing) {
+      dialog?.close();
+      setDialogShowing(false);
+    } else {
+      dialog?.show();
+      setDialogShowing(true);
+    }
+  }, [dialog, dialogShowing])
 
   
 
   return {
     dialogShowing,
-    showWebviewDialog,
+    toggleWebviewDialog,
     setSrc,
 
     webviewAgentSID,
