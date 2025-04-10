@@ -54,7 +54,7 @@ export function About() {
 
     return <div className="about-card" style={{ position: 'relative' }}>
         {
-            false
+            true
                 ? (
                     <>
                         <div className="about-card-sections about-card-title">
