@@ -21,7 +21,7 @@ export function MaskWidget(props: ImageWidgetProps) {
     const [uploadedImageName, setUploadedImageName] = useState<string | null>(null);
     const { backendURL } = useSDPPPInternalContext();
     const { uploadImage } = useSDPPPComfyCaller();
-    const { addBeforeWorkflowRunHook, removeBeforeWorkflowRunHook } = useWorkflowRunHooks();
+    const { addBeforeWorkflowRunHook } = useWorkflowRunHooks();
 
     const jimpImageRef = useRef<JimpInstance | null>(null);
 
@@ -50,11 +50,11 @@ export function MaskWidget(props: ImageWidgetProps) {
 
     useEffect(() => {
         // Add listener
-        addBeforeWorkflowRunHook(beforeRunHandler);
+        const remove = addBeforeWorkflowRunHook(beforeRunHandler);
 
         // Cleanup function
         return () => {
-            removeBeforeWorkflowRunHook(beforeRunHandler);
+            remove();
         };
     }, [beforeRunHandler]);
 

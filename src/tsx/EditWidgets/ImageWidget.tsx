@@ -36,7 +36,7 @@ export function ImageWidget(props: ImageWidgetProps) {
     const [uploadedImageName, setUploadedImageName] = useState<string | null>(null);
     const { backendURL } = useSDPPPInternalContext();
     const { uploadImage } = useSDPPPComfyCaller();
-    const { addBeforeWorkflowRunHook, removeBeforeWorkflowRunHook } = useWorkflowRunHooks();
+    const { addBeforeWorkflowRunHook } = useWorkflowRunHooks();
 
     const jimpImageRef = useRef<JimpInstance | null>(null);
 
@@ -64,12 +64,13 @@ export function ImageWidget(props: ImageWidgetProps) {
     }, [mode, pendingUpload, uploadedImageName, props.onValueChange]);
 
     useEffect(() => {
+        let hook = beforeRunHandler;
         // Add listener
-        addBeforeWorkflowRunHook(beforeRunHandler);
+        const remove = addBeforeWorkflowRunHook(hook);
 
         // Cleanup function
         return () => {
-            removeBeforeWorkflowRunHook(beforeRunHandler);
+            remove();
         };
     }, [beforeRunHandler]);
 

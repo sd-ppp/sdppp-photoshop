@@ -56,12 +56,17 @@ export function useWorkflowRunHooks() {
     } = useSDPPPInternalContext();
 
     const addBeforeWorkflowRunHook = useCallback((hook: () => {}) => {
-        setBeforeWorkflowRunHooks([...beforeWorkflowRunHooks, hook]);
-    }, [beforeWorkflowRunHooks, setBeforeWorkflowRunHooks]);
-
-    const removeBeforeWorkflowRunHook = useCallback((hook: () => {}) => {
-        setBeforeWorkflowRunHooks(beforeWorkflowRunHooks.filter((h: any) => h !== hook));
-    }, [beforeWorkflowRunHooks, setBeforeWorkflowRunHooks]);
+        setBeforeWorkflowRunHooks(beforeWorkflowRunHooks => {
+            const newBeforeWorkflowRunHooks = [...beforeWorkflowRunHooks, hook]
+            return newBeforeWorkflowRunHooks
+        });
+        return () => {
+            setBeforeWorkflowRunHooks((beforeWorkflowRunHooks: (() => {})[]) => {
+                const newBeforeWorkflowRunHooks = beforeWorkflowRunHooks.filter((h: any) => h !== hook)
+                return newBeforeWorkflowRunHooks
+            });
+        }
+    }, [setBeforeWorkflowRunHooks]);
 
 
     const triggerBeforeWorkflowRun = useCallback(async () => {
@@ -72,7 +77,6 @@ export function useWorkflowRunHooks() {
 
     return {
         addBeforeWorkflowRunHook,
-        removeBeforeWorkflowRunHook,
         triggerBeforeWorkflowRun,
     }
 }

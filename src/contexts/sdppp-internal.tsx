@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 import { PageStore, PageStoreData } from "../../../src/sdsystem/common/store/page.mts";
 import { useSDPPPWebview } from "./webview";
 import { PhotoshopSocket } from "../logics/PhotoshopSocket.mts";
@@ -34,7 +34,7 @@ export interface SDPPPInternalContextType {
     setComfyMultiUser: (comfyMultiUser: SDPPPInternalContextType['comfyMultiUser']) => void,
 
     beforeWorkflowRunHooks: (()=> {})[],
-    setBeforeWorkflowRunHooks: (beforeWorkflowRunHooks: SDPPPInternalContextType['beforeWorkflowRunHooks']) => void,
+    setBeforeWorkflowRunHooks: Dispatch<SetStateAction<(() => {})[]>>,
 }
 
 const SDPPPInternalContext = createContext<SDPPPInternalContextType | null>(null);
