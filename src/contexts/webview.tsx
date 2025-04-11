@@ -199,15 +199,22 @@ function createDialog(
   return dialog
 }
 
+let webviewContainer: HTMLDivElement | null = null
 function createHiddenWebview() {
+  if (!webviewContainer) {
+    webviewContainer = document.createElement('div')
+    webviewContainer.style.position = 'absolute';
+    webviewContainer.style.width = '1px'
+    webviewContainer.style.height = '1px'
+    webviewContainer.style.top = '0'
+    webviewContainer.style.left = '0'
+    webviewContainer.style.visibility = 'hidden'
+    document.body.appendChild(webviewContainer)
+  }
   const webview = document.createElement('webview')
-  webview.style.position = 'absolute';
-  webview.style.width = '50px'
-  webview.style.height = '50px'
-  webview.style.top = '-10000px'
-  webview.style.left = '0'
-  webview.style.opacity = '1'
-  document.body.appendChild(webview)
+  webview.style.width = '1px'
+  webview.style.height = '1px'
+  webviewContainer?.appendChild(webview)
   return webview
 }
 // webviewElement.addEventListener('loaderror', (e: any) => {
