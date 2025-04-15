@@ -20,10 +20,10 @@ export function About() {
                 }
             }
             webview.addEventListener('loadstart', start);
-            webview.addEventListener('loadstop', start);
+            webview.addEventListener('loadstop', start); 
             webview.addEventListener('loaderror', start);
 
-            webview.setAttribute('src', "./sdppp.html");
+            webview.setAttribute('src', "./_.html");
             webview.style.width = '1px';
             webview.style.height = '1px';
             persistentDivRef.current.appendChild(webview);

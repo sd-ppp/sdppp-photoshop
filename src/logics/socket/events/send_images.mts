@@ -5,6 +5,7 @@ import { Layer } from "photoshop/dom/Layer";
 import i18n from "../../../../../src/common/i18n.mts";
 import { runNextModalState } from "../../modalStateWrapper.mjs";
 import { SDPPPBounds, SpeicialIDManager, findInAllSubLayer, getLayerID, parseDocumentIdentify } from '../../util.mts';
+import { sdpppX } from "../../../../../src/common/sdpppX.mts";
 
 export interface ImageBlobParams {
     components: number,
@@ -17,7 +18,8 @@ export interface sendImagesActions {
         image_urls?: string[],
         document_identify: string,
         layer_identifies: string[],
-        boundaries: SDPPPBounds[]
+        boundaries: SDPPPBounds[],
+        new_layer_name?: string
     },
     result: any
 }
@@ -184,8 +186,12 @@ export default async function sendImages(params: sendImagesActions['params']) {
                 if (targetLayerOrGroup && targetLayerOrGroup.kind != constants.LayerKind.GROUP) {
                     return targetLayerOrGroup
                 } else {
+                    let sendLayerPrefix = '';
+                    if (typeof sdpppX.handleSendLayerName == 'function') {
+                        sendLayerPrefix = await sdpppX.handleSendLayerName(params.new_layer_name || 'SDPPP Images')
+                    }
                     const newLayer = await document.createLayer(constants.LayerKind.NORMAL, {
-                        name: `SDPPP Images ${sentCount}${jimps.length > 1 ? `_${index + 1}` : ''}`,
+                        name: `${sendLayerPrefix} ${sentCount}${jimps.length > 1 ? `_${index + 1}` : ''}`,
                     })
                     if (!newLayer) throw new Error(i18n('create layer failed'))
                     newLayers.push(newLayer)

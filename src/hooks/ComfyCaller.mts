@@ -5,7 +5,6 @@ import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mt
 import { useWorkflowRunHooks } from "./WidgetTable.mts";
 
 export function useSDPPPComfyCaller(): {
-    lastOpenedWorkflow: string;
     openWorkflow: (workflowAgentSID: string, workflow_path: string, reset: boolean) => Promise<void>;
     reopenWorkflow: (workflowAgentSID: string) => Promise<void>;
     saveWorkflow: (workflowAgentSID: string) => Promise<void>;
@@ -27,8 +26,6 @@ export function useSDPPPComfyCaller(): {
 } {
     const {
         socket,
-        lastOpenedWorkflow,
-        setLastOpenedWorkflow
     } = useSDPPPInternalContext();
     const {
         workflowAgentSID
@@ -49,18 +46,17 @@ export function useSDPPPComfyCaller(): {
                 from_sid: photoshopStore.data.sid,
                 reset
             });
-            setLastOpenedWorkflow(workflow_path);
         } catch (error) {
-            setLastOpenedWorkflow('')
         }
-    }, [socket, setLastOpenedWorkflow]);
+    }, [socket]);
 
     const reopenWorkflow = useCallback(async (workflowAgentSID: string) => {
-        if (!lastOpenedWorkflow) {
+        const workflowAgent = photoshopPageStoreMap.getStore(workflowAgentSID);
+        if (!workflowAgent || !workflowAgent.data.lastOpenedWorkflow) {
             throw new Error('lastOpenedWorkflow not found');
         }
-        await openWorkflow(workflowAgentSID, lastOpenedWorkflow, true);
-    }, [openWorkflow, lastOpenedWorkflow]);
+        await openWorkflow(workflowAgentSID, workflowAgent.data.lastOpenedWorkflow, true);
+    }, [openWorkflow]);
 
     const pageInstanceRun = useCallback((sid: string, size: number = 1) => {
         socket?.pageInstanceRun(sid, photoshopStore.data.sid, size);
@@ -71,14 +67,14 @@ export function useSDPPPComfyCaller(): {
         if (!workflowAgent) {
             throw new Error('workflowAgent not found');
         }
-        if (!lastOpenedWorkflow) {
+        if (!workflowAgent.data.lastOpenedWorkflow) {
             throw new Error('lastOpenedWorkflow not found');
         }
         await socket?.saveWorkflow(workflowAgent, {
-            workflow_path: lastOpenedWorkflow,
+            workflow_path: workflowAgent.data.lastOpenedWorkflow,
             from_sid: photoshopStore.data.sid
         });
-    }, [socket, lastOpenedWorkflow]);
+    }, [socket]);
 
     const callForPSDExtract = useCallback(async (workflowAgentSID: string) => {
         await socket?.callForPSDExtract(workflowAgentSID, {
@@ -130,7 +126,6 @@ export function useSDPPPComfyCaller(): {
     }, [socket, workflowAgentSID]);
 
     return {
-        lastOpenedWorkflow,
         openWorkflow,
         reopenWorkflow,
         saveWorkflow,

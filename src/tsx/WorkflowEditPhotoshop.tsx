@@ -15,8 +15,7 @@ import { useTraceUpdate } from "../../../src/common/tsx/util.mts"
 
 export function WorkflowEditPhotoshop() {
     const { 
-        callForPSDExtract,
-        lastOpenedWorkflow
+        callForPSDExtract
     } = useSDPPPComfyCaller();
     const { workflowAgent } = useSDPPPInternalContext();
     const {
@@ -104,7 +103,7 @@ export function WorkflowEditPhotoshop() {
     return (
         <div className="workflow-edit">
             <div className="workflow-edit-title">
-                {lastOpenedWorkflow && <sp-label style={{ fontWeight: 'bold' }}>{lastOpenedWorkflow}</sp-label>}
+                {workflowAgent?.data.lastOpenedWorkflow && <sp-label style={{ fontWeight: 'bold' }}>{workflowAgent?.data.lastOpenedWorkflow}</sp-label>}
                 {hasSamplePSD ? <a onClick={() => { callForPSDExtract(workflowAgent?.data.sid || '') }}>{'>' + i18n('sample .psd')}</a> : ''}
             </div>
             <WorkflowEdit
