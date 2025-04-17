@@ -206,14 +206,13 @@ function createHiddenWebview() {
     webviewContainer.style.position = 'absolute';
     webviewContainer.style.width = '1px'
     webviewContainer.style.height = '1px'
-    webviewContainer.style.top = '0'
-    webviewContainer.style.left = '0'
-    webviewContainer.style.visibility = 'hidden'
+    webviewContainer.style.right = '0'
+    webviewContainer.style.bottom = '-10000px'
     document.body.appendChild(webviewContainer)
   }
   const webview = document.createElement('webview')
-  webview.style.width = '1px'
-  webview.style.height = '1px'
+  webview.style.width = '100px'
+  webview.style.height = '100px'
   webviewContainer?.appendChild(webview)
   return webview
 }
