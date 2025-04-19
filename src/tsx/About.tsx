@@ -63,8 +63,9 @@ export function About() {
                         <sp-divider></sp-divider>
                         <h2>{i18n('Sponsors')}</h2>
                         <div className="about-card-sections about-card-sponsors">
-                            <a href="https://www.douyin.com/user/MS4wLjABAAAAge-jhN-wHFrwqHneTDIIun6NKeAnDbo9loqCjrtyaVBu2zWCm2a2NhhbeF15pTbF">沐沐AI</a>
-                            <a href="https://www.douyin.com/user/MS4wLjABAAAAdG7ZFMYaDrXBxUtUkvxaP9a2hYcMgF7TbW945YJKgA0">悟空AI</a>   
+                            <a href="https://v.douyin.com/hD2X7S717uw/">四喜AI</a>   
+                            <a href="https://v.douyin.com/3PnAYwvd5Hk/">悟空AI</a>   
+                            <a href="https://v.douyin.com/k6yKDEcVgP8/">沐沐AI</a>
                         </div>
                         <sp-divider></sp-divider>
                         <h2>{i18n('Links')}</h2>

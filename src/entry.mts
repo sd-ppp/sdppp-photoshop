@@ -3,6 +3,7 @@ import 'sdppp-test/photoshop'
 
 import { AddressBar } from './tsx/AddressBar.tsx';
 import { WorkflowEditPhotoshop } from './tsx/WorkflowEditPhotoshop.tsx';
+import { Promote } from './tsx/Promote.tsx';
 
 export {
     SDPPPProvider,
@@ -16,9 +17,9 @@ export { useAgentState } from "./hooks/AgentState.mjs";
 
 export { SDPPP } from "./tsx/SDPPP.js";
 
-export { ComfyLogin } from "./tsx/ComfyLogin.js";
-
+export { Promote } from "./tsx/Promote.tsx";
 
 type WorkflowEditPhotoshopType = typeof WorkflowEditPhotoshop;
 type AddressBarType = typeof AddressBar;
 export type { WorkflowEditPhotoshopType, AddressBarType };
+ 

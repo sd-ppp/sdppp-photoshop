@@ -8,24 +8,6 @@ import { useStore } from "../../../src/common/store/store-hooks.mts"
 import i18n from "../../../src/common/i18n.mts"
 import { sdpppX } from "../../../src/common/sdpppX.mts"
 
-interface LoginProps {
-    onRequestLogin?: () => void,
-}
-export function ComfyLogin(props: LoginProps) {
-    const { state: photoshopStoreData } = useStore(photoshopStore, ['/uname', '/comfyUser'])
-    const internalContext = useSDPPPInternalContext();
-
-    return (
-        <div className="identifier-bar">
-            <div className="identifier-bar-left">
-                <sp-label>(Photoshop ID: {photoshopStoreData?.uname})</sp-label>
-            </div>
-            {
-                internalContext.comfyMultiUser && <ComfyMultiUserLogin onRequestLogin={props.onRequestLogin} />
-            }
-        </div>
-    )
-}
 interface ComfyLoginProps {
     onRequestLogin?: () => void,
 }
