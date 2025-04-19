@@ -5,7 +5,7 @@ import SDPPPErrorBoundary from "../tsx/SDPPPErrorBoundary";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { photoshopStore } from "../logics/ModelDefines.mts";
 import { useLivePainting } from "../hooks/livePainting.mts";
-import { sdpppX } from "../../../src/common/sdpppX.mts";
+import { sdpppX } from "../../../../src/common/sdpppX.mts";
 import { SDPPPLoginProvider, useSDPPPLoginContext } from "./login";
 
 export interface SDPPPExternalContextType {

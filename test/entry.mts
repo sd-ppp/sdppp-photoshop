@@ -1,6 +1,6 @@
 import { app } from "photoshop";
 import { photoshopPageStoreMap, photoshopStore } from "../src/logics/ModelDefines.mts";
-import { sdpppX } from "../../src/common/sdpppX.mts";
+import { sdpppX } from "../../../src/common/sdpppX.mts";
 
 (globalThis as any).sdppp_debugPhotoshopStore = photoshopStore;
 (globalThis as any).sdppp_debugPhotoshopPageStoreMap = photoshopPageStoreMap;
@@ -14,4 +14,4 @@ sdpppX.registerTestCase = async () => {
     ])
 }
 
-import('../../test/mocha/entry.mts')
+import('../../../test/mocha/entry.mts')

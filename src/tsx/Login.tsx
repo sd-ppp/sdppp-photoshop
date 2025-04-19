@@ -1,5 +1,5 @@
 import { useState } from "react";
-import i18n from "../../../src/common/i18n.mts";
+import i18n from "../../../../src/common/i18n.mts";
 import { useSDPPPLoginContext } from "../contexts/login.tsx";
 
 export function Login() {

@@ -2,27 +2,11 @@ import {Jimp} from "jimp";
 import { app, constants, imaging } from "photoshop";
 import { Document } from "photoshop/dom/Document";
 import { Layer } from "photoshop/dom/Layer";
-import i18n from "../../../../../src/common/i18n.mts";
+import i18n from "../../../../../../src/common/i18n.mts";
 import { runNextModalState } from "../../modalStateWrapper.mjs";
 import { SDPPPBounds, SpeicialIDManager, findInAllSubLayer, getLayerID, parseDocumentIdentify } from '../../util.mts';
-import { sdpppX } from "../../../../../src/common/sdpppX.mts";
-
-export interface ImageBlobParams {
-    components: number,
-    pngData: Blob
-}
-
-export interface sendImagesActions {
-    params: {
-        image_blobs?: ImageBlobParams[], 
-        image_urls?: string[],
-        document_identify: string,
-        layer_identifies: string[],
-        boundaries: SDPPPBounds[],
-        new_layer_name?: string
-    },
-    result: any
-}
+import { sdpppX } from "../../../../../../src/common/sdpppX.mts";
+import type { sendImagesActions, ImageBlobParams } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 
 async function getActiveDocumentOrCreate(width: number, height: number) {
     if (app.activeDocument) return app.activeDocument

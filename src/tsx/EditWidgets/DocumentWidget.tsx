@@ -1,6 +1,6 @@
 import React from "react";
-import { PhotoshopStoreHelper } from "../../../../src/plugins/common/store/helpers.mts";
-import { DropdownWidget } from "../../../../src/plugins/common/tsx/EditWidgets/DropdownWidget";
+import { PhotoshopStoreHelper } from "../../../../../src/store/helpers.mts";
+import { DropdownWidget } from "../../EditWidgets/DropdownWidget";
 import { SpeicialIDManager } from "../../logics/util.mts";
 import { photoshopStore } from "../../logics/ModelDefines.mts";
 

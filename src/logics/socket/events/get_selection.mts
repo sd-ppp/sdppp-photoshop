@@ -1,12 +1,12 @@
 import { imaging } from "photoshop";
 import { host } from "uxp";
 import type { Document } from "photoshop/dom/Document";
-import i18n from "../../../../../src/common/i18n.mts";
+import i18n from "../../../../../../src/common/i18n.mts";
 import { runNextModalState } from "../../modalStateWrapper.mjs";
-import { SDPPPBounds, parseDocumentIdentify } from '../../util.mjs';
-import { alignPixelBit, padAndTrimToDesireBounds, PixelsAndSize } from "./get_image.mjs";
+import { parseDocumentIdentify } from '../../util.mjs';
+import { alignPixelBit, padAndTrimToDesireBounds } from "./get_image.mjs";
 import type { Bounds } from "photoshop/dom/objects/Bounds";
-
+import type { getSelectionActions, PixelsAndSize } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 
 async function getSelectionData(document: Document, bounds: any) {
     let options = {
@@ -21,18 +21,6 @@ async function getSelectionData(document: Document, bounds: any) {
         dataFromAPI,
         width: imageData.width,
         height: imageData.height,
-    }
-}
-
-export interface getSelectionActions {
-    params: {
-        document_identify: string,
-        boundary: SDPPPBounds,
-    },
-    result: {
-        blob: Uint8Array | Uint16Array | Float32Array | null,
-        width: number,
-        height: number,
     }
 }
 
@@ -57,7 +45,7 @@ export default async function getSelection(params: getSelectionActions['params']
         left: 0,
         top: 0,
         right: document.width,
-        bottom: document.height, 
+        bottom: document.height,
         width: document.width,
         height: document.height,
     };

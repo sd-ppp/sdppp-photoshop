@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { action, app, constants } from 'photoshop';
 import { openPSD } from './util.mts';
-import { SpeicialIDManager } from '../../../src/common/photoshop/specialLayer.mts';
+import { SpeicialIDManager } from '../../../../src/common/photoshop/specialLayer.mts';
 import { runNextModalState } from '../../src/logics/modalStateWrapper.mts';
 import getSelection from '../../src/logics/socket/events/get_selection.mts';
 

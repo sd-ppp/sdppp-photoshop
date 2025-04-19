@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
-import { PageStoreData } from "../../../src/sdsystem/common/store/page.mts";
-import { useStore } from "../../../src/common/store/store-hooks.mts";
+import { PageStoreData } from "../../../../src/store/page.mts";
+import { useStore } from "../../../../src/common/store/store-hooks.mts";
 
 export interface SDPPPWebpageInstance {
     sid: string,

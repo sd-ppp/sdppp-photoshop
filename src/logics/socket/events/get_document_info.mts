@@ -1,15 +1,7 @@
-import i18n from "../../../../../src/common/i18n.mts";
+import i18n from "../../../../../../src/common/i18n.mts";
 import { SDPPPBounds, parseDocumentIdentify } from "../../util.mts";
+import type { getDocumentInfoActions } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 
-export interface getDocumentInfoActions {
-    params: {
-        document_identify: string
-    },
-    result: {
-        document_boundary: SDPPPBounds,
-        selection_boundary: SDPPPBounds
-    }
-}
 export default async function getDocumentInfo(params: getDocumentInfoActions['params']): Promise<getDocumentInfoActions['result']> {
     const documentIdentify = params.document_identify
     let document = parseDocumentIdentify(documentIdentify);

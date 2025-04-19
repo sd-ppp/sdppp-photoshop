@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
-import { useStore } from "../../../src/common/store/store-hooks.mts";
-import { SDPPPGraphForm } from "../../../src/common/types";
-import { storeWidgetValue } from "../../../src/plugins/common/hooks/widgetable.mts";
+import { useStore } from "../../../../src/common/store/store-hooks.mts";
+import { SDPPPGraphForm } from "../../../../src/types/sdppp";
 
 export function useWidgetTable() {
     const {
@@ -98,4 +97,10 @@ function isDiffFromRemote(localForm: SDPPPGraphForm[], remoteForm: SDPPPGraphFor
         }
     }
     return false;
+}
+function storeWidgetValue(title: string, widgetIndex: number, value: any, outputType: string) {
+    localStorage.setItem(`widgetValue_${title}_${widgetIndex}`, JSON.stringify({
+        value,
+        outputType
+    }))
 }

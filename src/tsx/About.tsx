@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import i18n from "../../../src/common/i18n.mts";
+import i18n from "../../../../src/common/i18n.mts";
 import { useSDPPPLoginContext } from '../contexts/login';
 export let aboutComponentShowTimeSum = 0;
 let lastStartTime = 0;

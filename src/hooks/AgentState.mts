@@ -1,5 +1,5 @@
-import { useStore } from "../../../src/common/store/store-hooks.mts";
-import { PageStore } from "../../../src/sdsystem/common/store/page.mts";
+import { useStore } from "../../../../src/common/store/store-hooks.mts";
+import { PageStore } from "../../../../src/store/page.mts";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 
 export function useAgentState(agentSID: string): {

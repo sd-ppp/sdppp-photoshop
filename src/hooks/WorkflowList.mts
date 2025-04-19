@@ -1,12 +1,11 @@
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
-import { useQuery } from "@tanstack/react-query";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
 import { useSDPPPExternalContext } from "../contexts/sdppp-external";
 import { useState, useEffect, useCallback } from "react";
-import { useStore } from "../../../src/common/store/store-hooks.mts";
-import i18n from "../../../src/common/i18n.mts";
-import { PageStore } from "../../../src/sdsystem/common/store/page.mts";
-import { sdpppX } from "../../../src/common/sdpppX.mts";
+import { useStore } from "../../../../src/common/store/store-hooks.mts";
+import i18n from "../../../../src/common/i18n.mts";
+import { PageStore } from "../../../../src/store/page.mts";
+import { sdpppX } from "../../../../src/common/sdpppX.mts";
 
 function useFetchWorkflows(backendURL: string, comfyMultiUser: boolean, workflowagent: PageStore) {
     const { state: userData } = useStore(photoshopStore, ['/comfyUserToken'])

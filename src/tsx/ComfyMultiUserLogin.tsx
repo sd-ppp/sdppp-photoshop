@@ -4,9 +4,9 @@ import { useSDPPPInternalContext } from "../contexts/sdppp-internal"
 import { useSDPPPWebview } from "../contexts/webview"
 import { useSDPPPExternalContext } from "../contexts/sdppp-external"
 import { useSDPPPComfyCaller } from "../hooks/ComfyCaller.mts"
-import { useStore } from "../../../src/common/store/store-hooks.mts"
-import i18n from "../../../src/common/i18n.mts"
-import { sdpppX } from "../../../src/common/sdpppX.mts"
+import { useStore } from "../../../../src/common/store/store-hooks.mts"
+import i18n from "../../../../src/common/i18n.mts"
+import { sdpppX } from "../../../../src/common/sdpppX.mts"
 
 interface ComfyLoginProps {
     onRequestLogin?: () => void,

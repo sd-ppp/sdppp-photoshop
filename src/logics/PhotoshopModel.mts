@@ -1,9 +1,9 @@
 import { action, app } from "photoshop";
 import type { Document } from "photoshop/dom/Document";
-import { makeDocumentIdentify, makeLayerIdentify } from "../../../src/common/photoshop/identify.mts";
+import { makeDocumentIdentify, makeLayerIdentify } from "../../../../src/common/photoshop/identify.mts";
 import { getAllSubLayer, getSDPPPUID } from "./util.mts";
 import { photoshopStore } from "./ModelDefines.mts";
-import type { PhotoshopDataDocument } from "../../../src/plugins/common/store/photoshop.mts";
+import type { PhotoshopDataDocument } from "../../../../src/store/photoshop.mts";
 
 
 (async () => {

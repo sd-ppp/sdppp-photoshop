@@ -2,9 +2,9 @@ import { app, constants } from "photoshop";
 import type { Document } from "photoshop/dom/Document";
 import type { Layer } from "photoshop/dom/Layer";
 import { storage } from "uxp";
-import i18n from "../../../src/common/i18n.mts";
-import { SpeicialIDManager } from "../../../src/common/photoshop/specialLayer.mts";
-import { makeLayerIdentify } from "../../../src/common/photoshop/identify.mts";
+import i18n from "../../../../src/common/i18n.mts";
+import { SpeicialIDManager } from "../../../../src/common/photoshop/specialLayer.mts";
+import { makeLayerIdentify } from "../../../../src/common/photoshop/identify.mts";
 export interface SDPPPBounds {
     left: number,
     top: number,

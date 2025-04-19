@@ -1,5 +1,5 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
-import { PageStore, PageStoreData } from "../../../src/sdsystem/common/store/page.mts";
+import { PageStore, PageStoreData } from "../../../../src/store/page.mts";
 import { useSDPPPWebview } from "./webview";
 import { PhotoshopSocket } from "../logics/PhotoshopSocket.mts";
 import { photoshopPageStoreMap } from "../logics/ModelDefines.mts";

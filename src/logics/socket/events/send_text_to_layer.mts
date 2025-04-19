@@ -1,18 +1,8 @@
 import { constants } from "photoshop";
 import { findInAllSubLayer, getLayerID, parseDocumentIdentify } from "../../util.mts";
-import i18n from "../../../../../src/common/i18n.mts";
+import i18n from "../../../../../../src/common/i18n.mts";
 import { runNextModalState } from "../../modalStateWrapper.mjs";
-
-export interface sendTextActions {   
-    params: {
-        document_identify: string,
-        layer_identify: string,
-        text: string
-    },
-    result: {
-        success: boolean
-    }
-}
+import type { sendTextActions } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 
 export default async function sendText(params: sendTextActions['params']) {
     const documentIdentify = params.document_identify;

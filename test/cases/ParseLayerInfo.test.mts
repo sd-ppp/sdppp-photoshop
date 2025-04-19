@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 import { app, constants } from 'photoshop';
-import { makeDocumentIdentify } from '../../../src/common/photoshop/identify.mts';
+import { makeDocumentIdentify } from '../../../../src/common/photoshop/identify.mts';
 import { openPSD } from './util.mts';
-import { SpeicialIDManager } from '../../../src/common/photoshop/specialLayer.mts';
+import { SpeicialIDManager } from '../../../../src/common/photoshop/specialLayer.mts';
 import { runNextModalState } from '../../src/logics/modalStateWrapper.mts';
 import getLayerInfo from '../../src/logics/socket/events/get_layer_info.mts';
 

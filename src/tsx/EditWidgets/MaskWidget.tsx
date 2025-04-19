@@ -10,8 +10,8 @@ import QuickSetter from "./sub-widgets/QuickSetter";
 import { useSDPPPInternalContext } from '../../contexts/sdppp-internal';
 import { useSDPPPComfyCaller } from '../../entry.mts';
 import { useWorkflowRunHooks } from '../../hooks/WidgetTable.mts';
-import i18n from '../../../../src/common/i18n.mts';
-import { makeDocumentIdentify } from '../../../../src/common/photoshop/identify.mts';
+import i18n from '../../../../../src/common/i18n.mts';
+import { makeDocumentIdentify } from '../../../../../src/common/photoshop/identify.mts';
 
 export function MaskWidget(props: ImageWidgetProps) {
     const [layerIdentify, setLayerIdentify] = useState<string>('');

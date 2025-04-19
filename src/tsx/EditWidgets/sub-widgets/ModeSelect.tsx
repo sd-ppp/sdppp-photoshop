@@ -1,4 +1,4 @@
-import i18n from "../../../../../src/common/i18n.mts";
+import i18n from "../../../../../../src/common/i18n.mts";
 interface ModeSelectProps {
   mode: 'manual' | 'auto';
   setMode: (mode: 'manual' | 'auto') => void;

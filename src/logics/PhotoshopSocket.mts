@@ -1,11 +1,14 @@
-import { Socket, SocketConstructor, SocketMixin } from "../../../src/common/socket/Socket.mts";
-import { MainStoreHolderSocket } from "../../../src/common/socket/mixins/MainStoreHolder.mts";
-import { StoreMapHolderSocket } from "../../../src/common/socket/mixins/StoreMapHolder.mts";
-import { __GLOBAL_API_LEVEL__ } from "../../../src/common/version.mts";
-import { WorkflowCaller, WorkflowCallerSocket } from "../../../src/plugins/common/socket/WorkflowCaller.mts";
+import { Socket, SocketConstructor, SocketMixin } from "../../../../src/common/socket/Socket.mts";
+import { MainStoreHolderSocket } from "../../../../src/common/socket/mixins/MainStoreHolder.mts";
+import { StoreMapHolderSocket } from "../../../../src/common/socket/mixins/StoreMapHolder.mts";
+import { __GLOBAL_API_LEVEL__ } from "../../../../src/common/version.mts";
+// import { WorkflowCaller, WorkflowCallerSocket } 
 import { photoshopPageStoreMap, photoshopStore } from "./ModelDefines.mts";
-import { PhotoshopCallee, PhotoshopCalleeSocket } from "./socket/PhotoshopCallee.mts";
-import i18n from "../../../src/common/i18n.mts";
+import { PhotoshopCalleeSocket } from "./socket/PhotoshopCallee.mts";
+import i18n from "../../../../src/common/i18n.mts";
+import { WorkflowCallerSocket } from "../../../../src/socket/WorkflowCaller.mts";
+import { WorkflowCaller } from "../../../../src/socket/WorkflowCallerInterface.mjs";
+import { PhotoshopCallee } from "../../../../src/socket/PhotoshopCalleeInterface.mjs";
 
 export class PhotoshopSocket extends (SocketMixin(
     MainStoreHolderSocket(photoshopStore, 'photoshop'),

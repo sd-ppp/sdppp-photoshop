@@ -1,10 +1,10 @@
 import { assert } from 'chai';
 import { app, constants, imaging } from 'photoshop';
-import { makeDocumentIdentify, makeLayerIdentify } from '../../../src/common/photoshop/identify.mts';
+import { makeDocumentIdentify, makeLayerIdentify } from '../../../../src/common/photoshop/identify.mts';
 import { Document } from 'photoshop/dom/Document';
 import { Layer } from 'photoshop/dom/Layer';
 import { compareImageBlobAndPng, openPSD } from './util.mts';
-import { SpeicialIDManager } from '../../../src/common/photoshop/specialLayer.mts';
+import { SpeicialIDManager } from '../../../../src/common/photoshop/specialLayer.mts';
 import { runNextModalState } from '../../src/logics/modalStateWrapper.mts';
 import getImage from '../../src/logics/socket/events/get_image.mts';
 
@@ -28,8 +28,8 @@ describe('GetImage', async () => {
                 document_identify: SpeicialIDManager.get_SPECIAL_DOCUMENT_CURRENT(),
                 layer_identify: SpeicialIDManager.get_SPECIAL_LAYER_SELECTED_LAYER()
             })
-            assert(!!result.blob)
-            await compareImageBlobAndPng(result.blob, pngBuffer)
+            assert(!!result.pngData)
+            await compareImageBlobAndPng(result.pngData, pngBuffer)
         })
         it('32bitpsd', async () => {
             //@ts-ignore
@@ -107,8 +107,8 @@ describe('GetImage', async () => {
             };
 
             const result = await getImage(params);
-            assert.instanceOf(result.blob, Uint8Array);
-            await compareImageBlobAndPng(result.blob, pngBuffer)
+            assert.instanceOf(result.pngData, Uint8Array);
+            await compareImageBlobAndPng(result.pngData, pngBuffer)
         });
         it('should throw error when layer not found', async () => {
             const params = {
@@ -181,8 +181,8 @@ describe('GetImage', async () => {
 
             const result = await getImage(params);
 
-            assert.instanceOf(result.blob, Uint8Array);
-            await compareImageBlobAndPng(result.blob, pngBuffer)
+            assert.instanceOf(result.pngData, Uint8Array);
+            await compareImageBlobAndPng(result.pngData, pngBuffer)
         });
         it('can get background', async () => {
             //@ts-ignore
@@ -207,8 +207,8 @@ describe('GetImage', async () => {
 
             const result = await getImage(params);
 
-            assert.instanceOf(result.blob, Uint8Array);
-            await compareImageBlobAndPng(result.blob, pngBuffer)
+            assert.instanceOf(result.pngData, Uint8Array);
+            await compareImageBlobAndPng(result.pngData, pngBuffer)
         })
     });
     describe('edge case', ()=> {

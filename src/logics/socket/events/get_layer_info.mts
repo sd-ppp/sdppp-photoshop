@@ -1,21 +1,8 @@
 import type { Layer } from "photoshop/dom/Layer";
-import i18n from "../../../../../src/common/i18n.mts";
+import i18n from "../../../../../../src/common/i18n.mts";
 import { runNextModalState } from "../../modalStateWrapper.mjs";
 import { SDPPPBounds, SpeicialIDManager, getLayerID, getLayerInfoFromLayer, getRasterizedLayer, parseDocumentIdentify } from "../../util.mjs";
-
-export interface getLayerInfoActions {
-    params: {
-        document_identify: string,
-        layer_identify?: string
-    },
-    result: {
-        name: string,
-        opacity: number,
-        boundary: SDPPPBounds,
-        isGroup: boolean,
-        identify: string
-    }
-}
+import type { getLayerInfoActions } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 export default async function getLayerInfo(params: getLayerInfoActions['params']): Promise<getLayerInfoActions['result']> {
     const documentIdentify = params.document_identify
     let document = parseDocumentIdentify(documentIdentify);

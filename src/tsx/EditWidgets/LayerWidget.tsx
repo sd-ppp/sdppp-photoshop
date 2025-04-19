@@ -2,10 +2,10 @@ import React from "react";
 import { getSelectedLayerIdentify, SpeicialIDManager } from "../../logics/util.mts";
 import { photoshopStore } from "../../logics/ModelDefines.mts";
 import QuickSetter from "./sub-widgets/QuickSetter";
-import { PhotoshopStoreHelper } from "../../../../src/plugins/common/store/helpers.mts";
-import i18n from "../../../../src/common/i18n.mts";
-import { computeUIWeightCSS } from "../../../../src/common/tsx/util.mts";
-import { DropdownWidget } from "../../../../src/plugins/common/tsx/EditWidgets/DropdownWidget";
+import { PhotoshopStoreHelper } from "../../../../../src/store/helpers.mts";
+import i18n from "../../../../../src/common/i18n.mts";
+import { computeUIWeightCSS } from "../../../../../src/common/tsx/util";
+import { DropdownWidget } from "../../EditWidgets/DropdownWidget";
 
 interface LayerWidgetProps {
     onSelectUpdate: (identify: string, index: number) => void,

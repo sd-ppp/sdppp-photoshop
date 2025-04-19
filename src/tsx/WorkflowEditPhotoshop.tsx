@@ -6,15 +6,18 @@ import { useSDPPPInternalContext } from "../contexts/sdppp-internal"
 import { useSDPPPComfyCaller } from "../hooks/ComfyCaller.mts"
 import { useWidgetTable } from "../hooks/WidgetTable.mts"
 import { useCallback } from "react"
-import { SDPPPGraphForm } from "../../../src/common/types"
-import WorkflowEdit from "../../../src/plugins/common/tsx/WorkflowEdit"
-import i18n from "../../../src/common/i18n.mts"
+import { SDPPPGraphForm } from "../../../../src/types/sdppp"
+import WorkflowEdit from "../../../../src/common/WorkflowEdit"
+import i18n from "../../../../src/common/i18n.mts"
 import { useLivePainting } from "../hooks/livePainting.mts"
-import { useTraceUpdate } from "../../../src/common/tsx/util.mts"
+import { DropdownWidget } from "../EditWidgets/DropdownWidget.js";
+import { PrimitiveNumberWidget } from "../EditWidgets/PrimitiveNumberWidget.js";
+import { PrimitiveStringWidget } from "../EditWidgets/PrimitiveStringWidget.js";
+import { PrimitiveToggleWidget } from "../EditWidgets/PrimitiveToggleWidget.js";
 
 
 export function WorkflowEditPhotoshop() {
-    const { 
+    const {
         callForPSDExtract
     } = useSDPPPComfyCaller();
     const { workflowAgent } = useSDPPPInternalContext();
@@ -42,7 +45,7 @@ export function WorkflowEditPhotoshop() {
         widget: SDPPPGraphForm['widgets'][number],
         widgetIndex: number
     ) => {
-        
+
         if (widget.outputType == 'PS_DOCUMENT') {
             context.result.push(
                 <DocumentWidget
@@ -93,6 +96,59 @@ export function WorkflowEditPhotoshop() {
                 />
             );
             return true;
+        } else if (widget.outputType === 'number') {
+            const min = widget.options?.min ?? 0;
+            const max = widget.options?.max ?? 100;
+            const step = widget.options?.step ?? 1;
+
+            context.result.push(
+                <PrimitiveNumberWidget
+                    uiWeight={widget.uiWeight || 12}
+                    key={widgetIndex}
+                    inputMin={min}
+                    inputMax={max}
+                    inputStep={step}
+                    value={parseFloat(widget.value)}
+                    onValueChange={(v) => {
+                        onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
+                    }}
+                />)
+        } else if (widget.outputType === 'combo') {
+            context.result.push(
+                <DropdownWidget
+                    uiWeight={widget.uiWeight || 12}
+                    key={widgetIndex}
+                    options={widget.options?.values || []}
+                    onSelectUpdate={(v) => {
+                        onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
+                    }}
+                    value={widget.value}
+                />
+            )
+        } else if (widget.outputType === 'toggle') {
+            context.result.push(
+                <PrimitiveToggleWidget
+                    uiWeight={widget.uiWeight || 12}
+                    key={widgetIndex}
+                    name={widget.name}
+                    value={widget.value}
+                    onValueChange={(v) => {
+                        onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
+                    }}
+                />
+            )
+
+        } else {
+            context.result.push(
+                <PrimitiveStringWidget
+                    uiWeight={widget.uiWeight || 12}
+                    key={widgetIndex}
+                    value={typeof widget.value === 'string' ? widget.value : JSON.stringify(widget.value)}
+                    onValueChange={(v) => {
+                        onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
+                    }}
+                />
+            )
         }
         return false;
     }, [setWidgetValue]);

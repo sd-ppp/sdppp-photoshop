@@ -1,18 +1,13 @@
-import { imaging } from "photoshop";
+import { constants, imaging } from "photoshop";
 import type { Document } from "photoshop/dom/Document";
 import type { imaging as imagingType } from "photoshop/dom/ImagingModule";
 import type { Layer } from "photoshop/dom/Layer";
-import i18n from "../../../../../src/common/i18n.mts";
+import i18n from "../../../../../../src/common/i18n.mts";
 import { runNextModalState } from "../../modalStateWrapper.mjs";
 import { SDPPPBounds, SpeicialIDManager, getLayerID, getRasterizedLayer, parseDocumentIdentify, unTrimImageData } from '../../util.mjs';
 import { Jimp, JimpInstance, JimpMime } from "jimp";
 import type { Bounds } from "photoshop/dom/objects/Bounds";
-
-export interface PixelsAndSize<T> {
-    dataFromAPI: T,
-    width: number,
-    height: number
-}
+import type { getImageActions, PixelsAndSize } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 
 function applyLayerDataWithTransparent(pixelData: Uint8Array, maskData: Uint8Array | null): Uint8Array {
     for (let i = 0, length = pixelData.length / 4; i < length; i++) {
@@ -105,7 +100,9 @@ async function getPixelsData(document: Document, layer: Layer | null, bounds: an
         sourceBounds: bounds,
         // componentSize: 8, // Error Code -1 above PS 25.5 if psd in 16bit
         colorSpace: "RGB",
-        colorProfile: "sRGB IEC61966-2.1"
+    }
+    if (document.mode !== constants.DocumentMode.RGB) {
+        Object.assign(options, { colorProfile: 'sRGB IEC61966-2.1' });
     }
     if (layer) options.layerID = layer.id
     let pixels = await imaging.getPixels(options)
@@ -137,18 +134,6 @@ async function getMaskData(document: Document, layer: Layer | null, bounds: any)
         dataFromAPI,
         width: imageData.width,
         height: imageData.height,
-    }
-}
-
-export interface getImageActions {
-    params: {
-        document_identify: string,
-        layer_identify: string,
-        boundary?: SDPPPBounds,
-        max_wh?: number,
-    },
-    result: {
-        pngData: Uint8Array | null
     }
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useState, createContext, useContext, ReactNode, useCallback, useRef, useMemo } from "react";
-import i18n from "../../../src/common/i18n.mts";
+import i18n from "../../../../src/common/i18n.mts";
 
 const verifyInterval = 15000
 

@@ -1,18 +1,9 @@
 import { action, app, constants } from 'photoshop';
 import { storage } from 'uxp';
-import i18n from "../../../../../src/common/i18n.mts";
+import i18n from "../../../../../../src/common/i18n.mts";
 import { runNextModalState } from '../../modalStateWrapper.mjs';
 import { parseDocumentIdentify } from '../../util.mts';
-
-export interface PSDActions {
-    params: {
-        action: 'get' | 'extract'
-        document_identify: string,
-        data?: any,
-        fromSSID?: string
-    },
-    result: any
-}
+import type { PSDActions } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 
 let rejectExtractCount = 0;
 let lastExtract = 0;

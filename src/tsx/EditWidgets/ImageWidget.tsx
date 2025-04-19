@@ -9,9 +9,9 @@ import { useSDPPPComfyCaller } from '../../entry.mts';
 import { useWorkflowRunHooks } from '../../hooks/WidgetTable.mts';
 import { makeid, SpeicialIDManager } from '../../logics/util.mts';
 import { getSelectedLayerIdentify } from '../../logics/util.mts';
-import i18n from '../../../../src/common/i18n.mts';
+import i18n from '../../../../../src/common/i18n.mts';
 import getImage from '../../logics/socket/events/get_image.mts';
-import { makeDocumentIdentify } from '../../../../src/common/photoshop/identify.mts';
+import { makeDocumentIdentify } from '../../../../../src/common/photoshop/identify.mts';
 
 export interface ImageWidgetProps {
     onValueChange: (imageName: string) => Promise<void>,

@@ -1,16 +1,8 @@
 import { constants } from "photoshop";
 import { findInAllSubLayer, getLayerID, parseDocumentIdentify } from "../../util.mts";
-import i18n from "../../../../../src/common/i18n.mts";
+import i18n from "../../../../../../src/common/i18n.mts";
+import type { getTextActions } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 
-export interface getTextActions {   
-    params: {
-        document_identify: string,
-        layer_identify: string,
-    },
-    result: {
-        text: string
-    }
-}
 export default async function getText(params: getTextActions['params']) {
     const documentIdentify = params.document_identify
     let document = parseDocumentIdentify(documentIdentify);

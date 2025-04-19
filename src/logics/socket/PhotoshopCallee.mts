@@ -1,36 +1,20 @@
-import { Socket, SocketConstructor } from "../../../../src/common/socket/Socket.mts";
-import type { PhotoshopCallerActions } from "../../../../src/sdsystem/common/socket/PhotoshopCaller.mts";
-import getDocumentInfo, { getDocumentInfoActions } from "./events/get_document_info.mts";
-import getImage, { getImageActions } from "./events/get_image.mts";
-import getLayerInfo, { getLayerInfoActions } from "./events/get_layer_info.mjs";
-import getLayersInGroup, { LayerReducerActions } from "./events/get_layers_in_group.mjs";
+import { Socket, SocketConstructor } from "../../../../../src/common/socket/Socket.mts";
+import type { PhotoshopCalleeActions, PSDActions, getImageActions, sendImagesActions, getSelectionActions, getTextActions, sendTextActions, getLayerInfoActions, getDocumentInfoActions, LayerReducerActions } from "../../../../../src/socket/PhotoshopCalleeInterface.mts";
+import type { PhotoshopCallerActions } from "../../../../../src/socket/PhotoshopCallerInterface.mts";
+import getDocumentInfo from "./events/get_document_info.mts";
+import getImage from "./events/get_image.mts";
+import getLayerInfo from "./events/get_layer_info.mjs";
+import getLayersInGroup from "./events/get_layers_in_group.mjs";
 import getLinkedLayers from "./events/get_linked_layers.mjs";
-import getSelection, { getSelectionActions } from "./events/get_selection.mjs";
-import getText, { getTextActions } from "./events/get_text_from_layer.mjs";
-import PSD, { PSDActions } from "./events/psd.mjs";
-import sendImages, { sendImagesActions } from "./events/send_images.mjs";
-import sendText, { sendTextActions } from "./events/send_text_to_layer.mts";
+import getSelection from "./events/get_selection.mjs";
+import getText from "./events/get_text_from_layer.mjs";
+import PSD from "./events/psd.mjs";
+import sendImages from "./events/send_images.mjs";
+import sendText from "./events/send_text_to_layer.mts";
 
 interface PhotoshopCalleePayload {
     action: keyof PhotoshopCalleeActions;
     params: PhotoshopCalleeActions[keyof PhotoshopCalleeActions]['params'];
-}
-
-export interface PhotoshopCalleeActions {
-    psd: PSDActions;
-    getImage: getImageActions;
-    sendImages: sendImagesActions;
-    getSelection: getSelectionActions;
-    getText: getTextActions;
-    sendText: sendTextActions;
-    getLayerInfo: getLayerInfoActions;
-    getDocumentInfo: getDocumentInfoActions;
-    getLinkedLayers: LayerReducerActions;
-    getLayersInGroup: LayerReducerActions;
-}
-export interface PhotoshopCallee {
-    callForPSDExtract(sid: string, params: PhotoshopCallerActions['extractPSD']['params']): any;
-    uploadImage(sid: string, params: PhotoshopCallerActions['uploadImage']['params']): Promise<PhotoshopCallerActions['uploadImage']['result']>;
 }
 
 export function PhotoshopCalleeSocket(SocketClass: SocketConstructor<Socket>) {

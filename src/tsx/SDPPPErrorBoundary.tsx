@@ -1,5 +1,5 @@
 import React from "react";
-import i18n from "../../../src/common/i18n.mts";
+import i18n from "../../../../src/common/i18n.mts";
 
 export default class SDPPPErrorBoundary extends React.Component<{
     children: any

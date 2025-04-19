@@ -1,5 +1,5 @@
-import WorkflowEdit from "../../../src/plugins/common/tsx/WorkflowEdit";
-import { SDPPPGraphForm } from "../../../src/common/types";
+import WorkflowEdit from "../../../../src/common/WorkflowEdit";
+import { SDPPPGraphForm } from "../../../../src/types/sdppp";
 import { createRoot } from "react-dom/client";
 import { useState } from "react";
 

@@ -1,22 +1,10 @@
 import { constants } from "photoshop";
 import { SDPPPBounds, SpeicialIDManager, findInAllSubLayer, getLayerID, parseDocumentIdentify } from "../../util.mjs";
 import { Layer } from "photoshop/dom/Layer";
-import getLayerInfo, { getLayerInfoActions } from "./get_layer_info.mjs";
-import i18n from "../../../../../src/common/i18n.mts";
-import { makeLayerIdentify } from "../../../../../src/common/photoshop/identify.mts";
-
-export interface LayerReducerActions {
-    params: {
-        document_identify: string,
-        layer_identifies: string[],
-        select: string
-    },
-    result: {
-        layer_identifies: string[],
-        layer_boundaries: SDPPPBounds[],
-        layer_infos: getLayerInfoActions['result'][]
-    }
-}
+import getLayerInfo from "./get_layer_info.mjs";
+import i18n from "../../../../../../src/common/i18n.mts";
+import { makeLayerIdentify } from "../../../../../../src/common/photoshop/identify.mts";
+import type { LayerReducerActions } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 
 export async function LayerReducer(
     params: LayerReducerActions['params'],
