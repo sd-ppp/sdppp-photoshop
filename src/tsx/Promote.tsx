@@ -37,6 +37,7 @@ function CloudPromote() {
         <span className="cloud-promote-bar-left">推荐云端：</span>
         <span className="cloud-promote-bar-right">
             <span
+                style={{ borderColor: 'black' }}
                 onClick={() => {
                     shell.openExternal('https://cephalon.cloud/share/register-landing?invite_id=m95SDj');
                 }}
