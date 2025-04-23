@@ -14,9 +14,6 @@ export interface SDPPPInternalContextType {
     connectState: 'connected' | 'disconnected' | 'connecting',
     doConnectOrDisconnect: () => void,
 
-    lastOpenedWorkflow: string,
-    setLastOpenedWorkflow: (lastOpenedWorkflow: SDPPPInternalContextType['lastOpenedWorkflow']) => void,
-
     lastErrorMessage: string,
     setLastErrorMessage: (lastErrorMessage: SDPPPInternalContextType['lastErrorMessage']) => void,
 
@@ -44,7 +41,6 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
         setSrc,
         webviewAgentSID,
         prevWebviewAgentSID,
-        resetWebview,
     } = useSDPPPWebview();
 
     const [connectState, setConnectState] = useState<SDPPPInternalContextType['connectState']>('disconnected');
@@ -144,8 +140,6 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
         }
     }, [workflowAgentSID]);
 
-    // TODO remove in 1.8.0, store it in comfy side
-    const [lastOpenedWorkflow, setLastOpenedWorkflow] = useState<string>("");
     return <SDPPPInternalContext.Provider value={{
         socket,
 
@@ -153,8 +147,6 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
         setBackendURL,
         connectState,
         doConnectOrDisconnect,
-        lastOpenedWorkflow,
-        setLastOpenedWorkflow,
 
         lastErrorMessage,
         setLastErrorMessage,

@@ -197,8 +197,8 @@ export function SDPPPLoginProvider({
                     if (result) {
                         setIsLogin(true)
                     }
-                })
-        } else {
+                }) 
+        } else if (loginAppID) { 
             const interval = setInterval(() => {
                 const usertoken = localStorage.getItem('token')
                 if (!usertoken) return;

@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
-import { useStore } from "../../../../src/common/store/store-hooks.mts";
-import { SDPPPGraphForm } from "../../../../src/types/sdppp";
 
 export function useWidgetTable() {
     const {
@@ -9,30 +7,8 @@ export function useWidgetTable() {
         socket
     } = useSDPPPInternalContext();
 
-    const [form, setForm] = useState<SDPPPGraphForm[]>([]);
-    const [localForm, setLocalForm] = useState<SDPPPGraphForm[]>([]);
-
-    useEffect(() => {
-        if (isDiffFromRemote(localForm, form)) {
-            setLocalForm(form);
-        }
-    }, [form]);
-
-    const { state } = useStore(workflowAgent, '/currentForm');
-    useEffect(() => {
-        state?.currentForm && setForm(state.currentForm);
-    }, [state]);
-
     const setWidgetValue = useCallback(async (nodeID: number, widgetIndex: number, value: any) => {
         if (!workflowAgent) { throw new Error('workflowAgent not found'); }
-        for (let i = 0; i < localForm.length; i++) {
-            if (localForm[i].id === nodeID) {
-                localForm[i].widgets[widgetIndex].value = value;
-                storeWidgetValue(localForm[i].title, widgetIndex, value, localForm[i].widgets[widgetIndex].outputType);
-                break;
-            }
-        }
-        setLocalForm([...localForm]);
         await socket?.setWidgetValue(workflowAgent, {
             values: [{
                 nodeID,
@@ -40,10 +16,15 @@ export function useWidgetTable() {
                 value
             }]
         });
-    }, [workflowAgent, socket, localForm]);
+        const widgetTableID = workflowAgent.data.widgetTableStructure.widgetTableID;
+        const widgetTablePath = workflowAgent.data.widgetTableStructure.widgetTablePath;
+        const widgetTablePersisted = workflowAgent.data.widgetTableStructure.widgetTablePersisted;
+        const widgetTableKey = `${widgetTableID}_${widgetTablePath}_${widgetTablePersisted}`;
+        const outputType = workflowAgent.data.widgetTableStructure.nodes[nodeID].widgets[widgetIndex].outputType;
+        storeWidgetValue(widgetTableKey, nodeID, widgetIndex, value, outputType);
+    }, [workflowAgent, socket]);
 
     return {
-        form: localForm,
         setWidgetValue
     }
 }
@@ -79,28 +60,14 @@ export function useWorkflowRunHooks() {
         triggerBeforeWorkflowRun,
     }
 }
-function isDiffFromRemote(localForm: SDPPPGraphForm[], remoteForm: SDPPPGraphForm[] = []) {
-    if (localForm.length !== remoteForm.length) {
-        // console.log('found diff: length', localForm.length, remoteForm.length)
-        return true;
-    }
-    for (let i = 0; i < localForm.length; i++) {
-        if (localForm[i].id !== remoteForm[i].id) {
-            // console.log('found diff: id', i, localForm[i].id, remoteForm[i].id)
-            return true;
-        }
-        for (let j = 0; j < localForm[i].widgets.length; j++) {
-            if (localForm[i].widgets[j].value !== remoteForm[i].widgets[j].value) {
-                // console.log('found diff: widget value', i, j, localForm[i].widgets[j].value, remoteForm[i].widgets[j].value)
-                return true;
-            }
-        }
-    }
-    return false;
-}
-function storeWidgetValue(title: string, widgetIndex: number, value: any, outputType: string) {
-    localStorage.setItem(`widgetValue_${title}_${widgetIndex}`, JSON.stringify({
+
+function storeWidgetValue(widgetTableKey: string, nodeID: number, widgetIndex: number, value: any, outputType: string) {
+    const data = localStorage.getItem(`widgetValue_${widgetTableKey}`);
+    const dataObj = data ? JSON.parse(data) : {};
+    dataObj[nodeID] = dataObj[nodeID] || [];
+    dataObj[nodeID][widgetIndex] = {
         value,
         outputType
-    }))
+    }
+    localStorage.setItem(`widgetValue_${widgetTableKey}`, JSON.stringify(dataObj));
 }

@@ -28,6 +28,7 @@ export const config = {
         {
             name: 'license-and-obfuscate',
             setup(build: any) {
+                if (!isProduction) return;
                 build.onEnd((result: any) => {
                     // 读取LICENSE文件
                     const licensePath = join(projectRoot, 'LICENSE');
@@ -56,7 +57,6 @@ ${licenseContent}*/
     ],
     sourcemap: false,
     minify: isProduction,
-    write: false,
     loader: {
         '.psd': 'binary',
         '.png': 'binary'

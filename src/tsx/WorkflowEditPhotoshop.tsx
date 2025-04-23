@@ -6,7 +6,6 @@ import { useSDPPPInternalContext } from "../contexts/sdppp-internal"
 import { useSDPPPComfyCaller } from "../hooks/ComfyCaller.mts"
 import { useWidgetTable } from "../hooks/WidgetTable.mts"
 import { useCallback } from "react"
-import { SDPPPGraphForm } from "../../../../src/types/sdppp"
 import WorkflowEdit from "../../../../src/common/WorkflowEdit"
 import i18n from "../../../../src/common/i18n.mts"
 import { useLivePainting } from "../hooks/livePainting.mts"
@@ -14,7 +13,9 @@ import { DropdownWidget } from "../EditWidgets/DropdownWidget.js";
 import { PrimitiveNumberWidget } from "../EditWidgets/PrimitiveNumberWidget.js";
 import { PrimitiveStringWidget } from "../EditWidgets/PrimitiveStringWidget.js";
 import { PrimitiveToggleWidget } from "../EditWidgets/PrimitiveToggleWidget.js";
-
+import { WidgetTableStructureNode } from "../../../../src/types/sdppp/index.js"
+import { useStore } from "../../../../src/common/store/store-hooks.mjs"
+import { simplifyWorkflowPath } from "../../../../src/common/string-util.mts"
 
 export function WorkflowEditPhotoshop() {
     const {
@@ -22,27 +23,32 @@ export function WorkflowEditPhotoshop() {
     } = useSDPPPComfyCaller();
     const { workflowAgent } = useSDPPPInternalContext();
     const {
-        form: widgetTableForm,
         setWidgetValue
     } = useWidgetTable();
     const {
         setShouldTriggerLivePainting
     } = useLivePainting();
+    const {
+        state
+    } = useStore(workflowAgent, ['/widgetTableValue', '/widgetTableStructure', '/widgetTableErrors']);
 
     const hasSamplePSD = !!workflowAgent?.data.hasPSDNodes;
 
-    const onWidgetChange = useCallback(async (nodeid: number, widgetIndex: number, value: any, originNodeData: SDPPPGraphForm) => {
+    const onWidgetChange = useCallback(async (nodeid: number, widgetIndex: number, value: any, originNodeData: WidgetTableStructureNode) => {
         await setWidgetValue(nodeid, widgetIndex, value);
         setShouldTriggerLivePainting(true);
     }, [setWidgetValue, setShouldTriggerLivePainting]);
 
+    const widgetTableStructure = state?.widgetTableStructure;
+    const widgetTableValue = state?.widgetTableValue;
+    const widgetTableErrors = state?.widgetTableErrors;
     const onWidgetRender = useCallback((
         context: {
             keepRender: boolean,
             result: any[]
         },
-        fieldInfo: SDPPPGraphForm,
-        widget: SDPPPGraphForm['widgets'][number],
+        fieldInfo: WidgetTableStructureNode,
+        widget: WidgetTableStructureNode['widgets'][number],
         widgetIndex: number
     ) => {
 
@@ -50,7 +56,7 @@ export function WorkflowEditPhotoshop() {
             context.result.push(
                 <DocumentWidget
                     uiWeight={widget.uiWeight || 12}
-                    value={widget.value}
+                    value={widgetTableValue?.[fieldInfo.id]?.[widgetIndex] || ''}
                     onSelectUpdate={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
@@ -60,11 +66,11 @@ export function WorkflowEditPhotoshop() {
             return true;
         } else if (widget.outputType == 'PS_LAYER') {
             const documentNodeID = widget.options?.documentNodeID || 0;
-            const documentValue = widgetTableForm?.find(form => form.id == documentNodeID)?.widgets[0]?.value || '';
+            const documentValue = widgetTableValue?.[documentNodeID]?.[0] || '';
             context.result.push(
                 <LayerWidget
                     uiWeight={widget.uiWeight || 12}
-                    value={widget.value}
+                    value={widgetTableValue?.[fieldInfo.id]?.[widgetIndex] || ''}
                     documentValue={documentValue ? documentValue.split('/').pop() : ''}
                     onSelectUpdate={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
@@ -76,7 +82,7 @@ export function WorkflowEditPhotoshop() {
             context.result.push(
                 <ImageWidget
                     uiWeight={widget.uiWeight || 12}
-                    value={widget.value}
+                    value={widgetTableValue?.[fieldInfo.id]?.[widgetIndex] || ''}
                     key={widgetIndex}
                     onValueChange={async (v) => {
                         await onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
@@ -88,7 +94,7 @@ export function WorkflowEditPhotoshop() {
             context.result.push(
                 <MaskWidget
                     uiWeight={widget.uiWeight || 12}
-                    value={widget.value}
+                    value={widgetTableValue?.[fieldInfo.id]?.[widgetIndex] || ''}
                     key={widgetIndex}
                     onValueChange={async (v) => {
                         await onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
@@ -108,7 +114,7 @@ export function WorkflowEditPhotoshop() {
                     inputMin={min}
                     inputMax={max}
                     inputStep={step}
-                    value={parseFloat(widget.value)}
+                    value={parseFloat(widgetTableValue?.[fieldInfo.id]?.[widgetIndex] || '0')}
                     onValueChange={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
@@ -122,7 +128,7 @@ export function WorkflowEditPhotoshop() {
                     onSelectUpdate={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
-                    value={widget.value}
+                    value={widgetTableValue?.[fieldInfo.id]?.[widgetIndex] || ''}
                 />
             )
         } else if (widget.outputType === 'toggle') {
@@ -131,7 +137,7 @@ export function WorkflowEditPhotoshop() {
                     uiWeight={widget.uiWeight || 12}
                     key={widgetIndex}
                     name={widget.name}
-                    value={widget.value}
+                    value={widgetTableValue?.[fieldInfo.id]?.[widgetIndex] || ''}
                     onValueChange={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
@@ -139,11 +145,12 @@ export function WorkflowEditPhotoshop() {
             )
 
         } else {
-            context.result.push(
+            const value = widgetTableValue?.[fieldInfo.id]?.[widgetIndex] || '';
+            context.result.push( 
                 <PrimitiveStringWidget
                     uiWeight={widget.uiWeight || 12}
                     key={widgetIndex}
-                    value={typeof widget.value === 'string' ? widget.value : JSON.stringify(widget.value)}
+                    value={typeof value === 'string' ? value : JSON.stringify(value)}
                     onValueChange={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
@@ -151,22 +158,24 @@ export function WorkflowEditPhotoshop() {
             )
         }
         return false;
-    }, [setWidgetValue]);
+    }, [setWidgetValue, widgetTableValue]);
 
-    if (!widgetTableForm) {
+    if (!widgetTableStructure) {
         return null;
     }
-    return (
+    return ( 
         <div className="workflow-edit">
             <div className="workflow-edit-title">
-                {workflowAgent?.data.lastOpenedWorkflow && <sp-label style={{ fontWeight: 'bold' }}>{workflowAgent?.data.lastOpenedWorkflow}</sp-label>}
+                {widgetTableStructure.widgetTablePath && <sp-label style={{ fontWeight: 'bold' }}>{simplifyWorkflowPath(widgetTableStructure.widgetTablePath)}</sp-label>}
                 {hasSamplePSD ? <a onClick={() => { callForPSDExtract(workflowAgent?.data.sid || '') }}>{'>' + i18n('sample .psd')}</a> : ''}
             </div>
             <WorkflowEdit
-                formDatas={widgetTableForm}
+                widgetTableStructure={widgetTableStructure}
+                widgetTableValue={widgetTableValue || {}}
+                widgetTableErrors={widgetTableErrors || {}}
                 onWidgetChange={onWidgetChange}
                 onWidgetRender={onWidgetRender}
             />
         </div>
-    );
+    ); 
 }

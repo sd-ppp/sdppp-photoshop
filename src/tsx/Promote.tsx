@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { getI18nLocale } from "../../../src/common/i18n.mts";
-import { useStore } from "../../../src/common/store/store-hooks.mts";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
 import { photoshopStore } from "../logics/ModelDefines.mts";
 import { ComfyMultiUserLogin } from "./ComfyMultiUserLogin";
 import { useSDPPPWebview } from "../contexts/webview";
 import { shell } from "uxp";
+import { useStore } from "../../../../src/common/store/store-hooks.mts";
+import { getI18nLocale } from "../../../../src/common/i18n.mts";
 
 export function Promote() {
     const { state: photoshopStoreData } = useStore(photoshopStore, ['/uname', '/comfyUser'])

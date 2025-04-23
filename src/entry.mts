@@ -3,7 +3,6 @@ import 'sdppp-test/photoshop'
 
 import { AddressBar } from './tsx/AddressBar.tsx';
 import { WorkflowEditPhotoshop } from './tsx/WorkflowEditPhotoshop.tsx';
-import { Promote } from './tsx/Promote.tsx';
 
 export {
     SDPPPProvider,

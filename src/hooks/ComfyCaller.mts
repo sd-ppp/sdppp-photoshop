@@ -52,10 +52,13 @@ export function useSDPPPComfyCaller(): {
 
     const reopenWorkflow = useCallback(async (workflowAgentSID: string) => {
         const workflowAgent = photoshopPageStoreMap.getStore(workflowAgentSID);
-        if (!workflowAgent || !workflowAgent.data.lastOpenedWorkflow) {
-            throw new Error('lastOpenedWorkflow not found');
+        if (!workflowAgent || !workflowAgent.data.widgetTableStructure.widgetTablePath) {
+            throw new Error('workflow not found');
         }
-        await openWorkflow(workflowAgentSID, workflowAgent.data.lastOpenedWorkflow, true);
+        if (!workflowAgent.data.widgetTableStructure.widgetTablePersisted) {
+            throw new Error('workflow is not savable');
+        }
+        await openWorkflow(workflowAgentSID, workflowAgent.data.widgetTableStructure.widgetTablePath, true);
     }, [openWorkflow]);
 
     const pageInstanceRun = useCallback((sid: string, size: number = 1) => {
@@ -67,11 +70,11 @@ export function useSDPPPComfyCaller(): {
         if (!workflowAgent) {
             throw new Error('workflowAgent not found');
         }
-        if (!workflowAgent.data.lastOpenedWorkflow) {
-            throw new Error('lastOpenedWorkflow not found');
+        if (!workflowAgent.data.widgetTableStructure.widgetTablePath) {
+            throw new Error('workflow not found');
         }
         await socket?.saveWorkflow(workflowAgent, {
-            workflow_path: workflowAgent.data.lastOpenedWorkflow,
+            workflow_path: workflowAgent.data.widgetTableStructure.widgetTablePath,
             from_sid: photoshopStore.data.sid
         });
     }, [socket]);
