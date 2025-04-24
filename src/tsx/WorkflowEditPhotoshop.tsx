@@ -111,6 +111,7 @@ export function WorkflowEditPhotoshop() {
                 <PrimitiveNumberWidget
                     uiWeight={widget.uiWeight || 12}
                     key={widgetIndex}
+                    name={widget.name}
                     inputMin={min}
                     inputMax={max}
                     inputStep={step}
@@ -124,6 +125,7 @@ export function WorkflowEditPhotoshop() {
                 <DropdownWidget
                     uiWeight={widget.uiWeight || 12}
                     key={widgetIndex}
+                    name={widget.name}
                     options={widget.options?.values || []}
                     onSelectUpdate={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);

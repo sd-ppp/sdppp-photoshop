@@ -6,7 +6,8 @@ interface PrimitiveNumberWidgetProps {
     inputMax: number,
     inputStep: number
     value?: number,
-    onValueChange: (value: number) => void
+    onValueChange: (value: number) => void,
+    name?: string
 }
 
 export class PrimitiveNumberWidget extends BaseFormWidget<PrimitiveNumberWidgetProps, {}> {
@@ -18,41 +19,19 @@ export class PrimitiveNumberWidget extends BaseFormWidget<PrimitiveNumberWidgetP
 
     render() {
         const value = +(this.props.value || 0).toFixed(3)
-        // 检查步长范围是否过大
-        // let isStepRangeTooBig = ((this.props.inputMax - this.props.inputMin) / this.props.inputStep) > 1000;
-        // if (!isStepRangeTooBig && this.props.uiWeight >= 1) {
-        //     return (
-        //         <>
-        //             <sp-slider
-        //                 style={{
-        //                     ...this.computeUIWeightCSS(this.props.uiWeight * 0.6)
-        //                 }}
-        //                 min={this.props.inputMin}
-        //                 max={this.props.inputMax}
-        //                 step={this.props.inputStep}
-        //                 value={value}
-        //                 onInput={this.onInput}
-        //                 show-value="false"
-        //                 class="sdppp-slider"
-        //             >
-        //             </sp-slider>
-        //             <sp-textfield
-        //                 style={{
-        //                     ...this.computeUIWeightCSS(this.props.uiWeight * 0.4)
-        //                 }}
-        //                 onInput={this.onInput}
-        //                 value={value}
-        //             />
-        //         </>
-        //     );
-        // } else {
-            return <sp-textfield
-                style={{
-                    ...this.computeUIWeightCSS(this.props.uiWeight)
-                }}
-                onInput={this.onInput}
-                value={value}
-            />
-        // }
+
+        return (
+            <div style={{
+                ...this.computeUIWeightCSS(this.props.uiWeight),
+                display: 'flex', alignItems: 'center'
+            }}>
+                {this.props.name && <sp-label style={{ flex: 1 }}>{this.props.name}</sp-label>}
+                <sp-textfield
+                    style={{ flex: 2 }}
+                    onInput={this.onInput}
+                    value={value}
+                />
+            </div>
+        );
     }
 } 
