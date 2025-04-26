@@ -170,9 +170,9 @@ export default async function sendImages(params: sendImagesActions['params']) {
                 if (targetLayerOrGroup && targetLayerOrGroup.kind != constants.LayerKind.GROUP) {
                     return targetLayerOrGroup
                 } else {
-                    let sendLayerPrefix = '';
+                    let sendLayerPrefix = params.new_layer_name || 'SDPPP Images';
                     if (typeof sdpppX.handleSendLayerName == 'function') {
-                        sendLayerPrefix = await sdpppX.handleSendLayerName(params.new_layer_name || 'SDPPP Images')
+                        sendLayerPrefix = await sdpppX.handleSendLayerName(sendLayerPrefix)
                     }
                     const newLayer = await document.createLayer(constants.LayerKind.NORMAL, {
                         name: `${sendLayerPrefix} ${sentCount}${jimps.length > 1 ? `_${index + 1}` : ''}`,

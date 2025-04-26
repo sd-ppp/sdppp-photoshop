@@ -204,8 +204,8 @@ function createHiddenWebview() {
   if (!webviewContainer) {
     webviewContainer = document.createElement('div')
     webviewContainer.style.position = 'absolute';
-    webviewContainer.style.width = '1px'
-    webviewContainer.style.height = '1px'
+    webviewContainer.style.width = '100px'
+    webviewContainer.style.height = '100px'
     webviewContainer.style.right = '0'
     webviewContainer.style.bottom = '-10000px'
     document.body.appendChild(webviewContainer)
