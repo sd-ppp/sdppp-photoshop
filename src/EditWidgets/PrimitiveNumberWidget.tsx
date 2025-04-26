@@ -27,7 +27,7 @@ export class PrimitiveNumberWidget extends BaseFormWidget<PrimitiveNumberWidgetP
             }}>
                 {this.props.name && <sp-label style={{ flex: 1 }}>{this.props.name}</sp-label>}
                 <sp-textfield
-                    style={{ flex: 2 }}
+                    style={this.props.name ? { flex: 2 } : { width: '100%' }}
                     onInput={this.onInput}
                     value={value}
                 />

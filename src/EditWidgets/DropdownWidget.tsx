@@ -39,9 +39,7 @@ export class DropdownWidget extends BaseFormWidget<DropdownWidgetProps, Dropdown
                 <sp-picker
                     class="sdppp-dropdown-widget"
                     size="s"
-                    style={{
-                        flex: 2
-                    }}
+                    style={this.props.name ? { flex: 2 } : { width: '100%' }}
                 >
                     <sp-menu slot="options">
                         {options.map((id, index) => {
