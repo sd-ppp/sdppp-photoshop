@@ -3,6 +3,7 @@ import { useSDPPPExternalContext } from "../contexts/sdppp-external";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 import { useWorkflowRunHooks } from "./WidgetTable.mts";
+import { action } from "photoshop";
 
 export function useSDPPPComfyCaller(): {
     openWorkflow: (workflowAgentSID: string, workflow_path: string, reset: boolean) => Promise<void>;
@@ -101,16 +102,39 @@ export function useSDPPPComfyCaller(): {
         })
     }, [socket]);
 
-    const runPage = useCallback(async (agentSID?: string, size: number = 1) => {
+
+    (globalThis as any)['sdppp_action_run'] = async (arg: any, { workflowPath }: { workflowPath?: string }) => {
+        if (workflowPath) {
+            await runWorkflow(workflowPath);
+        } else {
+            await runPage();
+        }
+    };
+
+    const _runPage = useCallback(async (agentSID?: string, size: number = 1) => {
         if (!agentSID && !workflowAgentSID) return;
         await triggerBeforeWorkflowRun();
         await pageInstanceRun(agentSID || workflowAgentSID, size);
     }, [pageInstanceRun, workflowAgentSID, triggerBeforeWorkflowRun]);
 
+    const runPage = useCallback(async (agentSID?: string, size: number = 1) => {
+        await _runPage(agentSID || workflowAgentSID, size);
+        // @ts-ignore
+        action.recordAction?.({
+            "name": "sdppp_run",
+            "methodName": "sdppp_action_run"
+        }, {})
+    }, [_runPage]);
+
     const runWorkflow = useCallback(async (workflowPath: string, agentSID?: string, size: number = 1) => {
         if (!agentSID && !workflowAgentSID) return;
         await openWorkflow(agentSID || workflowAgentSID, workflowPath);
-        await runPage(agentSID || workflowAgentSID, size);
+        await _runPage(agentSID || workflowAgentSID, size);
+        // @ts-ignore
+        action.recordAction?.({
+            "name": "sdppp_run_" + workflowPath,
+            "methodName": "sdppp_action_run"
+        }, { workflowPath })
     }, [openWorkflow, runPage, workflowAgentSID]);
 
     const interrupt = useCallback(async () => {

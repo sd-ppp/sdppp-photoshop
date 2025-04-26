@@ -1,5 +1,5 @@
 import { Socket, SocketConstructor } from "../../../../../src/common/socket/Socket.mts";
-import type { PhotoshopCalleeActions, PSDActions, getImageActions, sendImagesActions, getSelectionActions, getTextActions, sendTextActions, getLayerInfoActions, getDocumentInfoActions, LayerReducerActions } from "../../../../../src/socket/PhotoshopCalleeInterface.mts";
+import type { PhotoshopCalleeActions, PSDActions, getImageActions, sendImagesActions, getSelectionActions, getTextActions, sendTextActions, getLayerInfoActions, getDocumentInfoActions, LayerReducerActions, RunPhotoshopActionActions } from "../../../../../src/socket/PhotoshopCalleeInterface.mts";
 import type { PhotoshopCallerActions } from "../../../../../src/socket/PhotoshopCallerInterface.mts";
 import getDocumentInfo from "./events/get_document_info.mts";
 import getImage from "./events/get_image.mts";
@@ -9,6 +9,7 @@ import getLinkedLayers from "./events/get_linked_layers.mjs";
 import getSelection from "./events/get_selection.mjs";
 import getText from "./events/get_text_from_layer.mjs";
 import PSD from "./events/psd.mjs";
+import runPhotoshopAction from "./events/run_photoshop_action.mts";
 import sendImages from "./events/send_images.mjs";
 import sendText from "./events/send_text_to_layer.mts";
 
@@ -48,6 +49,8 @@ export function PhotoshopCalleeSocket(SocketClass: SocketConstructor<Socket>) {
                         res = await getLinkedLayers(params as LayerReducerActions['params']);
                     } else if (action === 'getLayersInGroup') {
                         res = await getLayersInGroup(params as LayerReducerActions['params']);
+                    } else if (action === 'runPhotoshopAction') {
+                        res = await runPhotoshopAction(params as RunPhotoshopActionActions['params']);
                     }
                     const end = Date.now();
                     console.log('B_photoshop end', action, end - start);
