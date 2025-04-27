@@ -76,7 +76,9 @@ export function ImageWidget(props: ImageWidgetProps) {
 
     let imageUrl = previewBase64;
     if (!imageUrl && (uploadedImageName || props.value)) {
-        imageUrl = backendURL + `/api/view?filename=${uploadedImageName || props.value}&type=input&subfolder=&rand=` + Math.random()
+        const filename = uploadedImageName || props.value;
+        const subfolder = filename.split('/').slice(0, -1).join('/');
+        imageUrl = backendURL + (backendURL.endsWith('/') ? '' : '/') + `api/view?filename=${filename}&type=input&subfolder=${subfolder}&rand=` + Math.random()
     }
 
     const onSelectUpdate = useCallback(async (layerIdentify: string) => {
