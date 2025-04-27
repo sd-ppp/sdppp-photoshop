@@ -80,10 +80,6 @@ export default async function sendImages(params: sendImagesActions['params']) {
 
     // make document
     let incomingDocument = parseDocumentIdentify(documentIdentify);
-    // should add unittest
-    if (SpeicialIDManager.is_SPECIAL_DOCUMENT_CURRENT(documentIdentify)) {
-        incomingDocument = await getActiveDocumentOrCreate(jimps[0].bitmap.width, jimps[0].bitmap.height)
-    }
 
     if (SpeicialIDManager.is_SPECIAL_LAYER_PREVIEW_DOCUMENT(documentIdentify)) {
         incomingDocument = await getPreviewDocumentOrCreate(jimps[0].bitmap.width, jimps[0].bitmap.height)
