@@ -32,7 +32,7 @@ export function Promote() {
 }
 
 function CloudPromote() {
-    if (getI18nLocale() !== 'zh-CN') return null;
+    if (getI18nLocale() !== 'zhcn') return null;
     return <div className="cloud-promote-bar">
         <span className="cloud-promote-bar-left">推荐云端：</span>
         <span className="cloud-promote-bar-right">

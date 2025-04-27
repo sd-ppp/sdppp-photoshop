@@ -1,5 +1,5 @@
 import { app } from "photoshop";
-import { photoshopPageStoreMap, photoshopStore } from "../../photoshop-internal/src/logics/ModelDefines.mts";
+import { photoshopPageStoreMap, photoshopStore } from "../src/logics/ModelDefines.mts";
 import { sdpppX } from "../../src/common/sdpppX.mts";
 
 (globalThis as any).sdppp_debugPhotoshopStore = photoshopStore;

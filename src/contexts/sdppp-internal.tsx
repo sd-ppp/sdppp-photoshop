@@ -77,8 +77,8 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
             if (socket) {
                 socket.close()
                 setSocket(null);
-                setConnectState('disconnected');
             }
+            setConnectState('disconnected');
 
         } else {
             try {
