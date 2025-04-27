@@ -12,24 +12,6 @@ import type { PhotoshopDataDocument } from "../../../src/plugins/common/store/ph
 })().catch(console.error)
 
 
-function notifyCanvasStateChange() {
-    const historyStates = app.activeDocument?.historyStates;
-    historyStates && photoshopStore.setCanvasStateID(historyStates[historyStates.length - 1].id)
-}
-function notifySelectionStateChange() {
-    const historyStates = app.activeDocument?.historyStates;
-    historyStates && photoshopStore.setSelectionStateID(historyStates[historyStates.length - 1].id)
-}
-function notifyHistoryStateChange() {
-    const historyStates = app.activeDocument?.historyStates;
-    historyStates && photoshopStore.setHistoryStateID(historyStates[historyStates.length - 1].id)
-}
-
-action.addNotificationListener(['set'], (name, args) => {
-    if (args._target[0]._property == 'selection') {
-        notifySelectionStateChange();
-    }
-})
 action.addNotificationListener(['historyStateChanged'], (args: any) => {
     notifyHistoryStateChange()
     if (
@@ -67,20 +49,47 @@ action.addNotificationListener(['newDocument', 'open', 'close', 'make', 'modalJa
     fetchDocuments
 )
 
-// 发到非当前文档会触发这个, 所以只能每帧检测s
+// 发到非当前文档会触发这个, 所以只能每帧检测activeDocument and activeLayer
 // action.addNotificationListener(['select'], (name, args) => {
 //     if (args._target[0]._ref == 'document') {
 //         notifyCanvasStateChange()
 //         notifySelectionStateChange()
 //     }
 // })
+function notifyCanvasStateChange() {
+    const historyStates = app.activeDocument?.historyStates;
+    historyStates && photoshopStore.setCanvasStateID(historyStates[historyStates.length - 1].id)
+}
+function notifyHistoryStateChange() {
+    const historyStates = app.activeDocument?.historyStates;
+    historyStates && photoshopStore.setHistoryStateID(historyStates[historyStates.length - 1].id)
+}
+function notifySelectionStateChange() {
+    photoshopStore.setSelectionStateID(selectionAreaID + '_' + lastCurrentDocumentID + '_' + lastCurrentLayerID)
+}
 let lastCurrentDocumentID = app.activeDocument?.id;
-function checkCurrentDocument() {
-    if (lastCurrentDocumentID != app.activeDocument?.id) {
-        notifyCanvasStateChange()
-        notifySelectionStateChange()
+let lastCurrentLayerID = app.activeDocument?.activeLayers.map(layer => layer.id).join(',');
+let selectionAreaID = 0
+action.addNotificationListener(['set'], (name, args) => {
+    if (args._target[0]._property == 'selection') {
+        selectionAreaID++;
+        notifySelectionStateChange();
     }
-    lastCurrentDocumentID = app.activeDocument?.id
+})
+function checkCurrentDocument() {
+    const activeLayers = app.activeDocument?.activeLayers.map(layer => layer.id).join(',');
+    if (
+        lastCurrentDocumentID != app.activeDocument?.id ||
+        lastCurrentLayerID != activeLayers
+    ) {
+        lastCurrentDocumentID = app.activeDocument?.id
+        lastCurrentLayerID = activeLayers
+        notifySelectionStateChange()
+
+    } else {
+        lastCurrentDocumentID = app.activeDocument?.id
+        lastCurrentLayerID = activeLayers
+    }
     requestAnimationFrame(checkCurrentDocument)
 }
 requestAnimationFrame(checkCurrentDocument)
