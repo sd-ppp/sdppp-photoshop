@@ -5,7 +5,8 @@ import { ComfyMultiUserLogin } from "./ComfyMultiUserLogin";
 import { useSDPPPWebview } from "../contexts/webview";
 import { shell } from "uxp";
 import { useStore } from "../../../../src/common/store/store-hooks.mts";
-import { getI18nLocale } from "../../../../src/common/i18n.mts";
+import i18n, { getI18nLocale } from "../../../../src/common/i18n.mts";
+import { useSponsor } from "src/hooks/UseSponsor.mjs";
 
 export function Promote() {
     const { state: photoshopStoreData } = useStore(photoshopStore, ['/uname', '/comfyUser'])
@@ -32,26 +33,22 @@ export function Promote() {
 }
 
 function CloudPromote() {
-    if (getI18nLocale() !== 'zhcn') return null;
+    const { data: sponsorData } = useSponsor();
+    const cloud = sponsorData.cloud[getI18nLocale() == 'zhcn' ? 'zhcn' : 'en'];
+    if (!cloud || cloud.length == 0) return null;
     return <div className="cloud-promote-bar">
-        <span className="cloud-promote-bar-left">推荐云端：</span>
+        <span className="cloud-promote-bar-left">{i18n('Cloud')}</span>
         <span className="cloud-promote-bar-right">
-            <span
-                style={{ borderColor: 'black' }}
-                onClick={() => {
-                    shell.openExternal('https://cephalon.cloud/share/register-landing?invite_id=m95SDj');
-                }}
-            >
-                <img src="./icons/cephalon.ico" />Cephalon
-            </span>
-            <span
-                style={{ borderColor: '#f3ac40', color: 'var(--uxp-host-text-color)' }}
-                onClick={() => {
-                    shell.openExternal('https://www.chenyu.cn/console/login?invitationCode=BUD913');
-                }}
-            >
-                <img src="./icons/chenyu.ico" />晨羽智云
-            </span>
+            {cloud.map((item) => (
+                <span
+                    style={{ borderColor: item.color }}
+                    onClick={() => {
+                        shell.openExternal(item.url);
+                    }}
+                >
+                    <img src={item.icon} />{item.name}
+                </span>
+            ))}
         </span>
     </div>
 

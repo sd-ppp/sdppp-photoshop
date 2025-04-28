@@ -1,12 +1,14 @@
-import { useEffect, useRef } from 'react';
-import i18n from "../../../../src/common/i18n.mts";
+import { useEffect, useMemo, useRef } from 'react';
+import i18n, { getI18nLocale } from "../../../../src/common/i18n.mts";
 import { useSDPPPLoginContext } from '../contexts/login';
+import { useSponsor } from 'src/hooks/UseSponsor.mjs';
 export let aboutComponentShowTimeSum = 0;
 let lastStartTime = 0;
 
 export function About() {
     const persistentDivRef = useRef<HTMLDivElement>(null);
     const { loginStyle } = useSDPPPLoginContext();
+    const { data: sponsorData } = useSponsor();
 
     useEffect(() => {
         let detectedMinHeight = Infinity;
@@ -20,7 +22,7 @@ export function About() {
                 }
             }
             webview.addEventListener('loadstart', start);
-            webview.addEventListener('loadstop', start); 
+            webview.addEventListener('loadstop', start);
             webview.addEventListener('loaderror', start);
 
             webview.setAttribute('src', "./_.html");
@@ -53,6 +55,10 @@ export function About() {
         }
     }, [persistentDivRef]);
 
+    const community = useMemo(
+        () => sponsorData.community[getI18nLocale() == 'zhcn' ? 'zhcn' : 'en'],
+        [sponsorData]);
+
     return <div className="about-card" style={{ position: 'relative' }}>
         {
             loginStyle === 'none'
@@ -64,15 +70,16 @@ export function About() {
                         <sp-divider></sp-divider>
                         <h2>{i18n('Sponsors')}</h2>
                         <div className="about-card-sections about-card-sponsors">
-                            <a href="https://v.douyin.com/hD2X7S717uw/">四喜AI</a>   
-                            <a href="https://v.douyin.com/3PnAYwvd5Hk/">悟空AI</a>   
-                            <a href="https://v.douyin.com/k6yKDEcVgP8/">沐沐AI</a>
+                            {sponsorData.sponsors.map((sponsor) => (
+                                <a href={sponsor.url} key={sponsor.name}>{sponsor.name}</a>
+                            ))}
                         </div>
                         <sp-divider></sp-divider>
                         <h2>{i18n('Links')}</h2>
                         <div className="about-card-sections about-card-friends-links">
-                            <a href="https://www.xiaohongshu.com/user/profile/59f1fcc411be101aba7f048f">猫咪老师Reimagined</a>
-                            <a href="https://space.bilibili.com/590784254">来真的</a>
+                            {sponsorData.links.map((link) => (
+                                <a href={link.url} key={link.name}>{link.name}</a>
+                            ))}
                         </div>
                         <sp-divider></sp-divider>
                         <h2>SD-PPP {i18n('Community')}</h2>
@@ -93,9 +100,9 @@ export function About() {
                 )
         }
         <div className="about-card-sections about-card-links">
-            <a href="https://github.com/zombieyang/sd-ppp">Github</a>
-            <a href={i18n('https://www.youtube.com/@Github-Zombeeyang/videos')}>{i18n('Youtube')}</a>
-            <a href={i18n('https://discord.gg/9HeGjDvEmn')}>{i18n('Discord')}</a>
+            {community.map((item) => (
+                <a href={item.url} key={item.name}>{item.name}</a>
+            ))}
             <div style={{
                 width: 1,
                 height: 1,
