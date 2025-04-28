@@ -248,9 +248,39 @@ async function getJimpImage(params: getImageActions['params']): Promise<JimpInst
 
 async function getImage(params: getImageActions['params']): Promise<getImageActions['result']> {
     const jimpImage = await getJimpImage(params);
-    return {
-        pngData: new Uint8Array(await jimpImage.getBuffer(JimpMime.png)),
+    
+    // Extract alpha channel data from the bitmap
+    const width = jimpImage.bitmap.width;
+    const height = jimpImage.bitmap.height;
+    const alphaData = new Uint8Array(width * height);
+    
+    // Copy alpha values from RGBA data (every 4th byte)
+    for (let i = 0; i < width * height; i++) {
+        alphaData[i] = jimpImage.bitmap.data[i * 4 + 3];
     }
+    
+    // Create a pure black image with the same dimensions
+    const blackImage = new Jimp({
+        width: width,
+        height: height,
+    });
+    
+    // Copy the alpha channel from the original image to the black image
+    for (let i = 0; i < width * height; i++) {
+        blackImage.bitmap.data[i * 4 + 3] = jimpImage.bitmap.data[i * 4 + 3];
+    }
+    
+    const ret = {
+        jpegData: new Uint8Array(await jimpImage.getBuffer(JimpMime.jpeg, {
+            quality: params.quality,
+        })),
+        alphaData: new Uint8Array(await blackImage.getBuffer(JimpMime.png)),
+    }
+    
+    // if (params.quality) {
+    //     ret.jpegData = await jimpImage.getBuffer(JimpMime.jpeg, { quality: params.quality });
+    // }
+    return ret
 }
 getImage.getJimpImage = getJimpImage
 
