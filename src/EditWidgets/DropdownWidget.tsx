@@ -5,6 +5,7 @@ export interface DropdownWidgetProps {
     options: string[],
     value: string,
     name?: string,
+    extraOptions?: Record<string, any>
 }
 export interface DropdownWidgetState {
     filter: string

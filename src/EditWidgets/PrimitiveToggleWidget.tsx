@@ -4,7 +4,8 @@ import { BaseFormWidget } from "../../../../src/common/tsx/BaseFormWidget";
 interface PrimitiveToggleWidgetProps {
     value?: any,
     name?: string,
-    onValueChange: (value: boolean) => void
+    onValueChange: (value: boolean) => void,
+    extraOptions?: Record<string, any>
 }
 
 export class PrimitiveToggleWidget extends BaseFormWidget<PrimitiveToggleWidgetProps, {}> {

@@ -7,7 +7,8 @@ import { photoshopStore } from "../../logics/ModelDefines.mts";
 interface DocumentWidgetProps {
     onSelectUpdate: (identify: string, index: number) => void,
     value: string,
-    uiWeight: number
+    uiWeight: number,
+    extraOptions?: Record<string, any>
 }
 interface DocumentWidgetState {
     options: string[]

@@ -11,7 +11,8 @@ interface LayerWidgetProps {
     onSelectUpdate: (identify: string, index: number) => void,
     value: string,
     uiWeight: number,
-    documentValue?: string
+    documentValue?: string,
+    extraOptions?: Record<string, any>
 }
 
 interface LayerWidgetState {

@@ -236,12 +236,12 @@ async function getJimpImage(params: getImageActions['params']): Promise<JimpInst
         width: desireBounds.width,
         height: desireBounds.height,
     });
-    if (params.max_wh && (
-        desireBounds.width > params.max_wh || desireBounds.height > params.max_wh
-    )) {
-        const scaleRatio = params.max_wh / Math.max(desireBounds.width, desireBounds.height);
-        jimpImage.scale(scaleRatio);
-    }
+    // if (params.max_wh && (
+    //     desireBounds.width > params.max_wh || desireBounds.height > params.max_wh
+    // )) {
+    //     const scaleRatio = params.max_wh / Math.max(desireBounds.width, desireBounds.height);
+    //     jimpImage.scale(scaleRatio);
+    // }
 
     return jimpImage
 }

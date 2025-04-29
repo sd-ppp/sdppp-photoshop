@@ -61,6 +61,7 @@ export function WorkflowEditPhotoshop() {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
                     key={widgetIndex}
+                    extraOptions={widgetTableStructure?.extraOptions}
                 />
             );
             return true;
@@ -75,7 +76,9 @@ export function WorkflowEditPhotoshop() {
                     onSelectUpdate={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
-                    key={widgetIndex} />
+                    key={widgetIndex}
+                    extraOptions={widgetTableStructure?.extraOptions}
+                />
             );
             return true;
         } else if (widget.outputType == 'IMAGE_PATH') {
@@ -87,6 +90,7 @@ export function WorkflowEditPhotoshop() {
                     onValueChange={async (v) => {
                         await onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
+                    extraOptions={widgetTableStructure?.extraOptions}
                 />
             );
             return true;
@@ -99,6 +103,7 @@ export function WorkflowEditPhotoshop() {
                     onValueChange={async (v) => {
                         await onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
+                    extraOptions={widgetTableStructure?.extraOptions}
                 />
             );
             return true;
@@ -119,6 +124,7 @@ export function WorkflowEditPhotoshop() {
                     onValueChange={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
+                    extraOptions={widgetTableStructure?.extraOptions}
                 />)
         } else if (widget.outputType === 'combo') {
             context.result.push(
@@ -131,6 +137,7 @@ export function WorkflowEditPhotoshop() {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
                     value={widgetTableValue?.[fieldInfo.id]?.[widgetIndex] || ''}
+                    extraOptions={widgetTableStructure?.extraOptions}
                 />
             )
         } else if (widget.outputType === 'toggle') {
@@ -143,6 +150,7 @@ export function WorkflowEditPhotoshop() {
                     onValueChange={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
+                    extraOptions={widgetTableStructure?.extraOptions}
                 />
             )
 
@@ -156,6 +164,7 @@ export function WorkflowEditPhotoshop() {
                     onValueChange={(v) => {
                         onWidgetChange(fieldInfo.id, widgetIndex, v, fieldInfo);
                     }}
+                    extraOptions={widgetTableStructure?.extraOptions}
                 />
             )
         }

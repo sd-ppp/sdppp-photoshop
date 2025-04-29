@@ -4,7 +4,8 @@ import { computeUIWeightCSS } from "../../../../src/common/tsx/util";
 
 interface PrimitiveStringWidgetProps {
     value?: string,
-    onValueChange: (value: string) => void
+    onValueChange: (value: string) => void,
+    extraOptions?: Record<string, any>
 }
 
 export function PrimitiveStringWidget(props: PrimitiveStringWidgetProps & { uiWeight?: any }) {

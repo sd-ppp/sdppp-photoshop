@@ -15,8 +15,9 @@ import { makeDocumentIdentify } from '../../../../../src/common/photoshop/identi
 
 export interface ImageWidgetProps {
     onValueChange: (imageName: string) => Promise<void>,
-    uiWeight: number
-    value: string
+    uiWeight: number,
+    value: string,
+    extraOptions?: Record<string, any>
 }
 
 export interface ImageWidgetState {
@@ -26,6 +27,7 @@ export interface ImageWidgetState {
 
     pendingUpload: boolean,
     uploadedImageName: string | null
+
 }
 
 export function ImageWidget(props: ImageWidgetProps) {
