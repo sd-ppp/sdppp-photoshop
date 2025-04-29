@@ -101,6 +101,13 @@ function saveDataToLocalStorage(data: any) {
 let sponsorDataPromise: Promise<any> | null = null;
 
 export function useSponsor(): { data: {
+    LICENSE: {
+        name: string;
+        url: {
+            en: string;
+            zhcn: string;
+        };
+    };
     sponsors: {
         name: string;
         url: string;

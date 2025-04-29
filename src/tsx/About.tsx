@@ -65,7 +65,7 @@ export function About() {
                 ? (
                     <>
                         <div className="about-card-sections about-card-title">
-                            <a href="https://github.com/zombieyang/sd-ppp/blob/main/LICENSE">LICENSE: BSD3-Clause</a>
+                            <a href={sponsorData.LICENSE.url[getI18nLocale() == 'zhcn' ? 'zhcn' : 'en']}>{i18n('LICENSE:')} {sponsorData.LICENSE.name}</a>
                         </div>
                         <sp-divider></sp-divider>
                         <h2>{i18n('Sponsors')}</h2>
