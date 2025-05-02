@@ -36,7 +36,7 @@ export function useSDPPPComfyCaller(): {
     } = useWorkflowRunHooks();
 
 
-    const openWorkflow = useCallback(async (workflowAgentSID: string, workflow_path: string, reset: boolean = false) => {
+    const openWorkflow = useCallback(async (workflowAgentSID: string, workflow_path: string) => {
         const workflowAgent = photoshopPageStoreMap.getStore(workflowAgentSID);
         if (!workflowAgent) {
             throw new Error('workflowAgent not found');
@@ -45,9 +45,10 @@ export function useSDPPPComfyCaller(): {
             await socket?.openWorkflow(workflowAgent, {
                 workflow_path,
                 from_sid: photoshopStore.data.sid,
-                reset
+                reset: true
             });
         } catch (error) {
+            console.error(error);
         }
     }, [socket]);
 
@@ -59,7 +60,7 @@ export function useSDPPPComfyCaller(): {
         if (!workflowAgent.data.widgetTableStructure.widgetTablePersisted) {
             throw new Error('workflow is not savable');
         }
-        await openWorkflow(workflowAgentSID, workflowAgent.data.widgetTableStructure.widgetTablePath, true);
+        await openWorkflow(workflowAgentSID, workflowAgent.data.widgetTableStructure.widgetTablePath);
     }, [openWorkflow]);
 
     const pageInstanceRun = useCallback((sid: string, size: number = 1) => {
@@ -105,9 +106,9 @@ export function useSDPPPComfyCaller(): {
 
     (globalThis as any)['sdppp_action_run'] = async (arg: any, { workflowPath }: { workflowPath?: string }) => {
         if (workflowPath) {
-            await runWorkflow(workflowPath);
+            runWorkflow(workflowPath);
         } else {
-            await runPage();
+            runPage();
         }
     };
 
@@ -129,7 +130,7 @@ export function useSDPPPComfyCaller(): {
     const runWorkflow = useCallback(async (workflowPath: string, agentSID?: string, size: number = 1) => {
         if (!agentSID && !workflowAgentSID) return;
         await openWorkflow(agentSID || workflowAgentSID, workflowPath);
-        await _runPage(agentSID || workflowAgentSID, size);
+        _runPage(agentSID || workflowAgentSID, size);
         // @ts-ignore
         action.recordAction?.({
             "name": "sdppp_run_" + workflowPath,
