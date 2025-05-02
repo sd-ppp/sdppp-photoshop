@@ -1,4 +1,4 @@
-import './logics/PhotoshopModel.mts'
+import './logics/PhotoshopListener.mts'
 import 'sdppp-test/photoshop'
 
 import { AddressBar } from './tsx/AddressBar.tsx';

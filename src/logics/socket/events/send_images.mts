@@ -7,6 +7,7 @@ import { runNextModalState } from "../../modalStateWrapper.mjs";
 import { SDPPPBounds, SpeicialIDManager, findInAllSubLayer, getLayerID, parseDocumentIdentify } from '../../util.mts';
 import { sdpppX } from "../../../../../../src/common/sdpppX.mts";
 import type { sendImagesActions, ImageBlobParams } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
+import { notifyCanvasChange, notifyLayerChange } from "src/logics/PhotoshopDocumentStore.mjs";
 
 async function getActiveDocumentOrCreate(width: number, height: number) {
     if (app.activeDocument) return app.activeDocument
@@ -202,10 +203,14 @@ export default async function sendImages(params: sendImagesActions['params']) {
                 })
             })
         )
+
+        notifyLayerChange(layerOrGroups.map(layer => layer.id))
+        notifyCanvasChange();
     }, {
         commandName: i18n('show sent images'),
         document
     })
+
 
     return {}
 }
