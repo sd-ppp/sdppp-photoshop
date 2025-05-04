@@ -49,7 +49,7 @@ async function _openPSD(blob: Blob, psdName = 'sdppp.psd') {
 export async function compareImageBlobAndPng(buffer: Uint8Array, pngBuffer: Uint8Array, allowedDiff: number = 15) {
     const png = await Jimp.fromBuffer(Buffer.from(pngBuffer))
 
-    assert.equal(png.bitmap.width * png.bitmap.height, buffer.length / 4)
+    assert.equal(png.bitmap.width * png.bitmap.height, buffer.length / 4, `png.bitmap.width: ${png.bitmap.width}, png.bitmap.height: ${png.bitmap.height}, buffer.length: ${buffer.length}`)
     for (let w = 0; w < png.bitmap.width; w++) {
         for (let h = 0; h < png.bitmap.height; h++) {
             const rgba = intToRGBA(png.getPixelColor(w, h))
