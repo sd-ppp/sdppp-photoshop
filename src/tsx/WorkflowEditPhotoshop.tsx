@@ -156,7 +156,7 @@ export function WorkflowEditPhotoshop() {
 
         } else {
             const value = widgetTableValue?.[fieldInfo.id]?.[widgetIndex] || '';
-            context.result.push( 
+            context.result.push(
                 <PrimitiveStringWidget
                     uiWeight={widget.uiWeight || 12}
                     key={widgetIndex}
@@ -174,11 +174,15 @@ export function WorkflowEditPhotoshop() {
     if (!widgetTableStructure) {
         return null;
     }
-    return ( 
+    return (
         <div className="workflow-edit">
             <div className="workflow-edit-title">
                 {widgetTableStructure.widgetTablePath && <sp-label style={{ fontWeight: 'bold' }}>{simplifyWorkflowPath(widgetTableStructure.widgetTablePath)}</sp-label>}
-                {hasSamplePSD ? <a onClick={() => { callForPSDExtract(workflowAgent?.data.sid || '') }}>{'>' + i18n('sample .psd')}</a> : ''}
+                {hasSamplePSD ? <a onClick={() => {
+                    callForPSDExtract(workflowAgent?.data.sid || '').catch((error)=> {
+                        alert(error.message)
+                    })
+                }}>{'>' + i18n('sample .psd')}</a> : ''}
             </div>
             <WorkflowEdit
                 widgetTableStructure={widgetTableStructure}
@@ -188,5 +192,5 @@ export function WorkflowEditPhotoshop() {
                 onWidgetRender={onWidgetRender}
             />
         </div>
-    ); 
+    );
 }
