@@ -73,7 +73,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
             if (socket) {
                 socket.close()
                 setSocket(null);
-                setConnectState('disconnected');
+                // setConnectState('disconnected');
             }
 
         } else {
@@ -89,7 +89,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
                     setSocket(_socket);
                 }
                 _socket.connect();
-                setConnectState('connecting');
+                // setConnectState('connecting');
 
             } catch (e: any) {
                 setLastErrorMessage(e.stack || e.message || e);

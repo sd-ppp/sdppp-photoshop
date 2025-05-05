@@ -27,9 +27,21 @@ export class PhotoshopSocket extends (SocketMixin(
         }
     ) {
         super(backendURL);
+        const refreshSocketState = () => {
+            if (this.socket.active && this.socket.connected) {
+                setConnectState('connected');
+            } else if (this.socket.active) {
+                setConnectState('connecting');
+            } else {
+                setConnectState('disconnected');
+            }
+            requestAnimationFrame(refreshSocketState);
+        }
+        requestAnimationFrame(refreshSocketState);
         this.socket.on('connect_error', async (error: any) => {
             if (this.socket.active) {
                 let errorMessage = error.message;
+                // setConnectState('connecting');
                 try {
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 1500);
@@ -50,21 +62,18 @@ export class PhotoshopSocket extends (SocketMixin(
                     }
                 }
                 setLastErrorMessage(i18n(`{0}. reconnecting...`, errorMessage))
-                setConnectState('connecting');
             } else {
                 setLastErrorMessage(error.message)
-                setConnectState('disconnected');
             }
         });
         this.socket.on('sdppp_inited', (payload: any) => {
             setBackendURL(backendURL);
-            setConnectState('connected');
+            // setConnectState('connected');
             if (payload.multi_user) {
                 setComfyMultiUser(payload.multi_user);
             }
         })
         this.socket.on('disconnect', (...args: any[]) => {
-            setConnectState('disconnected');
             setComfyMultiUser(false);
             photoshopStore.setComfyUserToken('');
         });
