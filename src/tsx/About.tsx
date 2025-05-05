@@ -112,5 +112,13 @@ export function About() {
                 opacity: 0.1,
             }} ref={persistentDivRef} className="persistent-div"></div>
         </div>
+        
+        <sp-divider></sp-divider>
+        {
+            sponsorData.site &&
+            <h1>
+                <a href={sponsorData.site[getI18nLocale() == 'zhcn' ? 'zhcn' : 'en'].url}>{sponsorData.site[getI18nLocale() == 'zhcn' ? 'zhcn' : 'en'].name}</a>
+            </h1>
+        }
     </div>;
 }

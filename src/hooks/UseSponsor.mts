@@ -29,7 +29,19 @@ interface License {
     };
 }
 
+interface Site {
+    en: {
+        name: string;
+        url: string;
+    };
+    zhcn: {
+        name: string;
+        url: string;
+    };
+}
+
 interface SponsorData {
+    site?: Site;
     LICENSE: License;
     sponsors: SponsorItem[];
     links: SponsorItem[];
@@ -39,11 +51,21 @@ interface SponsorData {
 
 // 默认数据
 const DEFAULT_DATA: SponsorData = {
-    LICENSE: {
-        name: "SD-PPP",
-        url: {
-            en: "https://github.com/zombieyang/sd-ppp",
-            zhcn: "https://github.com/zombieyang/sd-ppp"
+    // "site": {
+    //     "en": {
+    //         "name": "Site: SDPPP.com",
+    //         "url": "https://github.com/zombieyang/sd-ppp"
+    //     },
+    //     "zhcn": {
+    //         "name": "官方网站：SDPPP.com",
+    //         "url": "https://gitee.com/zombieyang/sd-ppp"
+    //     }
+    // },
+    "LICENSE": {
+        "name": "BSD3-Clause",
+        "url": {
+            "en": "https://github.com/zombieyang/sd-ppp/blob/main/LICENSE",
+            "zhcn": "https://gitee.com/zombieyang/sd-ppp/blob/main/LICENSE"
         }
     },
     "sponsors": [
@@ -97,7 +119,7 @@ const DEFAULT_DATA: SponsorData = {
             {
                 "name": "Bilibili",
                 "url": "https://space.bilibili.com/44908313"
-            }
+            }   
         ]
     },
     "cloud": {
@@ -343,5 +365,6 @@ export function useSponsor(): { data: SponsorData } {
         }
     }, []);
 
+    // return { data: DEFAULT_DATA };
     return { data };
 }
