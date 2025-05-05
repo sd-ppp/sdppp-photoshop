@@ -55,6 +55,8 @@ export class PhotoshopSocket extends (SocketMixin(
                         errorMessage = i18n('502: Maybe the server is not running');
                     } else if (httpTest.status == 404) {
                         errorMessage = i18n('404: Maybe SDPPP is not installed or failed to run in ComfyUI');
+                    } else {
+                        errorMessage = `[${httpTest.status}] ${errorMessage}`;
                     }
                 } catch (e: any) {
                     if (e.message == 'Network request failed') {
