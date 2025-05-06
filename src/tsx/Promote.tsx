@@ -41,6 +41,7 @@ function CloudPromote() {
         <span className="cloud-promote-bar-right">
             {cloud.map((item) => (
                 <span
+                    key={item.name}
                     style={{ borderColor: item.color }}
                     onClick={() => {
                         shell.openExternal(item.url);

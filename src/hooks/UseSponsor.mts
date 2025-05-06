@@ -126,16 +126,16 @@ const DEFAULT_DATA: SponsorData = {
         "en": [],
         "zhcn": [
             {
-                "name": "Cephalon",
-                "url": "https://cephalon.cloud/share/register-landing?invite_id=m95SDj",
-                "icon": "https://cephalon.cloud/favicon.ico",
-                "color": "#000000"
-            },
-            {
                 "name": "晨羽智云",
                 "url": "https://www.chenyu.cn/console/login?invitationCode=BUD913",
-                "icon": "https://www.chenyu.cn/favicon.ico",
-                "color": "#f3ac40"
+                "icon": "icons/chenyu.ico",
+                "color": "var(--uxp-host-text-color-secondary)"
+            },
+            {
+                "name": "Cephalon",
+                "url": "https://cephalon.cloud/share/register-landing?invite_id=m95SDj",
+                "icon": "icons/cephalon.ico",
+                "color": "var(--uxp-host-text-color-secondary)"
             }
         ]
     }

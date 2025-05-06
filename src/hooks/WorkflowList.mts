@@ -137,6 +137,8 @@ export function useSDPPPWorkflowList(): {
     }
     // if (!workflowAgentState.sid && !afterPropsUpdate4s)
     //     listReplacer = <sp-label class="list-error-label">{i18n('Webview initialize failed. Please report to me via Discord/Github with your ComfyURL, Operate System')}</sp-label>;
+    if (!workflowAgentSID)
+        finalErrorMessage = i18n('Workflow Agent is loading...');
     if (!showingList.length)
         finalErrorMessage = i18n("Workflow list is empty, please save a workflow by Comfy's lastest UI");
     if (workflowsError)

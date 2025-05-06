@@ -49,13 +49,16 @@ export async function runNextModalState(fn: (restorer: ModalStateRestorer, ...ar
                     anyLayerSelectedChanged = true
                 }
             });
-            activeLayers.forEach((formerActiveLayer, index) => {
-                formerActiveLayer.visible = formerActiveLayersVisible[index];
-            })
+            // if the document is not the active document, these will cause blink.
+            if (options.document == app.activeDocument) {
+                activeLayers.forEach((formerActiveLayer, index) => {
+                    formerActiveLayer.visible = formerActiveLayersVisible[index];
+                })
+            }
         });
     }
 
-    let suspensionID: any = null 
+    let suspensionID: any = null
     modalStatePromise = modalStatePromise.catch(e => e)
         .then(() => {
             return new Promise<void>(resolve => {
@@ -94,10 +97,10 @@ export async function runNextModalState(fn: (restorer: ModalStateRestorer, ...ar
     let error = null;
     try {
         await modalStatePromise;
-    } catch(e) {
+    } catch (e) {
         error = e;
     }
-    
+
     if (anyLayerSelectedChanged) {
         modalStatePromise = core.executeAsModal(async (executionContext) => {
             activeLayers.forEach((layer, index) => {
