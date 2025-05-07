@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { BaseFormWidget } from "../../../../src/common/tsx/BaseFormWidget";
+import { computeUIWeightCSS } from "../../../../src/common/tsx/util";
 
 interface PrimitiveNumberWidgetProps {
     inputMin: number,
@@ -30,12 +30,6 @@ export const PrimitiveNumberWidget: React.FC<PrimitiveNumberWidgetProps> = (prop
         onValueChange(localValue);
     }, [localValue, onValueChange]);
 
-    const computeUIWeightCSS = (weight?: number) => {
-        return {
-            flex: weight || 1
-        };
-    };
-
     // 检查步长范围是否过大
     let isStepRangeTooBig = ((inputMax - inputMin) / inputStep) > 1000;
     if (!isStepRangeTooBig && uiWeight && uiWeight >= 1 && extraOptions?.useSliderForNumberWidget) {
@@ -63,7 +57,7 @@ export const PrimitiveNumberWidget: React.FC<PrimitiveNumberWidgetProps> = (prop
                         width: '40%'
                     }}
                     onInput={handleInput}
-                    value={localValue}
+                    value={localValue} 
                 />
             </div>
         );
@@ -74,9 +68,9 @@ export const PrimitiveNumberWidget: React.FC<PrimitiveNumberWidgetProps> = (prop
                 display: 'flex',
                 alignItems: 'center'
             }}>
-                {name && <sp-label style={{ flex: 1 }}>{name}</sp-label>}
+                {name && <sp-label style={{ flex: '1' }}>{name}</sp-label>}
                 <sp-textfield
-                    style={name ? { flex: 2 } : { width: '100%' }}
+                    style={name ? { flex: '2' } : { width: '100%' }}
                     onInput={handleInput}
                     onBlur={handleBlur}
                     value={localValue}

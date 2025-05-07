@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { BaseFormWidget } from "../../../../src/common/tsx/BaseFormWidget";
 import { computeUIWeightCSS } from "../../../../src/common/tsx/util";
-
+ 
 interface PrimitiveStringWidgetProps {
     value?: string,
     onValueChange: (value: string) => void,
