@@ -48,6 +48,7 @@ export const PrimitiveNumberWidget: React.FC<PrimitiveNumberWidgetProps> = (prop
                     step={inputStep}
                     value={localValue}
                     onInput={handleInput}
+                    onBlur={handleBlur}
                     show-value="false"
                     class="sdppp-slider"
                 >
@@ -57,6 +58,7 @@ export const PrimitiveNumberWidget: React.FC<PrimitiveNumberWidgetProps> = (prop
                         width: '40%'
                     }}
                     onInput={handleInput}
+                    onBlur={handleBlur}
                     value={localValue} 
                 />
             </div>
