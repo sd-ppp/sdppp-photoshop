@@ -4,10 +4,9 @@ import { useSDPPPExternalContext } from "../contexts/sdppp-external";
 import { useState, useEffect, useCallback } from "react";
 import { useStore } from "../../../../src/common/store/store-hooks.mts";
 import i18n from "../../../../src/common/i18n.mts";
-import { PageStore } from "../../../../src/store/page.mts";
 import { sdpppX } from "../../../../src/common/sdpppX.mts";
 
-function useFetchWorkflows(backendURL: string, comfyMultiUser: boolean, workflowagent: PageStore) {
+function useFetchWorkflows(backendURL: string) {
     const { state: userData } = useStore(photoshopStore, ['/comfyUserToken'])
     const { socket, workflowAgentSID } = useSDPPPInternalContext();
     const [listData, setListData] = useState<{
@@ -35,7 +34,7 @@ function useFetchWorkflows(backendURL: string, comfyMultiUser: boolean, workflow
                 return;
             }
             setIsLoading(false);
-
+            setError(null);
             setListData(
                 workflows
                     .reduce((acc: any, path: string) => {
@@ -87,14 +86,14 @@ export function useSDPPPWorkflowList(): {
         isDir: boolean
     }[]
 } {
-    const { backendURL, comfyMultiUser, workflowAgent } = useSDPPPInternalContext();
+    const { backendURL, comfyMultiUser } = useSDPPPInternalContext();
     const { workflowAgentSID } = useSDPPPExternalContext();
     const [afterPropsUpdate4s, setAfterPropsUpdate4s] = useState(true);
     const [currentViewingDirectory, setCurrentViewingDirectory] = useState('');
     // const {state: workflowAgentState} = useStore(workflowAgent as PageStore, ['/']);
 
     const { data: workflows, isLoading: isLoadingWorkflows, error: workflowsError, refetch: refetchWorkflows } = useFetchWorkflows(
-        backendURL, comfyMultiUser, workflowAgent as PageStore
+        backendURL
     );
 
     useEffect(() => {

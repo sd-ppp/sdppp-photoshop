@@ -39,7 +39,6 @@ export const usePhotoshopDocumentStore = create<PhotoshopDocumentState>((set, ge
       const currentDirtyID = state.layerDirtyIDs.get(layerId) || 0;
       const newLayerDirtyIDs = new Map(state.layerDirtyIDs);
       newLayerDirtyIDs.set(layerId, currentDirtyID + 1);
-      console.log(layerId, currentDirtyID + 1);
       return { layerDirtyIDs: newLayerDirtyIDs };
     });
     updateStoreIfNeeded();

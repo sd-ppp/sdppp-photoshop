@@ -65,6 +65,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
             setSrc(`${backendURL}`);
         } else {
             setSrc('')
+            setWorkflowAgentSID('')
         }
     }, [connectState]);
 

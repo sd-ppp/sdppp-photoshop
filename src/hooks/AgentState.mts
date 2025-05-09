@@ -2,7 +2,7 @@ import { useStore } from "../../../../src/common/store/store-hooks.mts";
 import { PageStore } from "../../../../src/store/page.mts";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 
-export function useAgentState(agentSID: string): {
+export function useAgentState(agentSID?: string): {
     sid: string,
     ssid: string,
     title: string,
@@ -13,9 +13,9 @@ export function useAgentState(agentSID: string): {
     executingNodeTitle: string,
     queueSize: number,
 } {
-    const agent = photoshopPageStoreMap.getStore(agentSID);
-    const { state: workflowAgentState } = useStore(agent as PageStore, ['/']);
-    if (!workflowAgentState) {
+    const agent = agentSID ? photoshopPageStoreMap.getStore(agentSID) : null;
+    const { state: workflowAgentState } = useStore(agent || null, ['/']);
+    if (!workflowAgentState || !agentSID) {
         return {
             sid: '',
             ssid: '',

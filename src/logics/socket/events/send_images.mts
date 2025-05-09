@@ -1,4 +1,4 @@
-import {Jimp} from "jimp";
+import { Jimp } from "jimp";
 import { app, constants, imaging } from "photoshop";
 import { Document } from "photoshop/dom/Document";
 import { Layer } from "photoshop/dom/Layer";
@@ -27,7 +27,7 @@ async function getActiveDocumentOrCreate(width: number, height: number) {
     return document
 }
 async function getPreviewDocumentOrCreate(width: number, height: number) {
-    const document = app.documents.find(document=> document.name == SpeicialIDManager.getSpecialDocumentForPreview())
+    const document = app.documents.find(document => document.name == SpeicialIDManager.getSpecialDocumentForPreview())
     if (document) {
         if (document.width < width || document.height < height) {
             await runNextModalState(async () => {
@@ -73,7 +73,23 @@ export default async function sendImages(params: sendImagesActions['params']) {
                 return await Jimp.read(imageURLs[index]);
 
             } else if (imageBlobs) {
-                return await Jimp.read(await imageBlobs[index].pngData.arrayBuffer())
+                if (imageBlobs[index].pngData) {
+                    return await Jimp.read(await imageBlobs[index].pngData.arrayBuffer())
+                } else {
+                    //@ts-ignore
+                    const paramBuffer = imageBlobs[index].buffer
+                    const buffer = paramBuffer instanceof Blob ?
+                        await paramBuffer.arrayBuffer() :
+                        paramBuffer
+                    return new Jimp({
+                        data: Buffer.from(buffer),
+                        //@ts-ignore
+                        width: imageBlobs[index].width,
+                        //@ts-ignore
+                        height: imageBlobs[index].height,
+                    })
+
+                }
 
             }
         }))
@@ -139,7 +155,7 @@ export default async function sendImages(params: sendImagesActions['params']) {
                 res[i + 3] = data[i + 3] / 255
             }
             data = res;
-        } 
+        }
 
         return await imaging.createImageDataFromBuffer(
             data,

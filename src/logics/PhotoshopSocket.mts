@@ -46,7 +46,7 @@ export class PhotoshopSocket extends (SocketMixin(
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 1500);
                     // @ts-ignore
-                    const httpTest = await fetch(backendURL + this.socket._opts.path, { 
+                    const httpTest = await fetch((backendURL + this.socket._opts.path).replace(/(?<!:)\/\//g, '/'), { 
                         method: 'GET',
                         signal: controller.signal
                     });
