@@ -1,25 +1,59 @@
-import { app } from "photoshop";
+import { action, app } from "photoshop";
 import i18n from "../../../../../../src/common/i18n.mts";
-import type { RunPhotoshopActionActions } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
+import type { RunPhotoshopActionOnLayerActions } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 import { runNextModalState } from "src/logics/modalStateWrapper.mjs";
+import { findInAllSubLayer, getLayerID, parseDocumentIdentify } from "src/logics/util.mjs";
 
-export default async function runPhotoshopAction(params: RunPhotoshopActionActions['params']) {
+export default async function runPhotoshopActionOnLayer(params: RunPhotoshopActionOnLayerActions['params']) {
     const { action_set: actionSetName, action: actionName } = params;
+    const { document_identify, layer_identify } = params;
 
     const actionSet = app.actionTree.find(actionSet => actionSet.name === actionSetName);
 
     if (!actionSet) {
         throw new Error(i18n('Action set {0} not found', actionSetName));
     }
-    const action = actionSet.actions.find(action => action.name === actionName);
-    if (!action) {
+    const actionForPlay = actionSet.actions.find(action => action.name === actionName);
+    if (!actionForPlay) {
         throw new Error(i18n('Action {0} not found', actionName));
     }
 
+    let incomingDocument = parseDocumentIdentify(document_identify);
+    if (!incomingDocument) {
+        throw new Error(i18n('document {0} not found', document_identify));
+    }
+    const document = incomingDocument;
+    const layerId = getLayerID(document, params.layer_identify);
+    const layer = findInAllSubLayer(document, layerId);
+    if (!layer) {
+        throw new Error(i18n('layer not found: {0}', layer_identify));
+    }
+
     await runNextModalState(async () => {
-        await action.play();
+        document.activeLayers.forEach(_layer => {
+            _layer.selected = false;
+        });
+        layer.selected = true;
     }, {
-        commandName: i18n('sdppp Run Photoshop Action'),
+        commandName: i18n('select layer'),
+        document: app.activeDocument
+    });
+    await runNextModalState(async () => {
+        await action.batchPlay([
+            {
+                "_obj": "select", 
+                "_target": [{
+                    "_name": layer.name, "_ref": "layer"
+                }], 
+                "layerID": [layer.id], 
+                "makeVisible": false
+            }
+        ], {
+            synchronousExecution: true
+        })
+        await actionForPlay.play();
+    }, {
+        commandName: i18n('run Photoshop Action'),
         document: app.activeDocument
     });
     return {

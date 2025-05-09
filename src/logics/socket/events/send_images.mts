@@ -85,7 +85,7 @@ export default async function sendImages(params: sendImagesActions['params']) {
     if (SpeicialIDManager.is_SPECIAL_LAYER_PREVIEW_DOCUMENT(documentIdentify)) {
         incomingDocument = await getPreviewDocumentOrCreate(jimps[0].bitmap.width, jimps[0].bitmap.height)
     }
-    if (!incomingDocument) throw new Error(i18n('document {0} not found'));
+    if (!incomingDocument) throw new Error(i18n('document {0} not found', documentIdentify));
     const document = incomingDocument
 
     // make area
