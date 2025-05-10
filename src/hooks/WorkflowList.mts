@@ -117,8 +117,10 @@ export function useSDPPPWorkflowList(): {
     if (!isLoadingWorkflows && !workflowsError && workflows) {
         Object.keys(workflows).forEach((path) => {
             if (path.startsWith(currentViewingDirectory)) {
-                const relativePath = path.slice(currentViewingDirectory.length).split('://')[1];
-                if (relativePath.indexOf('/') == -1) {
+                const relativePath = path.slice(currentViewingDirectory.length).split('://').pop();
+
+                if (!relativePath) {
+                } else if (relativePath.indexOf('/') == -1) {
                     showingList.push({ path, isDir: false })
                 } else {
                     showingList.unshift({ path: path.slice(0, path.lastIndexOf('/') + 1), isDir: true })
