@@ -2,7 +2,7 @@ import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffe
 import { PageStore, PageStoreData } from "../../../../src/store/page.mts";
 import { useSDPPPWebview } from "./webview";
 import { PhotoshopSocket } from "../logics/PhotoshopSocket.mts";
-import { photoshopPageStoreMap } from "../logics/ModelDefines.mts";
+import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 
 export const DEFAULT_BACKEND_URL = "http://127.0.0.1:8188"
 
@@ -63,6 +63,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
         if (connectState === 'connected') {
             setLastErrorMessage('')
             setSrc(`${backendURL}`);
+            photoshopStore.setIsLocal(backendURL.includes('localhost') || backendURL.includes('127.0.0.1'));
         } else {
             setSrc('')
             setWorkflowAgentSID('')

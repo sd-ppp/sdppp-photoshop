@@ -73,19 +73,17 @@ export default async function sendImages(params: sendImagesActions['params']) {
                 return await Jimp.read(imageURLs[index]);
 
             } else if (imageBlobs) {
-                if (imageBlobs[index].pngData) {
+                if ('pngData' in imageBlobs[index]) {
                     return await Jimp.read(await imageBlobs[index].pngData.arrayBuffer())
+
                 } else {
-                    //@ts-ignore
                     const paramBuffer = imageBlobs[index].buffer
                     const buffer = paramBuffer instanceof Blob ?
                         await paramBuffer.arrayBuffer() :
                         paramBuffer
                     return new Jimp({
                         data: Buffer.from(buffer),
-                        //@ts-ignore
                         width: imageBlobs[index].width,
-                        //@ts-ignore
                         height: imageBlobs[index].height,
                     })
 
