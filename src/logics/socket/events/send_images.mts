@@ -7,25 +7,9 @@ import { runNextModalState } from "../../modalStateWrapper.mjs";
 import { SDPPPBounds, SpeicialIDManager, findInAllSubLayer, getLayerID, parseDocumentIdentify } from '../../util.mts';
 import { sdpppX } from "../../../../../../src/common/sdpppX.mts";
 import type { sendImagesActions, ImageBlobParams } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
-import { notifyCanvasChange, notifyLayerChange } from "src/logics/PhotoshopDocumentStore.mjs";
+import { notifyCanvasChange, notifyLayerChange, usePhotoshopDocumentStore } from "src/logics/PhotoshopDocumentStore.mjs";
+import { makeLayerIdentify } from "../../../../../../src/common/photoshop/identify.mts";
 
-async function getActiveDocumentOrCreate(width: number, height: number) {
-    if (app.activeDocument) return app.activeDocument
-    let document = null;
-    await runNextModalState(async () => {
-        document = await app.createDocument({
-            width: width,
-            height: height,
-            resolution: 72,
-            mode: constants.NewDocumentMode.RGB,
-            fill: constants.DocumentFill.TRANSPARENT
-        })
-    }, {
-        document: null,
-        "commandName": i18n('create document for sent images')
-    })
-    return document
-}
 async function getPreviewDocumentOrCreate(width: number, height: number) {
     const document = app.documents.find(document => document.name == SpeicialIDManager.getSpecialDocumentForPreview())
     if (document) {
@@ -169,9 +153,10 @@ export default async function sendImages(params: sendImagesActions['params']) {
 
     // make layers and put pixels
     const newLayers: Layer[] = []
+    let finalLayerOrGroups: Layer[] = []
     await runNextModalState(async (restorer) => {
         let targetLayerOrGroup: Layer | null = null
-        const layerOrGroups: Layer[] = await Promise.all(
+        finalLayerOrGroups = await Promise.all(
             jimps.map(async (imageId, index) => {
                 const layerIdentify = layerIdentifies.length == 1 ? layerIdentifies[0] : layerIdentifies[index];
                 if (!SpeicialIDManager.is_SPECIAL_LAYER_NEW_LAYER(layerIdentify)) {
@@ -207,7 +192,7 @@ export default async function sendImages(params: sendImagesActions['params']) {
         }
 
         await Promise.all(
-            layerOrGroups.map(async (layer, index) => {
+            finalLayerOrGroups.map(async (layer, index) => {
                 await imaging.putPixels({
                     documentID: document.id,
                     layerID: layer.id,
@@ -218,7 +203,7 @@ export default async function sendImages(params: sendImagesActions['params']) {
             })
         )
 
-        notifyLayerChange(layerOrGroups.map(layer => layer.id))
+        notifyLayerChange(finalLayerOrGroups.map(layer => layer.id))
         notifyCanvasChange();
     }, {
         commandName: i18n('show sent images'),
@@ -226,5 +211,13 @@ export default async function sendImages(params: sendImagesActions['params']) {
     })
 
 
-    return {}
+    const documentStore = usePhotoshopDocumentStore.getState()
+    return {
+        layers: finalLayerOrGroups.map(layer => {
+            return {
+                identify: makeLayerIdentify(layer.id, layer.name),
+                dirtyID: documentStore.layerDirtyIDs.get(layer.id) || 0
+            }
+        })
+    }
 }

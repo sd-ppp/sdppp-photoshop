@@ -34,26 +34,10 @@ export default async function runPhotoshopActionOnLayer(params: RunPhotoshopActi
             _layer.selected = false;
         });
         layer.selected = true;
-    }, {
-        commandName: i18n('select layer'),
-        document: app.activeDocument
-    });
-    await runNextModalState(async () => {
-        await action.batchPlay([
-            {
-                "_obj": "select", 
-                "_target": [{
-                    "_name": layer.name, "_ref": "layer"
-                }], 
-                "layerID": [layer.id], 
-                "makeVisible": false
-            }
-        ], {
-            synchronousExecution: true
-        })
         await actionForPlay.play();
     }, {
         commandName: i18n('run Photoshop Action'),
+        dontRecoverSelection: true,
         document: app.activeDocument
     });
     return {
