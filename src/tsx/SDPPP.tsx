@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
 import { About } from "./About";
 import { AddressBar } from "./AddressBar";
@@ -18,22 +17,18 @@ interface SDPPPProps {
 export function SDPPP({
     renderContent
 }: SDPPPProps) {
-    const { 
+    const {
         connectState
     } = useSDPPPInternalContext();
-
-    const renderedContent = useMemo(() => {
-        return renderContent(connectState, AddressBar, WorkflowEditPhotoshop);
-    }, [connectState]);
 
     const { isLogin } = useSDPPPLoginContext();
 
     return (
         <>
-            <SDPPPErrorBoundary>    
+            <SDPPPErrorBoundary>
                 {
                     isLogin ?
-                        renderedContent :
+                        renderContent(connectState, AddressBar, WorkflowEditPhotoshop) :
                         <Login />
                 }
             </SDPPPErrorBoundary>
