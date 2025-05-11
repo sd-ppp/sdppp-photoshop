@@ -65,7 +65,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
             setSrc(`${backendURL}`);
             photoshopStore.setIsLocal(!!(
                 backendURL.includes('localhost') || 
-                backendURL.match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/)
+                backendURL.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
             ));
         } else {
             setSrc('')
