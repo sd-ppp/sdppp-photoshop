@@ -63,7 +63,10 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
         if (connectState === 'connected') {
             setLastErrorMessage('')
             setSrc(`${backendURL}`);
-            photoshopStore.setIsLocal(backendURL.includes('localhost') || backendURL.includes('127.0.0.1'));
+            photoshopStore.setIsLocal(!!(
+                backendURL.includes('localhost') || 
+                backendURL.match(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/)
+            ));
         } else {
             setSrc('')
             setWorkflowAgentSID('')
