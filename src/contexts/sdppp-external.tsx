@@ -10,7 +10,7 @@ import { SDPPPLoginProvider, useSDPPPLoginContext } from "./login";
 
 export interface SDPPPExternalContextType {
     logout: () => void,
-
+    isLogin: boolean,
     connectOrDisconnect: () => void,
     lastConnectErrorMessage: string,
     setAutoRunning: (autoRunning: { type: 'workflow' | 'page', value: string } | null) => void,
@@ -67,7 +67,7 @@ export function useSDPPPExternalContext() {
 function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
     const webviewContext = useSDPPPWebview();
     const internalContext = useSDPPPInternalContext();
-    const { logout } = useSDPPPLoginContext();
+    const { logout, isLogin } = useSDPPPLoginContext();
 
     if (sdpppX.registerTestCase) {
         (globalThis as any).sdppp_debugPhotoshopInternalContext = internalContext;
@@ -103,6 +103,7 @@ function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
 
     return <SDPPPExternalContext.Provider value={{
         logout: logout,
+        isLogin: isLogin,
 
         connectOrDisconnect: doConnectOrDisconnect,
         lastConnectErrorMessage: lastErrorMessage,
