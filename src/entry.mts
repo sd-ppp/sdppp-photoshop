@@ -1,4 +1,5 @@
 import './logics/PhotoshopListener.mts'
+import './log.ts'
 import 'sdppp-test/photoshop'
 
 import { AddressBar } from './tsx/AddressBar.tsx';
@@ -16,9 +17,9 @@ export { useAgentState } from "./hooks/AgentState.mjs";
 
 export { SDPPP } from "./tsx/SDPPP.js";
 
+export { Auths } from "./tsx/Auths.tsx";
 export { Promote } from "./tsx/Promote.tsx";
 
 type WorkflowEditPhotoshopType = typeof WorkflowEditPhotoshop;
 type AddressBarType = typeof AddressBar;
 export type { WorkflowEditPhotoshopType, AddressBarType };
- 

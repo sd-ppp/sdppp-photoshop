@@ -1,6 +1,11 @@
 import { app } from "photoshop";
 import { photoshopPageStoreMap, photoshopStore } from "../src/logics/ModelDefines.mts";
 import { sdpppX } from "../../../src/common/sdpppX.mts";
+const originalLog = sdpppX.log;
+sdpppX.log = (...args: any[]) => {
+    originalLog(...args);
+    console.log(...args);
+}
 
 (globalThis as any).sdppp_debugPhotoshopStore = photoshopStore;
 (globalThis as any).sdppp_debugPhotoshopPageStoreMap = photoshopPageStoreMap;

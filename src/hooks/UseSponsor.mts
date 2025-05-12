@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // 定义接口
 interface SponsorItem {
@@ -151,7 +151,7 @@ const DATA_SOURCES = {
 };
 
 // 超时时间（毫秒）
-const TIMEOUT_MS = 15000;
+const TIMEOUT_MS = 5000;
 
 /**
  * 从localStorage获取数据
@@ -294,7 +294,8 @@ let sponsorDataPromise: Promise<SponsorData> | null = null;
 /**
  * 获取赞助商数据的Hook
  */
-export function useSponsor(): { data: SponsorData } {
+export function useSponsor(): { data: SponsorData, isLoading: boolean } {
+    const [isLoading, setIsLoading] = React.useState(true);
     // 如果已经有一个请求在进行中，直接返回该Promise
     if (!sponsorDataPromise) {
         // 尝试从localStorage获取数据
@@ -313,6 +314,7 @@ export function useSponsor(): { data: SponsorData } {
                         // 保存到localStorage
                         saveDataToLocalStorage(data);
                         resolve(data);
+                        setIsLoading(false);
                     }
                 });
 
@@ -324,6 +326,7 @@ export function useSponsor(): { data: SponsorData } {
                         // 保存到localStorage
                         saveDataToLocalStorage(data);
                         resolve(data);
+                        setIsLoading(false);
                     }
                 });
 
@@ -333,9 +336,11 @@ export function useSponsor(): { data: SponsorData } {
                     resolved = true;
                     if (cachedData && validateSponsorData(cachedData)) {
                         resolve(cachedData);
+                        setIsLoading(false);
                     } else {
                         console.warn('Using default data as fallback');
                         resolve(DEFAULT_DATA);
+                        setIsLoading(false);
                     }
                 }
             }, TIMEOUT_MS);
@@ -365,6 +370,12 @@ export function useSponsor(): { data: SponsorData } {
         }
     }, []);
 
+    let [retIsLoading, setRetIsLoading] = useState(true)
+    useEffect(() => {
+        if (retIsLoading && !isLoading) {
+            setRetIsLoading(isLoading);
+        }
+    }, [isLoading]);
     // return { data: DEFAULT_DATA };
-    return { data };
+    return { data, isLoading: retIsLoading };
 }

@@ -6,54 +6,54 @@ export let aboutComponentShowTimeSum = 0;
 let lastStartTime = 0;
 
 export function About() {
-    const persistentDivRef = useRef<HTMLDivElement>(null);
     const { loginStyle } = useSDPPPLoginContext();
     const { data: sponsorData } = useSponsor();
+     
+    // const persistentDivRef = useRef<HTMLDivElement>(null);
+    // useEffect(() => {
+    //     let detectedMinHeight = Infinity;
+    //     let detectedMinWidth = Infinity;
+    //     let ended = false;
+    //     if (persistentDivRef.current) {
+    //         const webview = document.createElement('webview');
+    //         function start(event: any) {
+    //             if (!lastStartTime) {
+    //                 lastStartTime = Date.now();
+    //             }
+    //         }
+    //         webview.addEventListener('loadstart', start);
+    //         webview.addEventListener('loadstop', start);
+    //         webview.addEventListener('loaderror', start);
 
-    useEffect(() => {
-        let detectedMinHeight = Infinity;
-        let detectedMinWidth = Infinity;
-        let ended = false;
-        if (persistentDivRef.current) {
-            const webview = document.createElement('webview');
-            function start(event: any) {
-                if (!lastStartTime) {
-                    lastStartTime = Date.now();
-                }
-            }
-            webview.addEventListener('loadstart', start);
-            webview.addEventListener('loadstop', start);
-            webview.addEventListener('loaderror', start);
+    //         webview.setAttribute('src', "./_.html");
+    //         webview.style.width = '1px';
+    //         webview.style.height = '1px';
+    //         persistentDivRef.current.appendChild(webview);
+    //     }
+    //     function minHeightWidthDetection() {
+    //         const boundingRect = persistentDivRef
+    //             .current?.parentElement?.parentElement?.getBoundingClientRect();
+    //         if (boundingRect?.height && boundingRect?.width) {
+    //             detectedMinHeight = Math.min(detectedMinHeight, boundingRect.height);
+    //             detectedMinWidth = Math.min(detectedMinWidth, boundingRect.width);
+    //         }
 
-            webview.setAttribute('src', "./_.html");
-            webview.style.width = '1px';
-            webview.style.height = '1px';
-            persistentDivRef.current.appendChild(webview);
-        }
-        function minHeightWidthDetection() {
-            const boundingRect = persistentDivRef
-                .current?.parentElement?.parentElement?.getBoundingClientRect();
-            if (boundingRect?.height && boundingRect?.width) {
-                detectedMinHeight = Math.min(detectedMinHeight, boundingRect.height);
-                detectedMinWidth = Math.min(detectedMinWidth, boundingRect.width);
-            }
-
-            if (!ended) {
-                requestAnimationFrame(minHeightWidthDetection);
-            }
-        }
-        requestAnimationFrame(minHeightWidthDetection);
-        return () => {
-            ended = true;
-            if (lastStartTime) {
-                aboutComponentShowTimeSum += (Date.now() - lastStartTime);
-                lastStartTime = 0;
-            }
-            // console.log('aboutComponentShowTimeSum', aboutComponentShowTimeSum);
-            // console.log('detectedMinHeight', detectedMinHeight);
-            // console.log('detectedMinWidth', detectedMinWidth);
-        }
-    }, [persistentDivRef]);
+    //         if (!ended) {
+    //             requestAnimationFrame(minHeightWidthDetection);
+    //         }
+    //     }
+    //     requestAnimationFrame(minHeightWidthDetection);
+    //     return () => {
+    //         ended = true;
+    //         if (lastStartTime) {
+    //             aboutComponentShowTimeSum += (Date.now() - lastStartTime);
+    //             lastStartTime = 0;
+    //         }
+    //         // console.log('aboutComponentShowTimeSum', aboutComponentShowTimeSum);
+    //         // console.log('detectedMinHeight', detectedMinHeight);
+    //         // console.log('detectedMinWidth', detectedMinWidth);
+    //     }
+    // }, [persistentDivRef]);
 
     const community = useMemo(
         () => sponsorData.community[getI18nLocale() == 'zhcn' ? 'zhcn' : 'en'],
@@ -103,14 +103,14 @@ export function About() {
             {community.map((item) => (
                 <a href={item.url} key={item.name}>{item.name}</a>
             ))}
-            <div style={{
+            {/* <div style={{
                 width: 1,
                 height: 1,
                 position: 'absolute',
                 right: 0,
                 bottom: 0,
                 opacity: 0.1,
-            }} ref={persistentDivRef} className="persistent-div"></div>
+            }} ref={persistentDivRef} className="persistent-div"></div> */}
         </div>
         
         <sp-divider></sp-divider>

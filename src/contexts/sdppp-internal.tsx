@@ -3,9 +3,11 @@ import { PageStore, PageStoreData } from "../../../../src/store/page.mts";
 import { useSDPPPWebview } from "./webview";
 import { PhotoshopSocket } from "../logics/PhotoshopSocket.mts";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
+import { debug } from "debug";
+const log = debug('sdppp:internal');
 
 export const DEFAULT_BACKEND_URL = "http://127.0.0.1:8188"
-
+ 
 export interface SDPPPInternalContextType {
     socket: PhotoshopSocket | null,
 
@@ -30,7 +32,7 @@ export interface SDPPPInternalContextType {
     comfyMultiUser: boolean,
     setComfyMultiUser: (comfyMultiUser: SDPPPInternalContextType['comfyMultiUser']) => void,
 
-    beforeWorkflowRunHooks: (()=> {})[],
+    beforeWorkflowRunHooks: (() => {})[],
     setBeforeWorkflowRunHooks: Dispatch<SetStateAction<(() => {})[]>>,
 }
 
@@ -51,7 +53,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
     const [comfyMultiUser, setComfyMultiUser] = useState<SDPPPInternalContextType['comfyMultiUser']>(false);
     const [socket, setSocket] = useState<PhotoshopSocket | null>(null);
 
-    const [beforeWorkflowRunHooks, setBeforeWorkflowRunHooks] = useState<(()=> {})[]>([]);
+    const [beforeWorkflowRunHooks, setBeforeWorkflowRunHooks] = useState<(() => {})[]>([]);
 
     function setBackendURL(backendURL: SDPPPInternalContextType['backendURL']) {
         _setBackendURL(backendURL.split('?')[0].split('#')[0].trim());
@@ -63,10 +65,13 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
         if (connectState === 'connected') {
             setLastErrorMessage('')
             setSrc(`${backendURL}`);
-            photoshopStore.setIsLocal(!!(
-                backendURL.includes('localhost') || 
+
+            const isLocal = !!(
+                backendURL.includes('localhost') ||
                 backendURL.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
-            ));
+            )
+            log('setBackendURL:', backendURL, 'src:', isLocal);
+            photoshopStore.setIsLocal(true);
         } else {
             setSrc('')
             setWorkflowAgentSID('')
