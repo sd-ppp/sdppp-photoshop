@@ -86,7 +86,7 @@ function ConnectConfigBar() {
     useEffect(() => {
         if (!workflowAgentSID) {
             if (comfyMultiUser && !photoshopStore.data.comfyUserToken) {
-                setMessage(i18n('--multi-user activated, Not Login!'));
+                setMessage(i18n('--multi-user Not Login!'));
             } else if (timeoutError || loadError) {
                 setError(i18n('Error: {0}', loadError || i18n('timeout')));
             }
@@ -105,7 +105,7 @@ function ConnectConfigBar() {
     if (webviewAgentSID == workflowAgentSID) {
         runnerName = i18n('PS Webview');
     } else if (workflowAgentSID && ssid) {
-        runnerName = i18n('Browser Page {0}', ssid);
+        runnerName = i18n('Browser {0}', ssid);
     } else {
         runnerName = i18n('Loading...');
     }
