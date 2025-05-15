@@ -210,6 +210,7 @@ describe('SendImages', () => {
         };
 
         const result = await sendImages(params);
+        // @ts-ignore
         assert.deepEqual(result, {});
     });
 });

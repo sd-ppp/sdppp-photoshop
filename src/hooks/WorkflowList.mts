@@ -144,8 +144,6 @@ export function useSDPPPWorkflowList(): {
         finalErrorMessage = i18n("Workflow list is empty, please save a workflow by Comfy's lastest UI");
     if (workflowsError)
         finalErrorMessage = i18n("Workflow list loading failed: {0}", workflowsError.message);
-    if (!sdpppX.MU && comfyMultiUser)
-        finalErrorMessage = i18n('Workflow List of ComfyUI with --multi-user is only available for sponsors');
     if (isLoadingWorkflows)
         finalErrorMessage = "Loading";
 

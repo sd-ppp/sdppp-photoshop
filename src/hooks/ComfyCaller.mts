@@ -24,6 +24,7 @@ export function useSDPPPComfyCaller(): {
         success: boolean,
         error?: string
     } | undefined>;
+    setComfyOrgAPIKey: (apiKey: string) => Promise<void>;
 } {
     const {
         socket,
@@ -35,6 +36,10 @@ export function useSDPPPComfyCaller(): {
         triggerBeforeWorkflowRun
     } = useWorkflowRunHooks();
 
+
+    const setComfyOrgAPIKey = useCallback(async (apiKey: string) => {
+        await socket?.setComfyOrgAPIKey(workflowAgentSID, apiKey);
+    }, [socket, workflowAgentSID]);
 
     const openWorkflow = useCallback(async (workflowAgentSID: string, workflow_path: string) => {
         const workflowAgent = photoshopPageStoreMap.getStore(workflowAgentSID);
@@ -164,6 +169,7 @@ export function useSDPPPComfyCaller(): {
         uploadImage,
         interrupt,
         clearQueue,
-        reboot
+        reboot,
+        setComfyOrgAPIKey
     }
 }
