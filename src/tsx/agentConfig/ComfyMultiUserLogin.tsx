@@ -40,7 +40,7 @@ export function ComfyMultiUserLogin(props: ComfyLoginProps) {
     if (!comfyMultiUser) {
         return null;
     }
-    if (!sdpppX.MU && comfyMultiUser) {
+    if (!sdpppX.enableMU && comfyMultiUser) {
         return <div className="login-block">
             <div className="login-title">
                 {i18n('Comfy multi-user: ')}
