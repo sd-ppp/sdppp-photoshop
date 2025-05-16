@@ -84,7 +84,7 @@ function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
         workflowAgent,
         setWorkflowAgentSID,
         doConnectOrDisconnect,
-        lastErrorMessage,
+        lastErrorMessage: lastConnectErrorMessage,
     } = internalContext
     const {
         setShouldTriggerLivePainting
@@ -106,7 +106,7 @@ function SDPPPExternalProvider({ children }: { children: React.ReactNode }) {
         isLogin: isLogin,
 
         connectOrDisconnect: doConnectOrDisconnect,
-        lastConnectErrorMessage: lastErrorMessage,
+        lastConnectErrorMessage,
 
         setAutoRunning: setAutoRunning,
         autoRunning: autoRunning,

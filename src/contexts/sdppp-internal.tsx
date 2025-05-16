@@ -46,7 +46,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
     } = useSDPPPWebview();
 
     const [connectState, setConnectState] = useState<SDPPPInternalContextType['connectState']>('disconnected');
-    const [lastErrorMessage, setLastErrorMessage] = useState<SDPPPInternalContextType['lastErrorMessage']>('');
+    const [lastConnectErrorMessage, setLastConnectErrorMessage] = useState<SDPPPInternalContextType['lastErrorMessage']>('');
     const [backendURL, _setBackendURL] = useState<SDPPPInternalContextType['backendURL']>(localStorage.getItem('backendURL') || DEFAULT_BACKEND_URL);
     const [autoRunning, setAutoRunning] = useState<SDPPPInternalContextType['autoRunning']>(null);
     const [workflowAgentSID, setWorkflowAgentSID] = useState<string>('');
@@ -63,7 +63,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
     }, [backendURL]);
     useEffect(() => {
         if (connectState === 'connected') {
-            setLastErrorMessage('')
+            setLastConnectErrorMessage('')
             setSrc(`${backendURL}`);
 
             const isLocal = !!(
@@ -92,7 +92,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
                 if (!socket) {
                     _socket = new PhotoshopSocket(backendURL || DEFAULT_BACKEND_URL, {
                         setConnectState,
-                        setLastErrorMessage,
+                        setLastErrorMessage: setLastConnectErrorMessage,
                         setBackendURL,
                         setComfyMultiUser,
                     });
@@ -102,7 +102,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
                 // setConnectState('connecting');
 
             } catch (e: any) {
-                setLastErrorMessage(e.stack || e.message || e);
+                setLastConnectErrorMessage(e.stack || e.message || e);
             }
         }
     }
@@ -158,8 +158,8 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
         connectState,
         doConnectOrDisconnect,
 
-        lastErrorMessage,
-        setLastErrorMessage,
+        lastErrorMessage: lastConnectErrorMessage,
+        setLastErrorMessage: setLastConnectErrorMessage,
 
         autoRunning,
         setAutoRunning,
