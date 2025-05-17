@@ -21,6 +21,7 @@ const WebPageList: React.FC = () => {
             <div className="client-panel-title">
                 {i18n('Runner')}
             </div>
+            <sp-label>{i18n('Open ComfyUI in the browser to see more options')}</sp-label>
             <div className="agent-list">
                 <div
                     className={`agent-list-item${workflowAgentSID == webviewAgentSID ? ' selected' : ''}`}
