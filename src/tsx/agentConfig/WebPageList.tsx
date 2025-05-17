@@ -2,7 +2,6 @@ import React from "react";
 import i18n from "../../../../../src/common/i18n.mjs";
 import WebPageListItem from "./WebPageListItem";
 import { useSDPPPWebpageList } from "../../hooks/WebpageList.mts";
-import AgentIcon from "../../../../photoshop/src/tsx/icons/AgentIcon";
 import { useSDPPPInternalContext } from "../../contexts/sdppp-internal";
 import { useSDPPPWebview } from "../../contexts/webview";
 

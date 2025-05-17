@@ -23,7 +23,8 @@ const WebPageListItem: React.FC<WebPageListItemProps> = ({
             className={`agent-list-item${isWorkflowAgent ? ' selected' : ''}${isWorkflowAgent || isAutoRunning ? ' checked' : ''}`}
             onClick={() => setWorkflowAgentSID(isWorkflowAgent ? '' : pageInstance.sid)}
         >
-            <span>● [{pageInstance.ssid}] {pageInstance.lastError ? pageInstance.lastError?.replace('sdppp PS side error:', '') : pageInstance.title}</span>
+            <span>● [{pageInstance.ssid}] {pageInstance.title}</span>
+            {/* <span>● [{pageInstance.ssid}] {pageInstance.lastError ? pageInstance.lastError?.replace('sdppp PS side error:', '') : pageInstance.title}</span> */}
         </div>
     );
 }

@@ -1,8 +1,8 @@
-import { action, app } from "photoshop";
+import { action, app, constants } from "photoshop";
 import i18n from "../../../../../../src/common/i18n.mts";
 import type { RunPhotoshopActionOnLayerActions } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
 import { runNextModalState } from "src/logics/modalStateWrapper.mjs";
-import { findInAllSubLayer, getLayerID, parseDocumentIdentify } from "src/logics/util.mjs";
+import { findInAllSubLayer, getLayerID, parseDocumentIdentify, SpeicialIDManager } from "src/logics/util.mjs";
 
 export default async function runPhotoshopActionOnLayer(params: RunPhotoshopActionOnLayerActions['params']) {
     const { action_set: actionSetName, action: actionName } = params;
@@ -25,19 +25,23 @@ export default async function runPhotoshopActionOnLayer(params: RunPhotoshopActi
     const document = incomingDocument;
     const layerId = getLayerID(document, params.layer_identify);
     const layer = findInAllSubLayer(document, layerId);
-    if (!layer) {
-        throw new Error(i18n('layer not found: {0}', layer_identify));
-    }
 
-    await runNextModalState(async () => {
-        document.activeLayers.forEach(_layer => {
-            _layer.selected = false;
+    if (layer) {
+        await runNextModalState(async () => {
+            document.activeLayers.forEach(_layer => {
+                _layer.selected = false;
+            });
+            layer.selected = true;
+        }, {
+            commandName: i18n('select layer'),
+            dontRecoverSelection: true,
+            document: app.activeDocument
         });
-        layer.selected = true;
+    }
+    await runNextModalState(async () => {
         await actionForPlay.play();
     }, {
         commandName: i18n('run Photoshop Action'),
-        dontRecoverSelection: true,
         document: app.activeDocument
     });
     return {
