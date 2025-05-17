@@ -9,6 +9,7 @@ const WebPageList: React.FC = () => {
     const {
         workflowAgentSID,
         setWorkflowAgentSID,
+        backendURL,
     } = useSDPPPInternalContext();
     const {
         webviewAgentSID
@@ -19,7 +20,7 @@ const WebPageList: React.FC = () => {
     return (
         <>
             <div className="client-panel-title">
-                {i18n('Runner')}
+                {i18n('Runner')} ({backendURL})
             </div>
             <sp-label>{i18n('Open ComfyUI in the browser to see more options')}</sp-label>
             <div className="agent-list">

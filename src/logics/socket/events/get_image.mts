@@ -8,6 +8,9 @@ import { SDPPPBounds, SpeicialIDManager, getLayerID, getRasterizedLayer, parseDo
 import { Jimp, JimpInstance, JimpMime } from "jimp";
 import type { Bounds } from "photoshop/dom/objects/Bounds";
 import type { getImageActions, PixelsAndSize } from "../../../../../../src/socket/PhotoshopCalleeInterface.mts";
+import debug from "debug";
+
+const log = debug("sdppp:getImage");
 
 function applyLayerDataWithTransparent(pixelData: Uint8Array, maskData: Uint8Array | null): Uint8Array {
     for (let i = 0, length = pixelData.length / 4; i < length; i++) {
@@ -144,6 +147,8 @@ async function getJimpImage(params: getImageActions['params']): Promise<JimpInst
 
     const layerIdentify = params.layer_identify
     const layerID = getLayerID(document, layerIdentify);
+
+    log("getJimpImage", layerIdentify);
 
     if (params.boundary) {
         if (
