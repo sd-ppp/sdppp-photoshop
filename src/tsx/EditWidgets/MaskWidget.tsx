@@ -66,10 +66,16 @@ export function MaskWidget(props: ImageWidgetProps) {
     }
 
     const onSelectUpdate = useCallback(async (layerIdentify: string, invert: boolean = false) => {
-        const jimpImage = await getLayerImage(layerIdentify);
+        let jimpImage = await getLayerImage(layerIdentify);
         if (!jimpImage) return;
+        if (invert) {
+            jimpImage.scan(0, 0, jimpImage.bitmap.width, jimpImage.bitmap.height, function (x, y, idx) {
+                // Invert the alpha value
+                jimpImage.bitmap.data[idx + 3] = 255 - jimpImage.bitmap.data[idx + 3];
+            });
+        }
         jimpImageRef.current = jimpImage;
-        const base64 = await getMaskPreviewBase64(jimpImage, invert);
+        const base64 = await getMaskPreviewBase64(jimpImage);
         setLayerIdentify(layerIdentify);
         setPreviewBase64(base64);
         setPendingUpload(true);

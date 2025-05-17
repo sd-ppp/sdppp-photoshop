@@ -80,6 +80,10 @@ export function useSDPPPComfyCaller(): {
         if (!workflowAgent.data.widgetTableStructure.widgetTablePath) {
             throw new Error('workflow not found');
         }
+        if (workflowAgent.data.widgetTableStructure.widgetTablePath.indexOf("://") !== -1) {
+            // throw new Error('workflow is not savable');
+            return;
+        }
         await socket?.saveWorkflow(workflowAgent, {
             workflow_path: workflowAgent.data.widgetTableStructure.widgetTablePath,
             from_sid: photoshopStore.data.sid
