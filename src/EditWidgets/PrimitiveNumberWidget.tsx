@@ -30,6 +30,12 @@ export const PrimitiveNumberWidget: React.FC<PrimitiveNumberWidgetProps> = (prop
         onValueChange(localValue);
     }, [localValue, onValueChange]);
 
+    const handleInputAndBlur = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = +event.target.value;
+        setLocalValue(+newValue.toFixed(3));
+        onValueChange(+newValue.toFixed(3));
+    }, [localValue, onValueChange]);
+
     // 检查步长范围是否过大
     let isStepRangeTooBig = ((inputMax - inputMin) / inputStep) > 1000;
     if (!isStepRangeTooBig && uiWeight && uiWeight >= 1 && extraOptions?.useSliderForNumberWidget) {
@@ -47,8 +53,7 @@ export const PrimitiveNumberWidget: React.FC<PrimitiveNumberWidgetProps> = (prop
                     max={inputMax}
                     step={inputStep}
                     value={localValue}
-                    onInput={handleInput}
-                    onMouseUp={handleBlur}
+                    onInput={handleInputAndBlur}
                     show-value="false"
                     class="sdppp-slider"
                 >
