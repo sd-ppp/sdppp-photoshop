@@ -24,7 +24,9 @@ export function SDPPP({
     const { isLogin } = useSDPPPLoginContext();
 
     return (
-        <>
+        <div className="sdppp-container" style={connectState !== 'connected' ? {
+            height: '100vh',
+        } : {}}>
             <SDPPPErrorBoundary>
                 {
                     isLogin ?
@@ -33,6 +35,6 @@ export function SDPPP({
                 }
             </SDPPPErrorBoundary>
             {connectState != 'connected' && <About />}
-        </>
+        </div>
     );
 }

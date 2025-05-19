@@ -22,10 +22,12 @@ export type UserInfoResult = {
 }
 
 interface LogixContextType {
+    hasAuthingLogin: boolean,
     loginStyle: 'invitation' | 'password' | 'none',
     loginBannerTop: ReactNode | null,
     loginBannerBottom: ReactNode | null,
     isLogin: boolean,
+    loggedInUsername: string,
     logout: () => void,
     login: (username: string, password: string) => Promise<LoginResult>,
 }
@@ -216,10 +218,12 @@ export function SDPPPLoginProvider({
     }, [isLogin])
 
     return <SDPPPLoginContext.Provider value={{
+        hasAuthingLogin: !!loginAppID,
         loginStyle: loginStyle || 'none',
         loginBannerBottom: loginBannerBottom || null,
         loginBannerTop: loginBannerTop || null,
         isLogin,
+        loggedInUsername: localStorage.getItem('last-username') || '',
         logout: () => {
             localStorage.removeItem('token')
             setIsLogin(false)

@@ -8,6 +8,7 @@ import i18n from "../../../../src/common/i18n.mts";
 import { useSDPPPWebview } from "src/contexts/webview";
 import { AgentConfigDialog } from "./agentConfig/Dialog";
 import { photoshopStore } from "src/logics/ModelDefines.mjs";
+import { useSDPPPLoginContext } from "src/contexts/login";
 
 export function AddressBar() {
     const { backendURL, setBackendURL, connectState, doConnectOrDisconnect } = useSDPPPInternalContext();
@@ -80,6 +81,7 @@ function ConnectConfigBar() {
         executingNodeTitle,
         queueSize,
     } = useAgentState(workflowAgentSID);
+    const { loggedInUsername, hasAuthingLogin } = useSDPPPLoginContext();
 
     let queueText = workflowAgentSID && queueSize ? `(${queueSize})` : '';
 
@@ -128,7 +130,7 @@ function ConnectConfigBar() {
             }} />
         </dialog>
         <div className="connect-config-content">
-            <span>⏵ {i18n('Runner')}: {runnerName} {queueText}</span>
+            {hasAuthingLogin ? <span>用户名：{loggedInUsername}</span> : <span>⏵ {i18n('Runner')}: {runnerName} {queueText}</span>}
             {error && <span className="connect-config-error">{error}</span>}
             {!error && message && <span className="connect-config-message">{message}</span>}
         </div>

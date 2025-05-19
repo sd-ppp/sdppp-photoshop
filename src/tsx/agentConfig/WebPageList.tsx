@@ -16,12 +16,19 @@ const WebPageList: React.FC = () => {
     } = useSDPPPWebview();
 
     const { pageInstances } = useSDPPPWebpageList();
+    const { timeoutError } = useSDPPPWebview();
 
     return (
         <>
-            <div className="client-panel-title">
-                {i18n('Runner')} ({backendURL})
-            </div>
+            {
+                timeoutError ?
+                    <div className="client-panel-title">
+                        {i18n('Webview load timeout, please switch to a different runner')}
+                    </div>
+                    : <div className="client-panel-title">
+                        {i18n('Runner')} ({backendURL})
+                    </div>
+            }
             <sp-label>{i18n('Open ComfyUI in the browser to see more options')}</sp-label>
             <div className="agent-list">
                 <div

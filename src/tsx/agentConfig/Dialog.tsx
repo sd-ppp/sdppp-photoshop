@@ -1,15 +1,22 @@
+import { useSDPPPLoginContext } from "src/contexts/login";
 import i18n from "../../../../../src/common/i18n.mts";
+import { AuthingLogin } from "./AuthingLogin";
 import { ComfyMultiUserLogin } from "./ComfyMultiUserLogin";
 import { ComfyOrgLogin } from "./ComfyOrgLogin";
 import { WebPageList } from "./WebPageList";
+import { useSDPPPWebview } from "src/contexts/webview";
 
 export function AgentConfigDialog({onRequestLogin}: {onRequestLogin: () => void}) {
+    const { timeoutError } = useSDPPPWebview();
+    const { hasAuthingLogin } = useSDPPPLoginContext();
+
     return <div className="client-panel">
-        <WebPageList />
+        { (!hasAuthingLogin || timeoutError) && <WebPageList />}
         <div className="app-login-container">
             <div className="client-panel-title">
                 {i18n('Login/Auth')}
             </div>
+            <AuthingLogin />
             <ComfyMultiUserLogin onRequestLogin={onRequestLogin} />
             <ComfyOrgLogin />
         </div>

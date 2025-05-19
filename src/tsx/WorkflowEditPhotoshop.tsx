@@ -174,7 +174,7 @@ export function WorkflowEditPhotoshop() {
     if (!widgetTableStructure) {
         return null;
     }
-    return (
+    return ( 
         <div className="workflow-edit">
             <div className="workflow-edit-title">
                 {widgetTableStructure.widgetTablePath && <sp-label style={{ fontWeight: 'bold' }}>{simplifyWorkflowPath(widgetTableStructure.widgetTablePath)}</sp-label>}
