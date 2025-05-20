@@ -1,5 +1,6 @@
 import React from "react";
 import { BaseFormWidget } from "../../../../src/common/tsx/BaseFormWidget";
+import { sdpppX } from "../../../../src/common/sdpppX.mts";
 
 interface PrimitiveToggleWidgetProps {
     value?: any,
@@ -18,15 +19,24 @@ export class PrimitiveToggleWidget extends BaseFormWidget<PrimitiveToggleWidgetP
 
     render() {
         const checkedAttr = !!this.props.value ? { 'checked': true } : {};
-        return <sp-checkbox
-            label={this.props.name || ''}
-            style={{
-                ...this.computeUIWeightCSS(this.props.uiWeight)
-            }}
-            onInput={(e: any) => {
-                this.props.onValueChange(e.target.checked)
-            }}
-            {...checkedAttr}
-        >{this.props.name || ''}</sp-checkbox>
-    }
+        if (sdpppX.checkboxStyle === 'div') {
+            return <div
+                className={(checkedAttr.checked ? 'active' : '') + ' sdppp-checkbox'}
+                onClick={(e: any) => {
+                    this.props.onValueChange(!this.props.value)
+                }}
+            >{this.props.name || ''}</div>
+        } else {
+            return <sp-checkbox
+                label={this.props.name || ''}
+                style={{
+                    ...this.computeUIWeightCSS(this.props.uiWeight)
+                }}
+                onInput={(e: any) => {
+                    this.props.onValueChange(e.target.checked)
+                }}
+                {...checkedAttr}
+            >{this.props.name || ''}</sp-checkbox>
+        }
+        }
 } 
