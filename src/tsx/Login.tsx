@@ -3,7 +3,7 @@ import i18n from "../../../../src/common/i18n.mts";
 import { useSDPPPLoginContext } from "../contexts/login.tsx";
 
 export function Login() {
-    const { login, loginStyle, loginBannerTop, loginBannerBottom } = useSDPPPLoginContext()
+    const { login, loginStyle, loginBannerTop, loginBannerBottom, setIsTrialing } = useSDPPPLoginContext()
 
     const [username, setUsername] = useState(localStorage.getItem('last-username') || '');
     const [password, setPassword] = useState('');
@@ -54,6 +54,8 @@ export function Login() {
                     <div className="login-error-message">
                         {loginErrorMessage}
                     </div>
+
+                    
                     <button
                         className="login-button"
                         onClick={async () => {
@@ -68,6 +70,11 @@ export function Login() {
                     >
                         {i18n('Login')}
                     </button>
+                    {
+                        loginStyle === 'trialable-password' && (
+                            <a className="trial-button" onClick={() => setIsTrialing(true)}>游客试用</a>
+                        )
+                    }
                 </div>
             </div>
             {loginBannerBottom}

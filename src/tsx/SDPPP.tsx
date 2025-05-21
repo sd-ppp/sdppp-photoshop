@@ -21,20 +21,25 @@ export function SDPPP({
         connectState
     } = useSDPPPInternalContext();
 
-    const { isLogin } = useSDPPPLoginContext();
+    const { isLogin, isTrialing } = useSDPPPLoginContext();
 
     return (
-        <div className="sdppp-container" style={connectState !== 'connected' ? {
+        <div className="sdppp-container" style={connectState !== 'connected' ? { 
             height: '100vh',
         } : {}}>
             <SDPPPErrorBoundary>
                 {
-                    isLogin ?
+                    isLogin || isTrialing ?
                         renderContent(connectState, AddressBar, WorkflowEditPhotoshop) :
                         <Login />
                 }
             </SDPPPErrorBoundary>
             {connectState != 'connected' && <About />}
+            {
+                isTrialing && <div className="sdppp-trial-tips">
+                    <span>游客试用中，登陆解锁更多功能</span>
+                </div>
+            }
         </div>
     );
 }

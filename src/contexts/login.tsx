@@ -23,13 +23,15 @@ export type UserInfoResult = {
 
 interface LogixContextType {
     hasAuthingLogin: boolean,
-    loginStyle: 'invitation' | 'password' | 'none',
+    loginStyle: 'invitation' | 'password' | 'trialable-password' | 'none',
     loginBannerTop: ReactNode | null,
     loginBannerBottom: ReactNode | null,
     isLogin: boolean,
     loggedInUsername: string,
     logout: () => void,
     login: (username: string, password: string) => Promise<LoginResult>,
+    setIsTrialing: (isTrialing: boolean) => void,
+    isTrialing: boolean,
 }
 
 export const SDPPPLoginContext = createContext({} as LogixContextType);
@@ -48,6 +50,7 @@ export function SDPPPLoginProvider({
     loginBannerBottom?: ReactNode,
 }) {
     const [isLogin, setIsLogin] = useState(!loginAppID);
+    const [isTrialing, setIsTrialing] = useState(false);
 
     const authingLogin = useCallback(async (username: string, password: string = 'sdppp123456'): Promise<LoginResult> => {
         try {
@@ -223,12 +226,15 @@ export function SDPPPLoginProvider({
         loginBannerBottom: loginBannerBottom || null,
         loginBannerTop: loginBannerTop || null,
         isLogin,
-        loggedInUsername: localStorage.getItem('last-username') || '',
+        loggedInUsername: isLogin ? localStorage.getItem('last-username') || '' : '',
         logout: () => {
             localStorage.removeItem('token')
             setIsLogin(false)
+            setIsTrialing(false)
         },
         login,
+        setIsTrialing,
+        isTrialing,
     }}>
         {children}
     </SDPPPLoginContext.Provider>;

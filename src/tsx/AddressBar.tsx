@@ -81,7 +81,7 @@ function ConnectConfigBar() {
         executingNodeTitle,
         queueSize,
     } = useAgentState(workflowAgentSID);
-    const { loggedInUsername, hasAuthingLogin } = useSDPPPLoginContext();
+    const { loggedInUsername, hasAuthingLogin, isLogin } = useSDPPPLoginContext();
 
     let queueText = workflowAgentSID && queueSize ? `(${queueSize})` : '';
 
@@ -130,7 +130,7 @@ function ConnectConfigBar() {
             }} />
         </dialog>
         <div className="connect-config-content">
-            {hasAuthingLogin ? <span>用户名：{loggedInUsername}</span> : <span>⏵ {i18n('Runner')}: {runnerName} {queueText}</span>}
+            {hasAuthingLogin ? <span>用户名：{isLogin ? loggedInUsername : '未登录'}</span> : <span>⏵ {i18n('Runner')}: {runnerName} {queueText}</span>}
             {error && <span className="connect-config-error">{error}</span>}
             {!error && message && <span className="connect-config-message">{message}</span>}
         </div>

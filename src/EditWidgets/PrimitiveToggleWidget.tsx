@@ -21,6 +21,9 @@ export class PrimitiveToggleWidget extends BaseFormWidget<PrimitiveToggleWidgetP
         const checkedAttr = !!this.props.value ? { 'checked': true } : {};
         if (sdpppX.checkboxStyle === 'div') {
             return <div
+                style={{
+                    ...this.computeUIWeightCSS(this.props.uiWeight)
+                }}
                 className={(checkedAttr.checked ? 'active' : '') + ' sdppp-checkbox'}
                 onClick={(e: any) => {
                     this.props.onValueChange(!this.props.value)
@@ -38,5 +41,5 @@ export class PrimitiveToggleWidget extends BaseFormWidget<PrimitiveToggleWidgetP
                 {...checkedAttr}
             >{this.props.name || ''}</sp-checkbox>
         }
-        }
+    }
 } 

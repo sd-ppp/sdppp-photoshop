@@ -7,11 +7,11 @@ export function AuthingLogin() {
 
     return (
         <div className="login-block">
-            <div className="api-key-title">{sdpppX['插件名字']} ID: {loggedInUsername}</div>
+            <div className="api-key-title">{sdpppX['插件名字']} ID: {loggedInUsername || '未登录'}</div>
             <div className="logout-btn action-button" onClick={() => {
                 logout();
             }}>
-                {i18n('Logout')}
+                {loggedInUsername ? i18n('Logout') : i18n('Login')}
             </div>
         </div>
     )
