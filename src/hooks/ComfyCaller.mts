@@ -4,6 +4,7 @@ import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
 import { photoshopPageStoreMap, photoshopStore } from "../logics/ModelDefines.mts";
 import { useWorkflowRunHooks } from "./WidgetTable.mts";
 import { action } from "photoshop";
+import { sdpppX } from "../../../../src/common/sdpppX.mts";
 
 export function useSDPPPComfyCaller(): {
     openWorkflow: (workflowAgentSID: string, workflow_path: string, reset: boolean) => Promise<void>;
@@ -49,6 +50,8 @@ export function useSDPPPComfyCaller(): {
         try {
             await socket?.openWorkflow(workflowAgent, {
                 workflow_path,
+                sdpppID: sdpppX.sdpppID,
+                sdpppToken: localStorage.getItem('token') || '',
                 from_sid: photoshopStore.data.sid,
                 reset: true
             });

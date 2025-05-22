@@ -27,7 +27,14 @@ function useFetchWorkflows(backendURL: string) {
         setIsLoading(true);
         const workflowAgent = photoshopPageStoreMap.getStore(agentSID || workflowAgentSID);
         try {
-            const workflows = await socket?.listWorkflows(workflowAgent || null) || [];
+            const workflows = await socket?.listWorkflows(workflowAgent || null, {
+                listMode: sdpppX.listMode,
+                sdpppID: sdpppX.sdpppID,
+                sdpppToken: localStorage.getItem('token') || ''
+            }) || {
+                workflows: [],
+                error: 'Empty workflow list'
+            };
             if ('error' in workflows) {
                 setError(new Error(workflows.error));
                 setIsLoading(false);
@@ -36,7 +43,7 @@ function useFetchWorkflows(backendURL: string) {
             setIsLoading(false);
             setError(null);
             setListData(
-                workflows
+                workflows.workflows
                     .reduce((acc: any, path: string) => {
                         acc[path] = { path: path, content: null, error: '' }
                         return acc

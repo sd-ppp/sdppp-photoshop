@@ -12,6 +12,7 @@ export function AgentConfigDialog({onRequestLogin}: {onRequestLogin: () => void}
 
     return <div className="client-panel">
         { (!hasAuthingLogin || timeoutError) && <WebPageList />}
+        {/* <WebPageList /> */}
         <div className="app-login-container">
             <div className="client-panel-title">
                 {i18n('Login/Auth')}
