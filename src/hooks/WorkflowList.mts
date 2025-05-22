@@ -35,7 +35,7 @@ function useFetchWorkflows(backendURL: string) {
                 workflows: [],
                 error: 'Empty workflow list'
             };
-            if ('error' in workflows) {
+            if (workflows['error']) {
                 setError(new Error(workflows.error));
                 setIsLoading(false);
                 return;

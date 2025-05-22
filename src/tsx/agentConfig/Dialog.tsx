@@ -17,7 +17,7 @@ export function AgentConfigDialog({onRequestLogin}: {onRequestLogin: () => void}
             <div className="client-panel-title">
                 {i18n('Login/Auth')}
             </div>
-            <AuthingLogin />
+            {hasAuthingLogin && <AuthingLogin />}
             <ComfyMultiUserLogin onRequestLogin={onRequestLogin} />
             <ComfyOrgLogin />
         </div>
