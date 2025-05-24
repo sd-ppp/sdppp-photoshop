@@ -79,11 +79,23 @@ action.addNotificationListener(['set'], (name, args) => {
         notifySelectionChange()
     }
 })
+
 function checkCurrentDocument() {
     const activeLayers = app.activeDocument?.activeLayers.map(layer => layer.id).join(',');
     if (lastCurrentDocumentID != app.activeDocument?.id) {
         notifyDocumentChange();
     }
+
+    let allActions: string[] = [] 
+    app.actionTree.forEach(actionSet => {
+        actionSet.actions.forEach(action => {
+            allActions.push(actionSet.name + '/' + action.name);
+        })
+    })
+    if (photoshopStore.data.actions.length != allActions.length || photoshopStore.data.actions.some((action, index) => action != allActions[index])) {
+        photoshopStore.setActions(allActions);
+    }
+
     if (
         lastCurrentDocumentID != app.activeDocument?.id ||
         lastCurrentLayerID != activeLayers

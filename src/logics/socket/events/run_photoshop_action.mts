@@ -5,8 +5,10 @@ import { runNextModalState } from "src/logics/modalStateWrapper.mjs";
 import { findInAllSubLayer, getLayerID, parseDocumentIdentify, SpeicialIDManager } from "src/logics/util.mjs";
 
 export default async function runPhotoshopActionOnLayer(params: RunPhotoshopActionOnLayerActions['params']) {
-    const { action_set: actionSetName, action: actionName } = params;
+    const { action: actionFullName } = params;
     const { document_identify, layer_identify } = params;
+
+    const [actionSetName, actionName] = actionFullName.split('/') || [];
 
     const actionSet = app.actionTree.find(actionSet => actionSet.name === actionSetName);
 
@@ -23,7 +25,7 @@ export default async function runPhotoshopActionOnLayer(params: RunPhotoshopActi
         throw new Error(i18n('document {0} not found', document_identify));
     }
     const document = incomingDocument;
-    const layerId = getLayerID(document, params.layer_identify);
+    const layerId = getLayerID(document, layer_identify);
     const layer = findInAllSubLayer(document, layerId);
 
     if (layer) {
