@@ -15,6 +15,9 @@ export const config = {
     },
     outdir: join(projectRoot, 'plugins/photoshop/dist'),
     external: ['uxp', 'photoshop', 'os', 'fs', 'react', 'react-dom/client', 'jimp', 'socket.io-client', 'react/jsx-runtime', 'buffer'],
+    define: {
+        'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
+    },
     plugins: [
         externalGlobalPlugin.externalGlobalPlugin({
             'react': 'window.React',

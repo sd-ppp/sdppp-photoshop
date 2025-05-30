@@ -43,6 +43,7 @@ export function Promote() {
     }
     const src = './promote.html?color=' + color;
     const cloud = sponsorData.cloud[getI18nLocale() == 'zhcn' ? 'zhcn' : 'en'];
+    if (cloud.length == 0) return null;
     return (
         <webview ref={webviewRef} className="promote-webview" style={{ width: '100%', height: '24px' }} src={src} />
     );

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import sponsors from '../../../../../sponsors.json'
 
 // 定义接口
 interface SponsorItem {
@@ -50,96 +51,7 @@ interface SponsorData {
 }
 
 // 默认数据
-const DEFAULT_DATA: SponsorData = {
-    // "site": {
-    //     "en": {
-    //         "name": "Site: SDPPP.com",
-    //         "url": "https://github.com/zombieyang/sd-ppp"
-    //     },
-    //     "zhcn": {
-    //         "name": "官方网站：SDPPP.com",
-    //         "url": "https://gitee.com/zombieyang/sd-ppp"
-    //     }
-    // },
-    "LICENSE": {
-        "name": "BSD3-Clause",
-        "url": {
-            "en": "https://github.com/zombieyang/sd-ppp/blob/main/LICENSE",
-            "zhcn": "https://gitee.com/zombieyang/sd-ppp/blob/main/LICENSE"
-        }
-    },
-    "sponsors": [
-        {
-            "name": "四喜AI",
-            "url": "https://v.douyin.com/hD2X7S717uw/"
-        },
-        {
-            "name": "沐沐AI",
-            "url": "https://v.douyin.com/k6yKDEcVgP8/"
-        }
-    ],
-    "links": [
-        {
-            "name": "猫咪老师Reimagined",
-            "url": "https://www.xiaohongshu.com/user/profile/59f1fcc411be101aba7f048f"
-        },
-        {
-            "name": "来真的",
-            "url": "https://space.bilibili.com/590784254"
-        },
-        {
-            "name": "哑狗Egao",
-            "url": "https://space.bilibili.com/284721975"
-        }
-    ],
-    "community": {
-        "en": [
-            {
-                "name": "Github",
-                "url": "https://github.com/zombieyang/sd-ppp"
-            },
-            {
-                "name": "Discord",
-                "url": "https://discord.gg/9HeGjDvEmn"
-            },
-            {
-                "name": "Youtube",
-                "url": "https://www.youtube.com/@Github-Zombeeyang/videos"
-            }
-        ],
-        "zhcn": [
-            {
-                "name": "Github",
-                "url": "https://github.com/zombieyang/sd-ppp"
-            },
-            {
-                "name": "QQ频道",
-                "url": "https://pd.qq.com/s/5m42umo28"
-            },
-            {
-                "name": "Bilibili",
-                "url": "https://space.bilibili.com/44908313"
-            }   
-        ]
-    },
-    "cloud": {
-        "en": [],
-        "zhcn": [
-            {
-                "name": "晨羽智云",
-                "url": "https://www.chenyu.cn/console/login?invitationCode=BUD913",
-                "icon": "icons/chenyu.ico",
-                "color": "var(--uxp-host-text-color-secondary)"
-            },
-            {
-                "name": "Cephalon",
-                "url": "https://cephalon.cloud/share/register-landing?invite_id=m95SDj",
-                "icon": "icons/cephalon.ico",
-                "color": "var(--uxp-host-text-color-secondary)"
-            }
-        ]
-    }
-};
+const DEFAULT_DATA: SponsorData = sponsors;
 
 // 存储键名
 const STORAGE_KEY = 'sponsorData';
@@ -359,7 +271,11 @@ export function useSponsor(): { data: SponsorData, isLoading: boolean } {
         if (sponsorDataPromise) {
             sponsorDataPromise
                 .then(result => {
-                    setData(result);
+                    if (process.env.NODE_ENV === 'development') {
+                        setData(DEFAULT_DATA);
+                    } else {
+                        setData(result);
+                    }
                 })
                 .catch(error => {
                     console.error('Error in useSponsor:', error);
@@ -379,3 +295,98 @@ export function useSponsor(): { data: SponsorData, isLoading: boolean } {
     // return { data: DEFAULT_DATA };
     return { data, isLoading: retIsLoading };
 }
+
+
+
+
+// 默认数据
+// const DEFAULT_DATA: SponsorData = {
+//     // "site": {
+//     //     "en": {
+//     //         "name": "Site: SDPPP.com",
+//     //         "url": "https://github.com/zombieyang/sd-ppp"
+//     //     },
+//     //     "zhcn": {
+//     //         "name": "官方网站：SDPPP.com",
+//     //         "url": "https://gitee.com/zombieyang/sd-ppp"
+//     //     }
+//     // },
+//     "LICENSE": {
+//         "name": "BSD3-Clause",
+//         "url": {
+//             "en": "https://github.com/zombieyang/sd-ppp/blob/main/LICENSE",
+//             "zhcn": "https://gitee.com/zombieyang/sd-ppp/blob/main/LICENSE"
+//         }
+//     },
+//     "sponsors": [
+//         {
+//             "name": "四喜AI",
+//             "url": "https://v.douyin.com/hD2X7S717uw/"
+//         },
+//         {
+//             "name": "沐沐AI",
+//             "url": "https://v.douyin.com/k6yKDEcVgP8/"
+//         }
+//     ],
+//     "links": [
+//         {
+//             "name": "猫咪老师Reimagined",
+//             "url": "https://www.xiaohongshu.com/user/profile/59f1fcc411be101aba7f048f"
+//         },
+//         {
+//             "name": "来真的",
+//             "url": "https://space.bilibili.com/590784254"
+//         },
+//         {
+//             "name": "哑狗Egao",
+//             "url": "https://space.bilibili.com/284721975"
+//         }
+//     ],
+//     "community": {
+//         "en": [
+//             {
+//                 "name": "Github",
+//                 "url": "https://github.com/zombieyang/sd-ppp"
+//             },
+//             {
+//                 "name": "Discord",
+//                 "url": "https://discord.gg/9HeGjDvEmn"
+//             },
+//             {
+//                 "name": "Youtube",
+//                 "url": "https://www.youtube.com/@Github-Zombeeyang/videos"
+//             }
+//         ],
+//         "zhcn": [
+//             {
+//                 "name": "Github",
+//                 "url": "https://github.com/zombieyang/sd-ppp"
+//             },
+//             {
+//                 "name": "QQ频道",
+//                 "url": "https://pd.qq.com/s/5m42umo28"
+//             },
+//             {
+//                 "name": "Bilibili",
+//                 "url": "https://space.bilibili.com/44908313"
+//             }   
+//         ]
+//     },
+//     "cloud": {
+//         "en": [],
+//         "zhcn": [
+//             {
+//                 "name": "晨羽智云",
+//                 "url": "https://www.chenyu.cn/console/login?invitationCode=BUD913",
+//                 "icon": "icons/chenyu.ico",
+//                 "color": "var(--uxp-host-text-color-secondary)"
+//             },
+//             {
+//                 "name": "Cephalon",
+//                 "url": "https://cephalon.cloud/share/register-landing?invite_id=m95SDj",
+//                 "icon": "icons/cephalon.ico",
+//                 "color": "var(--uxp-host-text-color-secondary)"
+//             }
+//         ]
+//     }
+// };
