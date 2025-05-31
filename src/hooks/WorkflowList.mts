@@ -122,19 +122,24 @@ export function useSDPPPWorkflowList(): {
     }[] = [];
 
     if (!isLoadingWorkflows && !workflowsError && workflows) {
+        let showingFiles: string[] = [];
+        let showingDirs: string[] = [];
         Object.keys(workflows).forEach((path) => {
             if (path.startsWith(currentViewingDirectory)) {
                 const relativePath = path.slice(currentViewingDirectory.length).split('://').pop();
 
                 if (!relativePath) {
                 } else if (relativePath.indexOf('/') == -1) {
-                    showingList.push({ path, isDir: false })
+                    showingFiles.push(path)
                 } else {
-                    showingList.unshift({ path: path.slice(0, path.lastIndexOf('/') + 1), isDir: true })
+                    showingDirs.push(path.slice(0, path.lastIndexOf('/') + 1))
                 }
             }
         })
-        showingList = showingList.filter((item, index, self) =>
+        showingList = [
+            ...showingDirs.sort((a, b) => a.localeCompare(b)).map((path) => ({ path: path, isDir: true })),
+            ...showingFiles.map((path) => ({ path: path, isDir: false }))
+        ].filter((item, index, self) =>
             self.findIndex((t) => t.path == item.path) === index);
     }
 
