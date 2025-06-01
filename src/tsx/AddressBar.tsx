@@ -137,5 +137,7 @@ function ConnectConfigBar() {
         <div className="connect-config-actions">
             <CogIcon size={.8} />
         </div>
+
+        {progress ? <div className="connect-config-progress" style={{ width: `${progress}%` }}></div> : ''}
     </div>
 }
