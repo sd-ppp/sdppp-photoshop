@@ -94,7 +94,7 @@ function ConnectConfigBar() {
             }
 
         } else if (workflowAgentSID) {
-            if (progress) {
+            if (executingNodeTitle) { // progress 是当前节点的执行进度，没有用。应该用 executingNodeTitle 来显示当前正在执行的节点
                 setMessage(`(${progress}% - ${executingNodeTitle}...)`);
             } else {
                 setMessage('');

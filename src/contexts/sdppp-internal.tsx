@@ -71,7 +71,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
                 backendURL.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
             )
             log('setBackendURL:', backendURL, 'src:', isLocal);
-            photoshopStore.setIsLocal(true);
+            photoshopStore.setIsLocal(isLocal);
         } else {
             setSrc('')
             setWorkflowAgentSID('')
