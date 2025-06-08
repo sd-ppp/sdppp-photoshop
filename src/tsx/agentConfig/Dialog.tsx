@@ -4,14 +4,15 @@ import { AuthingLogin } from "./AuthingLogin";
 import { ComfyMultiUserLogin } from "./ComfyMultiUserLogin";
 import { ComfyOrgLogin } from "./ComfyOrgLogin";
 import { WebPageList } from "./WebPageList";
-import { useSDPPPWebview } from "src/contexts/webview";
+import { useSDPPPWebview } from "../../contexts/webview";
+import { photoshopStore } from "../../logics/ModelDefines.mts";
 
 export function AgentConfigDialog({onRequestLogin}: {onRequestLogin: () => void}) {
     const { timeoutError } = useSDPPPWebview();
     const { hasAuthingLogin } = useSDPPPLoginContext();
 
     return <div className="client-panel">
-        { (!hasAuthingLogin || timeoutError) && <WebPageList />}
+            { (!hasAuthingLogin || timeoutError) && <WebPageList />}
         {/* <WebPageList /> */}
         <div className="app-login-container">
             <div className="client-panel-title">
@@ -20,6 +21,7 @@ export function AgentConfigDialog({onRequestLogin}: {onRequestLogin: () => void}
             {hasAuthingLogin && <AuthingLogin />}
             <ComfyMultiUserLogin onRequestLogin={onRequestLogin} />
             <ComfyOrgLogin />
+            <sp-label>photoshop id: {photoshopStore.data.uname}</sp-label>
         </div>
     </div>
 }
