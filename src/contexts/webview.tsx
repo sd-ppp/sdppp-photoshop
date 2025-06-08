@@ -12,7 +12,7 @@ interface WebviewContextType {
   setWebviewAgentSID: (webviewAgentSID: string) => void
 
   timeoutError: boolean
-  loadError: boolean
+  loadError: string
 }
 
 const WebviewContext = createContext<WebviewContextType | null>(null);
@@ -83,7 +83,7 @@ function internalUseSDPPPWebview() {
   const [lastLoadAfter5s, setLastLoadAfter5s] = useState<boolean>(false);
   const [lastLoadStopped, setLastLoadStopped] = useState<boolean>(false);
   const loadtimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [loadError, setLoadError] = useState<boolean>(false);
+  const [loadError, setLoadError] = useState<string>('');
 
   useEffect(() => {
     const callback = () => {
@@ -117,8 +117,11 @@ function internalUseSDPPPWebview() {
     createdHiddenWebview.addEventListener('loadstop', () => {
       setLastLoadStopped(true);
     })
-    createdHiddenWebview.addEventListener('loaderror', () => {
-      setLoadError(true);
+    createdHiddenWebview.addEventListener('loaderror', (e) => {
+      setLoadError((e as any).message || e.type);
+    })
+    createdHiddenWebview.addEventListener('loadstart', () => {
+      setLoadError('');
     })
 
     return () => {
