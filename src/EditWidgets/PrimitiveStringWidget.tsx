@@ -50,7 +50,7 @@ export function PrimitiveStringWidget(props: PrimitiveStringWidgetProps & { uiWe
             />
             <p
                 ref={hiddenDivRef}
-                style={{ fontSize: 14, visibility: 'hidden', whiteSpace: 'pre-line' }}
+                style={{ fontSize: 14, visibility: 'hidden', whiteSpace: 'pre-line', width: '100%' }}
             >
                 {textAreaValue}
             </p>
