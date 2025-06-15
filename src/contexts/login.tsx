@@ -54,35 +54,24 @@ export function SDPPPLoginProvider({
 
     const authingLogin = useCallback(async (username: string, password: string = 'sdppp123456'): Promise<LoginResult> => {
         try {
-            const response = await fetch('https://api.authing.cn/api/v3/signin', {
+            const response = await fetch('https://tophotel.top/api/users/loginByUsername', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'x-authing-app-id': loginAppID,
-                    'x-authing-sdk-version': 'web:3.0.0'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    connection: 'PASSWORD',
-                    passwordPayload: {
-                        username: username, // 或使用 phone 或 username 取决于登录方式
-                        password: password
-                    }
+                    "username": username,
+                    "password": password
                 })
             });
 
             const data = await response.json();
             if (response.ok) {
-                if (data.statusCode === 200) {
-                    return {
-                        success: true,
-                        token: data.data.access_token // 登录成功后，本地存储的登录票据。用于下次启动时的验证
-                    };
-                } else if (data.statusCode === 403) {
-                    return {
-                        success: false,
-                        message: i18n('Verification Error'),
-                    };
-                }
+                return {
+                    success: true,
+                    token: data.data.token // 登录成功后，本地存储的登录票据。用于下次启动时的验证
+                };
+
             } else {
                 return {
                     success: false,
@@ -95,37 +84,29 @@ export function SDPPPLoginProvider({
                 message: error.toString(),
             };
         }
-        return {
-            success: false,
-            message: '登录失败',
-        }
     }, [])
 
     const verifyToken = useCallback(async (token: string) => {
         if (!token) {
             throw new Error('Token is required');
         }
-        const tokenType = 'access_token'
         // 构建请求URL和参数
-        const url = `https://api.authing.cn/oidc/token/introspection`;
-
-        // 构建表单数据 - 不使用URLSearchParams
-        const formData = `token=${encodeURIComponent(token)}&token_type_hint=${encodeURIComponent(tokenType)}&client_id=${encodeURIComponent(loginAppID)}`;
+        const url = `https://tophotel.top/api/users/checkToken`;
 
         try {
             const response = await fetch(url, {
-                method: 'POST',
+                method: 'GET',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: formData
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Bearer ${token}`
+                } 
             });
 
             if (!response.ok) {
                 throw new Error(`Verification failed with status: ${response.status}`);
             }
 
-            return await response.json();
+            return (await response.json()).status == 0;
         } catch (error) {
             console.error('Token verification error:', error);
             throw error;
@@ -133,32 +114,12 @@ export function SDPPPLoginProvider({
     }, [])
 
     const getUserInfo = useCallback(async (token: string): Promise<UserInfoResult> => {
-        try {
-            const response = await fetch('https://api.authing.cn/api/v3/get-profile', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'x-authing-app-id': loginAppID
-                }
-            });
-
-            const data = await response.json();
-            if (data.statusCode === 200) {
-                return {
-                    data: data.data,
-                    success: true,
-                };
-            } else {
-                return {
-                    message: data.message,
-                    success: false,
-                };
-            }
-        } catch (error: any) {
-            return {
-                success: false,
-                message: error,
-            };
+        await new Promise(resolve => setTimeout(resolve, 100))
+        return {
+            data: {
+                lastLogin: "0",
+            },
+            success: true,
         }
     }, [])
 
@@ -180,7 +141,7 @@ export function SDPPPLoginProvider({
             return false
         }
         const verifyResult = await verifyToken(token)
-        if (verifyResult.active) {
+        if (verifyResult) {
             const userInfo = await getUserInfo(token)
             if (userInfo.success) {
                 const remoteLastLogin = new Date(userInfo.data.lastLogin).getTime().toString()
