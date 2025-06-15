@@ -1,0 +1,7 @@
+{
+	"dependencies": {
+		"@testing-library/react": "^16.3.0",
+		"dotenv": "^16.5.0",
+		"jsdom": "^26.1.0"
+	}
+}

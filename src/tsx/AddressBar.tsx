@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSDPPPInternalContext } from "../contexts/sdppp-internal";
 import { DEFAULT_BACKEND_URL } from "../contexts/sdppp-internal";
 import CogIcon from "../../../photoshop/src/tsx/icons/CogIcon";
@@ -11,49 +11,46 @@ import { photoshopStore } from "src/logics/ModelDefines.mjs";
 import { useSDPPPLoginContext } from "src/contexts/login";
 
 export function AddressBar() {
-    const { backendURL, setBackendURL, connectState, doConnectOrDisconnect } = useSDPPPInternalContext();
-    const inputDisable = (connectState === 'connected' || connectState === 'connecting') ? { disabled: true } : {};
+    // const { backendURL, setBackendURL, connectState, doConnectOrDisconnect } = useSDPPPInternalContext();
+    // const inputDisable = (connectState === 'connected' || connectState === 'connecting') ? { disabled: true } : {};
 
-    useEffect(() => {
-        if (backendURL && connectState === 'disconnected') {
-            setTimeout(() => {
-                doConnectOrDisconnect();
-            }, 1000);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (backendURL && connectState === 'disconnected') {
+    //         setTimeout(() => {
+    //             doConnectOrDisconnect();
+    //         }, 1000);
+    //     }
+    // }, []);
 
-    const isUnmounting = useRef(false);
-    useEffect(() => {
-        return () => {
-            isUnmounting.current = true;
-        };
-    }, []);
+    // const isUnmounting = useRef(false);
+    // useEffect(() => {
+    //     return () => {
+    //         isUnmounting.current = true;
+    //     };
+    // }, []);
 
-    useEffect(() => {
-        return () => {
-            if (connectState === 'connected' && isUnmounting.current) {
-                doConnectOrDisconnect();
-            }
-        };
-    }, [connectState]);
+    // useEffect(() => {
+    //     return () => {
+    //         if (connectState === 'connected' && isUnmounting.current) {
+    //             doConnectOrDisconnect();
+    //         }
+    //     };
+    // }, [connectState]);
 
-    return <>
-        {connectState === 'connected' ?
-            <ConnectConfigBar />
-            : <sp-textfield
-                id="url-bar"
-                label="backendURL"
-                onInput={(ev: any) => { setBackendURL(ev.currentTarget.value); }}
-                {...inputDisable}
-                value={backendURL || ''}
-                placeholder={DEFAULT_BACKEND_URL}
-            ></sp-textfield>
-        }
-        <sp-action-button
-            id="connect-btn"
-            onClick={() => { doConnectOrDisconnect(); }}
-        >{connectState !== 'disconnected' ? '⊗' : '→'}</sp-action-button>
-    </>;
+    // return <>
+    //     {connectState === 'connected' ?
+    //         <ConnectConfigBar />
+    //         : <sp-textfield
+    //             id="url-bar"
+    //             label="backendURL"
+    //             onInput={(ev: any) => { setBackendURL(ev.currentTarget.value); }}
+    //             {...inputDisable}
+    //             value={backendURL || ''}
+    //             placeholder={DEFAULT_BACKEND_URL}
+    //         ></sp-textfield>
+    //     }
+    // </>;
+    return <ConnectConfigBar></ConnectConfigBar>
 }
 
 function ConnectConfigBar() {
@@ -64,7 +61,9 @@ function ConnectConfigBar() {
         workflowAgentSID,
     } = useSDPPPContext();
     const {
-        comfyMultiUser
+        comfyMultiUser,
+        connectState,
+        backendURL
     } = useSDPPPInternalContext();
     const {
         webviewAgentSID,
@@ -89,7 +88,7 @@ function ConnectConfigBar() {
         if (!workflowAgentSID) {
             if (comfyMultiUser && !photoshopStore.data.comfyUserToken) {
                 setMessage(i18n('--multi-user Not Login!'));
-            } else if (timeoutError || loadError) {
+            } else if (connectState === 'connected' && (timeoutError || loadError)) {
                 setError(i18n('Error: {0}', loadError || i18n('timeout')));
             }
 
@@ -101,7 +100,7 @@ function ConnectConfigBar() {
                 setError('');
             }
         }
-    }, [workflowAgentSID, lastError, progress, executingNodeTitle, timeoutError, loadError, comfyMultiUser]);
+    }, [workflowAgentSID, lastError, progress, executingNodeTitle, timeoutError, loadError, comfyMultiUser, connectState]);
 
     let runnerName = '';
     if (webviewAgentSID == workflowAgentSID) {
@@ -111,6 +110,21 @@ function ConnectConfigBar() {
     } else {
         runnerName = i18n('Loading...');
     }
+
+    const connectMainMessage = useMemo(() => {
+        if (connectState === 'disconnected') {
+            return `comfy未连接，点我连接`
+
+        } else if (connectState === 'connecting') {
+            return `comfy连接中...`
+        }
+
+        if (hasAuthingLogin) {
+            return `用户名：${isLogin ? loggedInUsername : '未登录'}`
+        } else {
+            return `⏵ ${i18n('Runner')}: ${runnerName} ${queueText}`
+        }
+    }, [hasAuthingLogin, isLogin, loggedInUsername, runnerName, queueText, connectState]);
 
     return <div className="connect-configuration" onClick={() => {
         agentConfigDialogRef.current?.show();
@@ -129,13 +143,22 @@ function ConnectConfigBar() {
                 toggleWebviewDialog();
             }} />
         </dialog>
+        <div className={"status-bar " + connectState}>
+            <div className="status-icon" title={i18n(connectState)}>⬤</div>
+        </div>
         <div className="connect-config-content">
-            {hasAuthingLogin ? <span>用户名：{isLogin ? loggedInUsername : '未登录'}</span> : <span>⏵ {i18n('Runner')}: {runnerName} {queueText}</span>}
+            <span className="connect-config-main">{connectMainMessage}
+            </span>
             {error && <span className="connect-config-error">{error}</span>}
             {!error && message && <span className="connect-config-message">{message}</span>}
         </div>
         <div className="connect-config-actions">
-            <CogIcon size={.8} />
+            {
+                connectState === 'connected' ?
+                    <CogIcon size={.8} />
+                    :
+                    '→'
+            }
         </div>
 
         {progress ? <div className="connect-config-progress" style={{ width: `${progress}%` }}></div> : ''}

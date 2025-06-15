@@ -14,7 +14,7 @@ export interface SDPPPInternalContextType {
     backendURL: string,
     setBackendURL: (backendURL: SDPPPInternalContextType['backendURL']) => void,
     connectState: 'connected' | 'disconnected' | 'connecting',
-    doConnectOrDisconnect: () => void,
+    doConnectOrDisconnect: (backendURL?: string) => void,
 
     lastErrorMessage: string,
     setLastErrorMessage: (lastErrorMessage: SDPPPInternalContextType['lastErrorMessage']) => void,
@@ -76,9 +76,9 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
             setSrc('')
             setWorkflowAgentSID('')
         }
-    }, [connectState]);
+    }, [connectState, backendURL]);
 
-    function doConnectOrDisconnect() {
+    function doConnectOrDisconnect(_backendURL?: string) {
         if (connectState === 'connected' || connectState === 'connecting') {
             if (socket) {
                 socket.close()
@@ -90,7 +90,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
             try {
                 let _socket: PhotoshopSocket = socket as PhotoshopSocket;
                 if (!socket) {
-                    _socket = new PhotoshopSocket(backendURL || DEFAULT_BACKEND_URL, {
+                    _socket = new PhotoshopSocket(_backendURL || backendURL || DEFAULT_BACKEND_URL, {
                         setConnectState,
                         setLastErrorMessage: setLastConnectErrorMessage,
                         setBackendURL,
