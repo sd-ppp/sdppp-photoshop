@@ -10,6 +10,8 @@ import { DEFAULT_BACKEND_URL, useSDPPPInternalContext } from "../../contexts/sdp
 import { useEffect, useRef, useState } from "react";
 import { useSDPPPContext } from "src/entry.mjs";
 import { CloudControl } from "./CloudControl";
+import AIProviders from "src/hooks/CloudControls/AIProviders";
+import { useStore } from "zustand";
 
 export function AgentConfigDialog({ onRequestLogin }: { onRequestLogin: () => void }) {
     const { timeoutError } = useSDPPPWebview();
@@ -25,19 +27,20 @@ export function AgentConfigDialog({ onRequestLogin }: { onRequestLogin: () => vo
             setConnectedAfter1s(false);
         }
     }, [connectState]);
-    const [cloudControlValid, setCloudControlValid] = useState<boolean>(false);
+    const xiangongApiKey = useStore(AIProviders, (state) => state.xiangong.apiKey)
+    const chenyuApiKey = useStore(AIProviders, (state) => state.chenyu.apiKey)
 
     return <div className="client-panel">
         {connectedAfter1s && (!hasAuthingLogin || timeoutError) && <WebPageList />}
-        {!cloudControlValid && <div className="client-panel-block connect-address">
+        {!xiangongApiKey && !chenyuApiKey && <div className="client-panel-block connect-address">
             <div className="client-panel-title">
                 连接指定地址
             </div>
             <AddressBar />
         </div>}
         {
-            (connectState !== 'connected' || cloudControlValid) &&
-            <CloudControl cloudControlValid={cloudControlValid} setCloudControlValid={setCloudControlValid} />
+            (connectState !== 'connected' || xiangongApiKey || chenyuApiKey) &&
+            <CloudControl />
         }
         <sp-divider />
         <div className="client-panel-block app-login-container">

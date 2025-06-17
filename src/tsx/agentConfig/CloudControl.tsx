@@ -4,59 +4,55 @@ import { sdpppX } from '../../../../../src/common/sdpppX.mts';
 import { shell } from 'uxp';
 import { useSDPPPInternalContext } from 'src/contexts/sdppp-internal';
 import { useTraceUpdate } from '../../../../../src/common/tsx/util';
+import AIProviders from 'src/hooks/CloudControls/AIProviders';
+import { useStore } from 'zustand';
 
-export function CloudControl({
-    cloudControlValid, setCloudControlValid,
-}: {
-    cloudControlValid: boolean, setCloudControlValid: (valid: boolean) => void
-}) {
+export function CloudControl() {
     const {
         setBackendURL,
         connectState, doConnectOrDisconnect,    
     } = useSDPPPInternalContext();
-    const [apiKey, _setApiKey] = useState<string>('');
-    function setApiKey(apiKey: string) {
-        localStorage.setItem('apiKey', apiKey);
-        _setApiKey(apiKey);
-    }
-    useEffect(() => {
-        const apiKey = localStorage.getItem('apiKey');
-        if (apiKey) {
-            setApiKey(apiKey);
-        }
-    }, []);
+    const xiangongApiKey = useStore(AIProviders, (state) => state.xiangong.apiKey)
+    const chenyuApiKey = useStore(AIProviders, (state) => state.chenyu.apiKey)
+    const [tempApiKey, setTempApiKey] = useState<string>(xiangongApiKey || chenyuApiKey || '');
 
     return (
         <div className="client-panel-block">
             <div className="client-panel-title">
-                {cloudControlValid ? '连接云端' : '或 连接云端'}
+                {xiangongApiKey || chenyuApiKey ? '连接云端' : '或 连接云端'}
             </div>
-            {cloudControlValid ? <a style={{ color: 'var(--uxp-host-text-color-secondary)', fontSize: '12px', position: 'absolute', right: '0', top: '0', cursor: 'pointer' }} onClick={() => {
-                setApiKey('');
-                setCloudControlValid(false);
+            {xiangongApiKey || chenyuApiKey ? <a style={{ color: 'var(--uxp-host-text-color-secondary)', fontSize: '12px', position: 'absolute', right: '0', top: '0', cursor: 'pointer' }} onClick={() => {
+                AIProviders.setState({
+                    xiangong: {
+                        apiKey: '',
+                    },
+                    chenyu: {
+                        apiKey: '',
+                    }
+                })
+                setTempApiKey('');
                 setBackendURL('');
                 if (connectState === 'connected') {
                     doConnectOrDisconnect();
                 }
             }}>重设API令牌或按地址连接</a> : ''}
-            {!cloudControlValid && <div className="connect-box api-key-input">
+            {!xiangongApiKey && !chenyuApiKey && <div className="connect-box api-key-input">
                 <sp-textfield
                     id="api-key" 
                     label="API Key"
-                    onBlur={(ev: any) => { setApiKey(ev.currentTarget.value); }}
-                    value={apiKey || ''}
-                    placeholder="填入仙宫云/晨羽智云的API令牌"
+                    onBlur={(ev: any) => { setTempApiKey(ev.currentTarget.value); }}
+                    placeholder="填入仙宫云的API令牌"
                     style={{ flex: '1' }}
                 ></sp-textfield>
             </div>}
-            {!apiKey && <a onClick={() => shell.openExternal('https://www.xiangongyun.com/console/user/accesstoken')}>如何获取仙宫云API令牌？</a>}
-            {apiKey && <CloudControlXiangong apiKey={apiKey} clearApiKey={() => setApiKey('')} setApiKeyValid={setCloudControlValid} />}
+            {!xiangongApiKey && <a onClick={() => shell.openExternal('https://www.xiangongyun.com/console/user/accesstoken')}>如何获取仙宫云API令牌？</a>}
+            {tempApiKey && <CloudControlXiangong apiKey={tempApiKey}/>}
         </div>
     );
 }
 
-export function CloudControlXiangong({ apiKey, clearApiKey, setApiKeyValid }: {
-    apiKey: string, clearApiKey: () => void, setApiKeyValid: (valid: boolean) => void
+export function CloudControlXiangong({ apiKey }: {
+    apiKey: string
 }) {
     const {
         instances,
@@ -72,6 +68,7 @@ export function CloudControlXiangong({ apiKey, clearApiKey, setApiKeyValid }: {
         startInstanceLoading,
     } = useXiangong({ apiKey });
     const {
+        cloudInstance,
         setBackendURL,
         connectState, doConnectOrDisconnect,
     } = useSDPPPInternalContext();
@@ -92,7 +89,11 @@ export function CloudControlXiangong({ apiKey, clearApiKey, setApiKeyValid }: {
 
     useEffect(() => {
         if (apiKey && balance && !balanceError) {
-            setApiKeyValid(true);
+            AIProviders.setState({
+                xiangong: {
+                    apiKey: apiKey,
+                },
+            })
             setBackendURL('');
         }
     }, [balance, balanceError, apiKey]);
@@ -142,40 +143,38 @@ export function CloudControlXiangong({ apiKey, clearApiKey, setApiKeyValid }: {
                                     <sp-label>GPU型号: {instance.gpu_model}</sp-label>
                                     <sp-label style={{ color: 'var(--uxp-host-text-color)' }}>状态: {statusToText(instance.status)}</sp-label>
                                 </div>
-                                {instance.status === 'running' && <sp-action-button
+                                {/* {instance.status === 'running' && <sp-action-button
                                         style={{ position: 'absolute', left: '50%', top: '35%' }}
                                         quiet
                                         class="instance-action-button"
                                         onClick={() => shell.openExternal(`https://${instance.id}-8081.container.x-gpu.com/files/`)}
-                                    >输出目录</sp-action-button>}
+                                    >输出目录</sp-action-button>} */}
                                 <div className="instance-actions"
-                                    style={{ display: hoverInstanceId === instance.id ? 'flex' : 'none' }}
+                                    style={{ display: hoverInstanceId === instance.id || cloudInstance === instance.id ? 'flex' : 'none' }}
                                 >
-                                    {instance.status === 'running' && <sp-action-button
+                                    {instance.status === 'running' && <div
                                         onClick={async () => {
-                                            doConnectOrDisconnect(`https://${instance.id}-8188.container.x-gpu.com/`)
+                                            doConnectOrDisconnect(`https://${instance.id}-8188.container.x-gpu.com/`, instance.id)
                                         }}
-                                        class="connect-button"
+                                        className="instance-action-button"
                                     >
-                                        {connectState !== 'disconnected' ? '断开连接' : '连接'}
-                                    </sp-action-button>}
-                                    {instance.status === 'shutdown' && <sp-action-button
+                                        {connectState !== 'disconnected' && instance.id === cloudInstance ? '断开连接' : '连接'}
+                                    </div>}
+                                    {instance.status === 'shutdown' && <div
                                         onClick={async () => {
                                             if (startInstanceLoading) return;
                                             await startInstance({ id: instance.id })
                                         }}
-                                        class="instance-action-button"
+                                        className="instance-action-button"
                                     >
                                         {startInstanceLoading ? '启动中...' : '启动'}
-                                    </sp-action-button>}
-                                    {instance.status === 'running' && <sp-action-button
-                                        quiet
+                                    </div>}
+                                    {instance.status === 'running' && <div
                                         onClick={() => destroyInstance({ id: instance.id })}
-                                        class="instance-action-button"
-                                        style={{ color: 'lightcoral' }}
+                                        className="instance-action-button instance-action-button-red"
                                     >
                                         {destroyInstanceLoading ? '销毁中...' : '销毁'}
-                                    </sp-action-button>}
+                                    </div>}
                                 </div>
                             </div>
                         ))}

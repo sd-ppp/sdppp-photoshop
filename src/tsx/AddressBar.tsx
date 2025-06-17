@@ -9,8 +9,17 @@ import { useSDPPPWebview } from "src/contexts/webview";
 import { AgentConfigDialog } from "./agentConfig/Dialog";
 import { photoshopStore } from "src/logics/ModelDefines.mjs";
 import { useSDPPPLoginContext } from "src/contexts/login";
+import { sdpppX } from "../../../../src/common/sdpppX.mts";
+import { shell } from "uxp";
+import { useXiangongInstance } from "src/hooks/CloudControls/useXiangongInstance";
+import { useStore } from "zustand";
+import AIProviders from "src/hooks/CloudControls/AIProviders";
 
 export function AddressBar() {
+    const {
+        cloudInstance,
+        connectState,
+    } = useSDPPPInternalContext();
     // const { backendURL, setBackendURL, connectState, doConnectOrDisconnect } = useSDPPPInternalContext();
     // const inputDisable = (connectState === 'connected' || connectState === 'connecting') ? { disabled: true } : {};
 
@@ -50,8 +59,56 @@ export function AddressBar() {
     //         ></sp-textfield>
     //     }
     // </>;
-    return <ConnectConfigBar></ConnectConfigBar>
+    return <>
+        <div className="header-bar">
+            <img width={55} src="./icons/logo.png" alt="logo" />
+            <h1>{sdpppX['插件名字']}</h1>
+            {/* {
+                        !editorMode ?
+                            <div className={"status-bar " + connectState}>
+                                <div className="status-icon" title={lastConnectErrorMessage?.toString() || i18n(connectState)}>⬤</div>
+                            </div>
+                            : ''
+                    } */}
+            {}
+            <ConnectConfigBar></ConnectConfigBar>
+        </div>
+        {cloudInstance && connectState === 'connected' && <CloudInstanceBar cloudInstance={cloudInstance} />}
+    </>
 }
+
+function CloudInstanceBar({
+    cloudInstance,
+}: {
+    cloudInstance: string,
+}) {
+    const {
+        setCloudInstance,
+        doConnectOrDisconnect,
+    } = useSDPPPInternalContext();
+    const apiKey = useStore(AIProviders, (state) => state.xiangong.apiKey)
+    const {
+        shutdownWithoutGPU,
+        shutdownWithoutGPULoading,
+        destroyInstance,
+        destroyInstanceLoading,
+    } = useXiangongInstance({ apiKey: apiKey, instanceId: cloudInstance });
+    return <div className="cloud-instance-bar">
+        <div className="cloud-instance-bar-left-button" onClick={() => {
+            shell.openExternal(`https://${cloudInstance}-8081.container.x-gpu.com/files/`)
+        }}>输出目录</div>
+        <div className="cloud-instance-bar-right-button" onClick={async () => {
+            await shutdownWithoutGPU()
+            setCloudInstance('')
+            doConnectOrDisconnect()
+        }}>云端关机{shutdownWithoutGPULoading ? '中...' : ''}</div>
+        <div className="cloud-instance-bar-right-button" onClick={async () => {
+            await destroyInstance()
+            setCloudInstance('')
+            doConnectOrDisconnect()
+        }}>云端销毁{destroyInstanceLoading ? '中...' : ''}</div>
+    </div>
+}   
 
 function ConnectConfigBar() {
     const [message, setMessage] = useState<string>('');
@@ -113,10 +170,10 @@ function ConnectConfigBar() {
 
     const connectMainMessage = useMemo(() => {
         if (connectState === 'disconnected') {
-            return `comfy未连接，点我连接`
+            return `云端未连接，点我连接`
 
         } else if (connectState === 'connecting') {
-            return `comfy连接中...`
+            return `云端连接中...`
         }
 
         if (hasAuthingLogin) {

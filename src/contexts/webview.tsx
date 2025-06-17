@@ -106,14 +106,7 @@ function internalUseSDPPPWebview() {
     const createdHiddenWebview = createHiddenWebview()
     setHiddenWebview(createdHiddenWebview)
 
-    if (loadtimeoutRef.current) {
-      clearTimeout(loadtimeoutRef.current);
-    }
-    setLastLoadAfter5s(false);
     setLastLoadStopped(false);
-    loadtimeoutRef.current = setTimeout(() => {
-      setLastLoadAfter5s(true);
-    }, 5000);
     createdHiddenWebview.addEventListener('loadstop', () => {
       setLastLoadStopped(true);
     })
@@ -125,9 +118,6 @@ function internalUseSDPPPWebview() {
     })
 
     return () => {
-      if (loadtimeoutRef.current) {
-        clearTimeout(loadtimeoutRef.current);
-      }
       dialog?.parentElement?.removeChild(dialog);
     }
   }, []);
@@ -141,6 +131,19 @@ function internalUseSDPPPWebview() {
     } else {
       hiddenWebview?.setAttribute('src', src);
       dialogWebview?.setAttribute('src', src);
+    }
+    
+    if (loadtimeoutRef.current) {
+      clearTimeout(loadtimeoutRef.current);
+    }
+    setLastLoadAfter5s(false);
+    loadtimeoutRef.current = setTimeout(() => {
+      setLastLoadAfter5s(true);
+    }, 5000);
+    return () => {
+      if (loadtimeoutRef.current) {
+        clearTimeout(loadtimeoutRef.current);
+      }
     }
   }, [src]);
 
@@ -168,7 +171,7 @@ function internalUseSDPPPWebview() {
     }
   }, [dialog, dialogShowing])
 
-  
+
 
   return {
     dialogShowing,
@@ -186,7 +189,7 @@ function internalUseSDPPPWebview() {
     timeoutError: useMemo(() => {
       return lastLoadAfter5s && !lastLoadStopped
     }, [lastLoadAfter5s, lastLoadStopped]),
-    loadError, 
+    loadError,
   }
 }
 

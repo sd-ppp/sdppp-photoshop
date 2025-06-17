@@ -11,10 +11,12 @@ export const DEFAULT_BACKEND_URL = "http://127.0.0.1:8188"
 export interface SDPPPInternalContextType {
     socket: PhotoshopSocket | null,
 
+    cloudInstance: string,
+    setCloudInstance: (cloudInstance: SDPPPInternalContextType['cloudInstance']) => void,
     backendURL: string,
     setBackendURL: (backendURL: SDPPPInternalContextType['backendURL']) => void,
     connectState: 'connected' | 'disconnected' | 'connecting',
-    doConnectOrDisconnect: (backendURL?: string) => void,
+    doConnectOrDisconnect: (backendURL?: string, cloudInstance?: string) => void,
 
     lastErrorMessage: string,
     setLastErrorMessage: (lastErrorMessage: SDPPPInternalContextType['lastErrorMessage']) => void,
@@ -48,6 +50,7 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
     const [connectState, setConnectState] = useState<SDPPPInternalContextType['connectState']>('disconnected');
     const [lastConnectErrorMessage, setLastConnectErrorMessage] = useState<SDPPPInternalContextType['lastErrorMessage']>('');
     const [backendURL, _setBackendURL] = useState<SDPPPInternalContextType['backendURL']>(localStorage.getItem('backendURL') || DEFAULT_BACKEND_URL);
+    const [cloudInstance, setCloudInstance] = useState<SDPPPInternalContextType['cloudInstance']>(localStorage.getItem('cloudInstance') || '');
     const [autoRunning, setAutoRunning] = useState<SDPPPInternalContextType['autoRunning']>(null);
     const [workflowAgentSID, setWorkflowAgentSID] = useState<string>('');
     const [comfyMultiUser, setComfyMultiUser] = useState<SDPPPInternalContextType['comfyMultiUser']>(false);
@@ -75,10 +78,11 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
         } else {
             setSrc('')
             setWorkflowAgentSID('')
+            setCloudInstance('')
         }
     }, [connectState, backendURL]);
 
-    function doConnectOrDisconnect(_backendURL?: string) {
+    function doConnectOrDisconnect(_backendURL?: string, _cloudInstance?: string) {
         if (connectState === 'connected' || connectState === 'connecting') {
             if (socket) {
                 socket.close()
@@ -93,7 +97,10 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
                     _socket = new PhotoshopSocket(_backendURL || backendURL || DEFAULT_BACKEND_URL, {
                         setConnectState,
                         setLastErrorMessage: setLastConnectErrorMessage,
-                        setBackendURL,
+                        setBackendURL: (backendURL: string) => {
+                            setBackendURL(backendURL);
+                            setCloudInstance(_cloudInstance || '');
+                        },
                         setComfyMultiUser,
                     });
                     setSocket(_socket);
@@ -152,6 +159,9 @@ export function SDPPPInternalContextProvider({ children }: { children: ReactNode
 
     return <SDPPPInternalContext.Provider value={{
         socket,
+
+        cloudInstance,
+        setCloudInstance,
 
         backendURL,
         setBackendURL,
