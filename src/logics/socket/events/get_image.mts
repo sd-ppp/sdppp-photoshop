@@ -104,7 +104,7 @@ async function getPixelsData(document: Document, layer: Layer | null, bounds: an
         // componentSize: 8, // Error Code -1 above PS 25.5 if psd in 16bit
         colorSpace: "RGB",
     }
-    if (document.mode !== constants.DocumentMode.RGB) {
+    if (document.mode !== constants.DocumentMode.RGB || document.colorProfileName !== 'sRGB IEC61966-2.1') {
         Object.assign(options, { colorProfile: 'sRGB IEC61966-2.1' });
     }
     if (layer) options.layerID = layer.id
