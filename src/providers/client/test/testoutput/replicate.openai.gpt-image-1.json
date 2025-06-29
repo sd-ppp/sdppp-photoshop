@@ -1,0 +1,399 @@
+{
+  "cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/105c8d2f-df56-499f-8121-3a1f6232cf0b/Screenshot_2025-04-23_at_4.08..png",
+  "created_at": "2025-04-23T18:43:34.958305Z",
+  "default_example": {
+    "completed_at": "2025-04-28T16:11:01.119025Z",
+    "created_at": "2025-04-28T16:10:15.231000Z",
+    "data_removed": false,
+    "error": null,
+    "id": "1f7kjzpk7xrmc0cpfmmvysbdcc",
+    "input": {
+      "prompt": "Add the floral pattern to the vase",
+      "quality": "auto",
+      "background": "auto",
+      "moderation": "auto",
+      "aspect_ratio": "1:1",
+      "input_images": [
+        "https://replicate.delivery/pbxt/MusWuQJm1RJPu1Cj0ajRmoMnHyYNPk6ljT1QCU4DbHMsqDTF/53541851-62f3-44a7-b075-ef053ae2f324.jpg",
+        "https://replicate.delivery/pbxt/MusWuPkfcvyZQuuXeMIbQXEMe9K2G8rDCNraQffAt0OzMRaT/colored-flower-pattern-free-vector.jpg"
+      ],
+      "output_format": "webp",
+      "openai_api_key": "[REDACTED]",
+      "number_of_images": 1,
+      "output_compression": 90
+    },
+    "is_free_trial_prediction": false,
+    "logs": "Generating image...\nImage size: 378.3KB\nImage size: 303.0KB\nGenerated image in 45.6sec\nGenerated 1 images\nInput text token count: 711\nInput image token count: 646\nOutput token count: 4160",
+    "metrics": {
+      "image_count": 1,
+      "predict_time": 45.874764574,
+      "total_time": 45.888025
+    },
+    "model": "openai/gpt-image-1",
+    "output": [
+      "https://replicate.delivery/xezq/hEcJpm50O9ouFVu506qf6wAjLKc4MH1oFeRZ4PORmTqVqVnUA/tmpfkxavg8q.png"
+    ],
+    "started_at": "2025-04-28T16:10:15.244261Z",
+    "status": "succeeded",
+    "urls": {
+      "stream": "https://stream.replicate.com/v1/files/bcwr-4ara7pu7nunijhb5pbaxvgh5afyy5trt42lbrtahmmpcy4s3vvma",
+      "get": "https://api.replicate.com/v1/predictions/1f7kjzpk7xrmc0cpfmmvysbdcc",
+      "cancel": "https://api.replicate.com/v1/predictions/1f7kjzpk7xrmc0cpfmmvysbdcc/cancel"
+    },
+    "version": "hidden"
+  },
+  "description": "A multimodal image generation model that creates high-quality images. You need to bring your own verified OpenAI key to use this model. Your OpenAI account will be charged for usage.",
+  "github_url": null,
+  "latest_version": {
+    "id": "919e1bf061bd37ecb46e7d467ac952029cb5a5a9d195823832f5a17ec69e57d4",
+    "created_at": "2025-04-28T15:10:25.151568Z",
+    "cog_version": "0.14.7",
+    "openapi_schema": {
+      "info": {
+        "title": "Cog",
+        "version": "0.1.0"
+      },
+      "paths": {},
+      "openapi": "3.0.2",
+      "components": {
+        "schemas": {
+          "Input": {
+            "type": "object",
+            "title": "Input",
+            "required": [
+              "openai_api_key",
+              "prompt"
+            ],
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "title": "Prompt",
+                "x-order": 1,
+                "description": "A text description of the desired image"
+              },
+              "quality": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/quality"
+                  }
+                ],
+                "default": "auto",
+                "x-order": 5,
+                "description": "The quality of the generated image"
+              },
+              "user_id": {
+                "type": "string",
+                "title": "User Id",
+                "x-order": 10,
+                "description": "An optional unique identifier representing your end-user. This helps OpenAI monitor and detect abuse."
+              },
+              "background": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/background"
+                  }
+                ],
+                "default": "auto",
+                "x-order": 6,
+                "description": "Set whether the background is transparent or opaque or choose automatically"
+              },
+              "moderation": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/moderation"
+                  }
+                ],
+                "default": "auto",
+                "x-order": 9,
+                "description": "Content moderation level"
+              },
+              "aspect_ratio": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/aspect_ratio"
+                  }
+                ],
+                "default": "1:1",
+                "x-order": 2,
+                "description": "The aspect ratio of the generated image"
+              },
+              "input_images": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "title": "Input Images",
+                "x-order": 3,
+                "description": "A list of images to use as input for the generation"
+              },
+              "output_format": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/output_format"
+                  }
+                ],
+                "default": "webp",
+                "x-order": 8,
+                "description": "Output format"
+              },
+              "openai_api_key": {
+                "type": "string",
+                "title": "Openai Api Key",
+                "format": "password",
+                "x-order": 0,
+                "description": "Your OpenAI API key",
+                "x-cog-secret": true
+              },
+              "number_of_images": {
+                "type": "integer",
+                "title": "Number Of Images",
+                "default": 1,
+                "maximum": 10,
+                "minimum": 1,
+                "x-order": 4,
+                "description": "Number of images to generate (1-10)"
+              },
+              "output_compression": {
+                "type": "integer",
+                "title": "Output Compression",
+                "default": 90,
+                "maximum": 100,
+                "minimum": 0,
+                "x-order": 7,
+                "description": "Compression level (0-100%)"
+              }
+            }
+          },
+          "Output": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "title": "Output"
+          },
+          "Status": {
+            "enum": [
+              "starting",
+              "processing",
+              "succeeded",
+              "canceled",
+              "failed"
+            ],
+            "type": "string",
+            "title": "Status",
+            "description": "An enumeration."
+          },
+          "quality": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "auto"
+            ],
+            "type": "string",
+            "title": "quality",
+            "description": "An enumeration."
+          },
+          "background": {
+            "enum": [
+              "auto",
+              "transparent",
+              "opaque"
+            ],
+            "type": "string",
+            "title": "background",
+            "description": "An enumeration."
+          },
+          "moderation": {
+            "enum": [
+              "auto",
+              "low"
+            ],
+            "type": "string",
+            "title": "moderation",
+            "description": "An enumeration."
+          },
+          "WebhookEvent": {
+            "enum": [
+              "start",
+              "output",
+              "logs",
+              "completed"
+            ],
+            "type": "string",
+            "title": "WebhookEvent",
+            "description": "An enumeration."
+          },
+          "aspect_ratio": {
+            "enum": [
+              "1:1",
+              "3:2",
+              "2:3"
+            ],
+            "type": "string",
+            "title": "aspect_ratio",
+            "description": "An enumeration."
+          },
+          "output_format": {
+            "enum": [
+              "png",
+              "jpeg",
+              "webp"
+            ],
+            "type": "string",
+            "title": "output_format",
+            "description": "An enumeration."
+          },
+          "ValidationError": {
+            "type": "object",
+            "title": "ValidationError",
+            "required": [
+              "loc",
+              "msg",
+              "type"
+            ],
+            "properties": {
+              "loc": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "title": "Location"
+              },
+              "msg": {
+                "type": "string",
+                "title": "Message"
+              },
+              "type": {
+                "type": "string",
+                "title": "Error Type"
+              }
+            }
+          },
+          "PredictionRequest": {
+            "type": "object",
+            "title": "PredictionRequest",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "webhook": {
+                "type": "string",
+                "title": "Webhook",
+                "format": "uri",
+                "maxLength": 65536,
+                "minLength": 1
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "output_file_prefix": {
+                "type": "string",
+                "title": "Output File Prefix"
+              },
+              "webhook_events_filter": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WebhookEvent"
+                },
+                "default": [
+                  "start",
+                  "output",
+                  "logs",
+                  "completed"
+                ]
+              }
+            }
+          },
+          "PredictionResponse": {
+            "type": "object",
+            "title": "PredictionResponse",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "logs": {
+                "type": "string",
+                "title": "Logs",
+                "default": ""
+              },
+              "error": {
+                "type": "string",
+                "title": "Error"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "output": {
+                "$ref": "#/components/schemas/Output"
+              },
+              "status": {
+                "$ref": "#/components/schemas/Status"
+              },
+              "metrics": {
+                "type": "object",
+                "title": "Metrics"
+              },
+              "version": {
+                "type": "string",
+                "title": "Version"
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": "string",
+                "title": "Started At",
+                "format": "date-time"
+              },
+              "completed_at": {
+                "type": "string",
+                "title": "Completed At",
+                "format": "date-time"
+              }
+            }
+          },
+          "HTTPValidationError": {
+            "type": "object",
+            "title": "HTTPValidationError",
+            "properties": {
+              "detail": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ValidationError"
+                },
+                "title": "Detail"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "license_url": "https://openai.com/policies/",
+  "name": "gpt-image-1",
+  "owner": "openai",
+  "paper_url": "https://openai.com/index/image-generation-api/",
+  "run_count": 97701,
+  "url": "https://replicate.com/openai/gpt-image-1",
+  "visibility": "public",
+  "weights_url": null
+}

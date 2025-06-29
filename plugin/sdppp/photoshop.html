@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  
+  <script>
+    global.screen = {};
+    window.WebSocket.prototype.OPEN = 1;
+    globalThis.sdpppX = globalThis.sdpppX || {};
+  </script>
+  <script src="../sdpppX.js" ></script>
+  <script>
+    if (typeof window.MutationObserver === "undefined") {
+      window.MutationObserver = function () {
+        // 这里可以给出警告或日志，方便调试
+        console.warn("MutationObserver is not supported in this browser. Polyfill is a noop.");
+      };
+      window.MutationObserver.prototype.observe = function () { };
+      window.MutationObserver.prototype.disconnect = function () { };
+      window.MutationObserver.prototype.takeRecords = function () { return []; };
+    }
+  </script>
+  <script crossorigin src="/sdppp/photoshop.js"></script>
+  <link rel="stylesheet" crossorigin href="/sdppp/photoshop.css">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="../run.js" ></script>
+</body>
+
+</html>

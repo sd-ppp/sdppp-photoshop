@@ -1,0 +1,178 @@
+.image-preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: var(--sdppp-widget-background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  // 关闭按钮样式
+  &__close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 20;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    color: white;
+    opacity: 0;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.6) !important;
+      color: white !important;
+      transform: scale(1.1);
+    }
+
+    .anticon {
+      font-size: 12px;
+    }
+  }
+
+  // hover时显示关闭按钮
+  &:hover &__close-btn {
+    opacity: 1;
+  }
+
+  &__container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // 当支持aspect-ratio时，容器使用相对定位
+  @supports (aspect-ratio: 1) {
+    &__container {
+      position: relative;
+    }
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .ant-image {
+      width: 100%;
+      height: 100%;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .ant-image-img {
+      max-width: 100% !important;
+      max-height: 100% !important;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain !important;
+      display: block !important;
+    }
+  }
+
+  &__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    &--prev {
+      left: 16px;
+    }
+
+    &--next {
+      right: 16px;
+    }
+  }
+
+  // hover时显示导航按钮
+  &:hover &__nav {
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__indicator {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    z-index: 10;
+  }
+
+  // 发送到PS按钮样式
+  &__send-btn {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    min-width: 120px;
+    height: 40px;
+    border-radius: 20px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  // hover时显示按钮
+  &:hover &__send-btn {
+    opacity: 1;
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    &__nav {
+      width: 36px;
+      height: 36px;
+      
+      &--prev {
+        left: 8px;
+      }
+
+      &--next {
+        right: 8px;
+      }
+    }
+
+    &__send-btn {
+      right: 16px !important;
+      bottom: 16px !important;
+      min-width: 100px;
+      height: 36px;
+    }
+  }
+
+  // 图片加载状态
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--sdppp-host-text-color-secondary);
+  }
+} 

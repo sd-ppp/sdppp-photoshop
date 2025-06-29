@@ -1,0 +1,324 @@
+{
+  "cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/debc1069-7e6b-48a7-a71b-489cc7cf1323/replicate-prediction-np382f6t.webp",
+  "created_at": "2025-05-28T22:08:03.621735Z",
+  "default_example": {
+    "completed_at": "2025-06-03T21:28:58.602729Z",
+    "created_at": "2025-06-03T21:28:53.673000Z",
+    "data_removed": false,
+    "error": null,
+    "id": "s5ny1abwn5rma0cq6ysbzw0re8",
+    "input": {
+      "prompt": "Make the letters 3D, floating in space on a city street",
+      "input_image": "https://replicate.delivery/xezq/XfwWjHJ7HfrmXE6ukuLVEpXWfeQ3PQeRI5mApuLXRxST7XMmC/tmpc91tlq20.png",
+      "aspect_ratio": "match_input_image",
+      "output_format": "jpg",
+      "safety_tolerance": 2
+    },
+    "is_free_trial_prediction": false,
+    "logs": "Using seed: 558658691\nGenerating...\nGenerated image in 4.7sec\nDownloading 149928 bytes\nDownloaded 0.14MB in 0.14sec",
+    "metrics": {
+      "image_count": 1,
+      "predict_time": 4.921643012,
+      "total_time": 4.929729
+    },
+    "model": "black-forest-labs/flux-kontext-max",
+    "output": "https://replicate.delivery/xezq/Mbbd8Tx2YfRYXSEmLgblTzGtj4ZurpgPjLui6jAqfXLasRzUA/tmpkav_ivyd.jpg",
+    "started_at": "2025-06-03T21:28:53.681086Z",
+    "status": "succeeded",
+    "urls": {
+      "stream": "https://stream.replicate.com/v1/files/bcwr-xpekfj5uhysb2iyghdmeoezon5ywfblxkpmvujt6ujnmeobb475a",
+      "get": "https://api.replicate.com/v1/predictions/s5ny1abwn5rma0cq6ysbzw0re8",
+      "cancel": "https://api.replicate.com/v1/predictions/s5ny1abwn5rma0cq6ysbzw0re8/cancel"
+    },
+    "version": "hidden"
+  },
+  "description": "A premium text-based image editing model that delivers maximum performance and improved typography generation for transforming images through natural language prompts",
+  "github_url": null,
+  "latest_version": {
+    "id": "317b27292eda8dda72eae6b6d24b2d74d2a247d626e22c39bb60d4bdf83cc52b",
+    "created_at": "2025-06-03T13:53:27.703429Z",
+    "cog_version": "0.15.2",
+    "openapi_schema": {
+      "info": {
+        "title": "Cog",
+        "version": "0.1.0"
+      },
+      "paths": {},
+      "openapi": "3.0.2",
+      "components": {
+        "schemas": {
+          "Input": {
+            "type": "object",
+            "title": "Input",
+            "required": [
+              "prompt"
+            ],
+            "properties": {
+              "seed": {
+                "type": "integer",
+                "title": "Seed",
+                "x-order": 3,
+                "nullable": true,
+                "description": "Random seed. Set for reproducible generation"
+              },
+              "prompt": {
+                "type": "string",
+                "title": "Prompt",
+                "x-order": 0,
+                "description": "Text description of what you want to generate, or the instruction on how to edit the given image."
+              },
+              "input_image": {
+                "type": "string",
+                "title": "Input Image",
+                "format": "uri",
+                "x-order": 1,
+                "nullable": true,
+                "description": "Image to use as reference. Must be jpeg, png, gif, or webp."
+              },
+              "aspect_ratio": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/aspect_ratio"
+                  }
+                ],
+                "default": "match_input_image",
+                "x-order": 2,
+                "description": "Aspect ratio of the generated image. Use 'match_input_image' to match the aspect ratio of the input image."
+              },
+              "output_format": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/output_format"
+                  }
+                ],
+                "default": "png",
+                "x-order": 4,
+                "description": "Output format for the generated image"
+              },
+              "safety_tolerance": {
+                "type": "integer",
+                "title": "Safety Tolerance",
+                "default": 2,
+                "maximum": 6,
+                "minimum": 0,
+                "x-order": 5,
+                "description": "Safety tolerance, 0 is most strict and 6 is most permissive. 2 is currently the maximum allowed when input images are used."
+              }
+            }
+          },
+          "Output": {
+            "type": "string",
+            "title": "Output",
+            "format": "uri"
+          },
+          "Status": {
+            "enum": [
+              "starting",
+              "processing",
+              "succeeded",
+              "canceled",
+              "failed"
+            ],
+            "type": "string",
+            "title": "Status",
+            "description": "An enumeration."
+          },
+          "WebhookEvent": {
+            "enum": [
+              "start",
+              "output",
+              "logs",
+              "completed"
+            ],
+            "type": "string",
+            "title": "WebhookEvent",
+            "description": "An enumeration."
+          },
+          "aspect_ratio": {
+            "enum": [
+              "match_input_image",
+              "1:1",
+              "16:9",
+              "9:16",
+              "4:3",
+              "3:4",
+              "3:2",
+              "2:3",
+              "4:5",
+              "5:4",
+              "21:9",
+              "9:21",
+              "2:1",
+              "1:2"
+            ],
+            "type": "string",
+            "title": "aspect_ratio",
+            "description": "An enumeration."
+          },
+          "output_format": {
+            "enum": [
+              "jpg",
+              "png"
+            ],
+            "type": "string",
+            "title": "output_format",
+            "description": "An enumeration."
+          },
+          "ValidationError": {
+            "type": "object",
+            "title": "ValidationError",
+            "required": [
+              "loc",
+              "msg",
+              "type"
+            ],
+            "properties": {
+              "loc": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "title": "Location"
+              },
+              "msg": {
+                "type": "string",
+                "title": "Message"
+              },
+              "type": {
+                "type": "string",
+                "title": "Error Type"
+              }
+            }
+          },
+          "PredictionRequest": {
+            "type": "object",
+            "title": "PredictionRequest",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "context": {
+                "type": "object",
+                "title": "Context",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "webhook": {
+                "type": "string",
+                "title": "Webhook",
+                "format": "uri",
+                "maxLength": 65536,
+                "minLength": 1
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "output_file_prefix": {
+                "type": "string",
+                "title": "Output File Prefix"
+              },
+              "webhook_events_filter": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WebhookEvent"
+                },
+                "default": [
+                  "start",
+                  "output",
+                  "logs",
+                  "completed"
+                ]
+              }
+            }
+          },
+          "PredictionResponse": {
+            "type": "object",
+            "title": "PredictionResponse",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "logs": {
+                "type": "string",
+                "title": "Logs",
+                "default": ""
+              },
+              "error": {
+                "type": "string",
+                "title": "Error"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "output": {
+                "$ref": "#/components/schemas/Output"
+              },
+              "status": {
+                "$ref": "#/components/schemas/Status"
+              },
+              "metrics": {
+                "type": "object",
+                "title": "Metrics"
+              },
+              "version": {
+                "type": "string",
+                "title": "Version"
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": "string",
+                "title": "Started At",
+                "format": "date-time"
+              },
+              "completed_at": {
+                "type": "string",
+                "title": "Completed At",
+                "format": "date-time"
+              }
+            }
+          },
+          "HTTPValidationError": {
+            "type": "object",
+            "title": "HTTPValidationError",
+            "properties": {
+              "detail": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ValidationError"
+                },
+                "title": "Detail"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "license_url": null,
+  "name": "flux-kontext-max",
+  "owner": "black-forest-labs",
+  "paper_url": null,
+  "run_count": 1409963,
+  "url": "https://replicate.com/black-forest-labs/flux-kontext-max",
+  "visibility": "public",
+  "weights_url": "https://huggingface.co/black-forest-labs"
+}

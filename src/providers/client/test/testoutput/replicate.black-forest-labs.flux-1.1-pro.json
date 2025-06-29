@@ -1,0 +1,345 @@
+{
+  "cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/bd872eff-363a-4e10-8cc1-84057afa9f57/flux-1.1-cover.webp",
+  "created_at": "2024-10-01T17:40:24.295660Z",
+  "default_example": {
+    "completed_at": "2024-11-25T20:53:51.370600Z",
+    "created_at": "2024-11-25T20:53:47.556000Z",
+    "data_removed": false,
+    "error": null,
+    "id": "hxvjgf8hmhrge0ckcmdbr6k0km",
+    "input": {
+      "prompt": "black forest gateau cake spelling out the words \"FLUX 1 . 1 Pro\", tasty, food photography",
+      "aspect_ratio": "1:1",
+      "output_format": "webp",
+      "output_quality": 80,
+      "safety_tolerance": 2,
+      "prompt_upsampling": true
+    },
+    "is_free_trial_prediction": false,
+    "logs": "Running prediction... \nUsing seed: 47744\nGenerating image...\nGenerated image in 3.6sec\nDownloaded image in 0.15sec",
+    "metrics": {
+      "image_count": 1,
+      "predict_time": 3.805898917,
+      "total_time": 3.8146
+    },
+    "model": "black-forest-labs/flux-1.1-pro",
+    "output": "https://replicate.delivery/czjl/XetPfMnnBtnyLUNiNcnl2Hneyeo8AsfsOl2AG5Znql5f3VK9E/tmpuv7lgrx7.jpg",
+    "started_at": "2024-11-25T20:53:47.564701Z",
+    "status": "succeeded",
+    "urls": {
+      "stream": "https://stream.replicate.com/v1/files/fddq-rdnmuouasiaorsbl2b5xarywbmuu4222kby6hmoz55vdnnbwtqbq",
+      "get": "https://api.replicate.com/v1/predictions/hxvjgf8hmhrge0ckcmdbr6k0km",
+      "cancel": "https://api.replicate.com/v1/predictions/hxvjgf8hmhrge0ckcmdbr6k0km/cancel"
+    },
+    "version": "hidden"
+  },
+  "description": "Faster, better FLUX Pro. Text-to-image model with excellent image quality, prompt adherence, and output diversity.",
+  "github_url": null,
+  "latest_version": {
+    "id": "80a09d66baa990429c2f5ae8a4306bf778a1b3775afd01cc2cc8bdbe9033769c",
+    "created_at": "2025-03-31T12:45:41.061611Z",
+    "cog_version": "0.14.3",
+    "openapi_schema": {
+      "info": {
+        "title": "Cog",
+        "version": "0.1.0"
+      },
+      "paths": {},
+      "openapi": "3.0.2",
+      "components": {
+        "schemas": {
+          "Input": {
+            "type": "object",
+            "title": "Input",
+            "required": [
+              "prompt"
+            ],
+            "properties": {
+              "seed": {
+                "type": "integer",
+                "title": "Seed",
+                "x-order": 6,
+                "description": "Random seed. Set for reproducible generation"
+              },
+              "width": {
+                "type": "integer",
+                "title": "Width",
+                "maximum": 1440,
+                "minimum": 256,
+                "x-order": 3,
+                "description": "Width of the generated image in text-to-image mode. Only used when aspect_ratio=custom. Must be a multiple of 32 (if it's not, it will be rounded to nearest multiple of 32). Note: Ignored in img2img and inpainting modes."
+              },
+              "height": {
+                "type": "integer",
+                "title": "Height",
+                "maximum": 1440,
+                "minimum": 256,
+                "x-order": 4,
+                "description": "Height of the generated image in text-to-image mode. Only used when aspect_ratio=custom. Must be a multiple of 32 (if it's not, it will be rounded to nearest multiple of 32). Note: Ignored in img2img and inpainting modes."
+              },
+              "prompt": {
+                "type": "string",
+                "title": "Prompt",
+                "x-order": 0,
+                "description": "Text prompt for image generation"
+              },
+              "aspect_ratio": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/aspect_ratio"
+                  }
+                ],
+                "default": "1:1",
+                "x-order": 2,
+                "description": "Aspect ratio for the generated image"
+              },
+              "image_prompt": {
+                "type": "string",
+                "title": "Image Prompt",
+                "format": "uri",
+                "x-order": 1,
+                "description": "Image to use with Flux Redux. This is used together with the text prompt to guide the generation towards the composition of the image_prompt. Must be jpeg, png, gif, or webp."
+              },
+              "output_format": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/output_format"
+                  }
+                ],
+                "default": "webp",
+                "x-order": 8,
+                "description": "Format of the output images."
+              },
+              "output_quality": {
+                "type": "integer",
+                "title": "Output Quality",
+                "default": 80,
+                "maximum": 100,
+                "minimum": 0,
+                "x-order": 9,
+                "description": "Quality when saving the output images, from 0 to 100. 100 is best quality, 0 is lowest quality. Not relevant for .png outputs"
+              },
+              "safety_tolerance": {
+                "type": "integer",
+                "title": "Safety Tolerance",
+                "default": 2,
+                "maximum": 6,
+                "minimum": 1,
+                "x-order": 5,
+                "description": "Safety tolerance, 1 is most strict and 6 is most permissive"
+              },
+              "prompt_upsampling": {
+                "type": "boolean",
+                "title": "Prompt Upsampling",
+                "default": false,
+                "x-order": 7,
+                "description": "Automatically modify the prompt for more creative generation"
+              }
+            }
+          },
+          "Output": {
+            "type": "string",
+            "title": "Output",
+            "format": "uri"
+          },
+          "Status": {
+            "enum": [
+              "starting",
+              "processing",
+              "succeeded",
+              "canceled",
+              "failed"
+            ],
+            "type": "string",
+            "title": "Status",
+            "description": "An enumeration."
+          },
+          "WebhookEvent": {
+            "enum": [
+              "start",
+              "output",
+              "logs",
+              "completed"
+            ],
+            "type": "string",
+            "title": "WebhookEvent",
+            "description": "An enumeration."
+          },
+          "aspect_ratio": {
+            "enum": [
+              "custom",
+              "1:1",
+              "16:9",
+              "3:2",
+              "2:3",
+              "4:5",
+              "5:4",
+              "9:16",
+              "3:4",
+              "4:3"
+            ],
+            "type": "string",
+            "title": "aspect_ratio",
+            "description": "An enumeration."
+          },
+          "output_format": {
+            "enum": [
+              "webp",
+              "jpg",
+              "png"
+            ],
+            "type": "string",
+            "title": "output_format",
+            "description": "An enumeration."
+          },
+          "ValidationError": {
+            "type": "object",
+            "title": "ValidationError",
+            "required": [
+              "loc",
+              "msg",
+              "type"
+            ],
+            "properties": {
+              "loc": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "title": "Location"
+              },
+              "msg": {
+                "type": "string",
+                "title": "Message"
+              },
+              "type": {
+                "type": "string",
+                "title": "Error Type"
+              }
+            }
+          },
+          "PredictionRequest": {
+            "type": "object",
+            "title": "PredictionRequest",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "webhook": {
+                "type": "string",
+                "title": "Webhook",
+                "format": "uri",
+                "maxLength": 65536,
+                "minLength": 1
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "output_file_prefix": {
+                "type": "string",
+                "title": "Output File Prefix"
+              },
+              "webhook_events_filter": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WebhookEvent"
+                },
+                "default": [
+                  "start",
+                  "output",
+                  "logs",
+                  "completed"
+                ]
+              }
+            }
+          },
+          "PredictionResponse": {
+            "type": "object",
+            "title": "PredictionResponse",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "logs": {
+                "type": "string",
+                "title": "Logs",
+                "default": ""
+              },
+              "error": {
+                "type": "string",
+                "title": "Error"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "output": {
+                "$ref": "#/components/schemas/Output"
+              },
+              "status": {
+                "$ref": "#/components/schemas/Status"
+              },
+              "metrics": {
+                "type": "object",
+                "title": "Metrics"
+              },
+              "version": {
+                "type": "string",
+                "title": "Version"
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": "string",
+                "title": "Started At",
+                "format": "date-time"
+              },
+              "completed_at": {
+                "type": "string",
+                "title": "Completed At",
+                "format": "date-time"
+              }
+            }
+          },
+          "HTTPValidationError": {
+            "type": "object",
+            "title": "HTTPValidationError",
+            "properties": {
+              "detail": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ValidationError"
+                },
+                "title": "Detail"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "license_url": "https://replicate.com/black-forest-labs/flux-pro#license",
+  "name": "flux-1.1-pro",
+  "owner": "black-forest-labs",
+  "paper_url": null,
+  "run_count": 39243844,
+  "url": "https://replicate.com/black-forest-labs/flux-1.1-pro",
+  "visibility": "public",
+  "weights_url": null
+}

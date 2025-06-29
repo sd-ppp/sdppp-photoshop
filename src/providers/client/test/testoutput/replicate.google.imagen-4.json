@@ -1,0 +1,309 @@
+{
+  "cover_image_url": "https://tjzk.replicate.delivery/models_models_featured_image/895ffdc5-07d6-4b16-ac62-b27ba5b24468/4ccgkq0a6xrm80cpykfszajfaw.webp",
+  "created_at": "2025-05-21T15:15:07.422259Z",
+  "default_example": {
+    "completed_at": "2025-05-23T20:56:46.257482Z",
+    "created_at": "2025-05-23T20:56:42.098000Z",
+    "data_removed": false,
+    "error": null,
+    "id": "h2pafc8fe9rma0cpzvqtpjzvyr",
+    "input": {
+      "prompt": "The photo: Create a cinematic, photorealistic medium shot capturing the nostalgic warmth of a late 90s indie film. The focus is a young woman with brightly dyed pink-gold hair and freckled skin, looking directly and intently into the camera lens with a hopeful yet slightly uncertain smile, she is slightly off-center. She wears an oversized, vintage band t-shirt that says \"Replicate\" (slightly worn) over a long-sleeved striped top and simple silver stud earrings. The lighting is soft, golden hour sunlight streaming through a slightly dusty window, creating lens flare and illuminating dust motes in the air. The background shows a blurred, cluttered bedroom with posters on the wall and fairy lights, rendered with a shallow depth of field. Natural film grain, a warm, slightly muted color palette, and sharp focus on her expressive eyes enhance the intimate, authentic feel",
+      "aspect_ratio": "16:9",
+      "safety_filter_level": "block_medium_and_above"
+    },
+    "is_free_trial_prediction": false,
+    "logs": "Generating image...\nGenerated image in 3.90sec",
+    "metrics": {
+      "image_count": 1,
+      "predict_time": 4.151626451,
+      "total_time": 4.159482
+    },
+    "model": "google/imagen-4",
+    "output": "https://replicate.delivery/xezq/vfRlemVaYMuINEe8KCCmeJT6V3Dv7S45rxMhIgnST2Q7wkelC/tmp4mqrs3rp.png",
+    "started_at": "2025-05-23T20:56:42.105855Z",
+    "status": "succeeded",
+    "urls": {
+      "stream": "https://stream.replicate.com/v1/files/bcwr-b7yjxy7r5cuvjxdqbgkqvljtctzlvnj3zriski2len5jodj7zpha",
+      "get": "https://api.replicate.com/v1/predictions/h2pafc8fe9rma0cpzvqtpjzvyr",
+      "cancel": "https://api.replicate.com/v1/predictions/h2pafc8fe9rma0cpzvqtpjzvyr/cancel"
+    },
+    "version": "hidden"
+  },
+  "description": "Google's Imagen 4 flagship model",
+  "github_url": null,
+  "latest_version": {
+    "id": "c63c40624e81fdd85e5e85743296c4f634bb54a147510ff034768b7fe8a4bbf7",
+    "created_at": "2025-06-12T10:57:12.319782Z",
+    "cog_version": "0.15.5",
+    "openapi_schema": {
+      "info": {
+        "title": "Cog",
+        "version": "0.1.0"
+      },
+      "paths": {},
+      "openapi": "3.0.2",
+      "components": {
+        "schemas": {
+          "Input": {
+            "type": "object",
+            "title": "Input",
+            "required": [
+              "prompt"
+            ],
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "title": "Prompt",
+                "x-order": 0,
+                "description": "Text prompt for image generation"
+              },
+              "aspect_ratio": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/aspect_ratio"
+                  }
+                ],
+                "default": "1:1",
+                "x-order": 1,
+                "description": "Aspect ratio of the generated image"
+              },
+              "output_format": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/output_format"
+                  }
+                ],
+                "default": "jpg",
+                "x-order": 3,
+                "description": "Format of the output image"
+              },
+              "safety_filter_level": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/safety_filter_level"
+                  }
+                ],
+                "default": "block_only_high",
+                "x-order": 2,
+                "description": "block_low_and_above is strictest, block_medium_and_above blocks some prompts, block_only_high is most permissive but some prompts will still be blocked"
+              }
+            }
+          },
+          "Output": {
+            "type": "string",
+            "title": "Output",
+            "format": "uri"
+          },
+          "Status": {
+            "enum": [
+              "starting",
+              "processing",
+              "succeeded",
+              "canceled",
+              "failed"
+            ],
+            "type": "string",
+            "title": "Status",
+            "description": "An enumeration."
+          },
+          "WebhookEvent": {
+            "enum": [
+              "start",
+              "output",
+              "logs",
+              "completed"
+            ],
+            "type": "string",
+            "title": "WebhookEvent",
+            "description": "An enumeration."
+          },
+          "aspect_ratio": {
+            "enum": [
+              "1:1",
+              "9:16",
+              "16:9",
+              "3:4",
+              "4:3"
+            ],
+            "type": "string",
+            "title": "aspect_ratio",
+            "description": "An enumeration."
+          },
+          "output_format": {
+            "enum": [
+              "jpg",
+              "png"
+            ],
+            "type": "string",
+            "title": "output_format",
+            "description": "An enumeration."
+          },
+          "ValidationError": {
+            "type": "object",
+            "title": "ValidationError",
+            "required": [
+              "loc",
+              "msg",
+              "type"
+            ],
+            "properties": {
+              "loc": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "title": "Location"
+              },
+              "msg": {
+                "type": "string",
+                "title": "Message"
+              },
+              "type": {
+                "type": "string",
+                "title": "Error Type"
+              }
+            }
+          },
+          "PredictionRequest": {
+            "type": "object",
+            "title": "PredictionRequest",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "context": {
+                "type": "object",
+                "title": "Context",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "webhook": {
+                "type": "string",
+                "title": "Webhook",
+                "format": "uri",
+                "maxLength": 65536,
+                "minLength": 1
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "output_file_prefix": {
+                "type": "string",
+                "title": "Output File Prefix"
+              },
+              "webhook_events_filter": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WebhookEvent"
+                },
+                "default": [
+                  "start",
+                  "output",
+                  "logs",
+                  "completed"
+                ]
+              }
+            }
+          },
+          "PredictionResponse": {
+            "type": "object",
+            "title": "PredictionResponse",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "logs": {
+                "type": "string",
+                "title": "Logs",
+                "default": ""
+              },
+              "error": {
+                "type": "string",
+                "title": "Error"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "output": {
+                "$ref": "#/components/schemas/Output"
+              },
+              "status": {
+                "$ref": "#/components/schemas/Status"
+              },
+              "metrics": {
+                "type": "object",
+                "title": "Metrics"
+              },
+              "version": {
+                "type": "string",
+                "title": "Version"
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": "string",
+                "title": "Started At",
+                "format": "date-time"
+              },
+              "completed_at": {
+                "type": "string",
+                "title": "Completed At",
+                "format": "date-time"
+              }
+            }
+          },
+          "HTTPValidationError": {
+            "type": "object",
+            "title": "HTTPValidationError",
+            "properties": {
+              "detail": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ValidationError"
+                },
+                "title": "Detail"
+              }
+            }
+          },
+          "safety_filter_level": {
+            "enum": [
+              "block_low_and_above",
+              "block_medium_and_above",
+              "block_only_high"
+            ],
+            "type": "string",
+            "title": "safety_filter_level",
+            "description": "An enumeration."
+          }
+        }
+      }
+    }
+  },
+  "license_url": null,
+  "name": "imagen-4",
+  "owner": "google",
+  "paper_url": null,
+  "run_count": 404975,
+  "url": "https://replicate.com/google/imagen-4",
+  "visibility": "public",
+  "weights_url": null
+}

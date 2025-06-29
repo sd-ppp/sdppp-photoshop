@@ -1,0 +1,125 @@
+{
+  "id": "sd-ppp2",
+  "name": "SD-PPP2.0",
+  "version": "0.0.2",
+  "main": "sdppp/photoshop.html", 
+  "manifestVersion": 5,
+  "host": {
+    "app": "PS",
+    "minVersion": "26.0.0"
+  },
+  "featureFlags": {
+    "enableAlerts": true
+  },
+  "requiredPermissions": {
+    "network": {
+      "domains": "all"
+    },
+    "allowCodeGenerationFromStrings": true,
+    "launchProcess": {
+      "schemes": [
+        "http",
+        "https"
+      ],
+      "extensions": [
+        ".svg",
+        ".png"
+      ]
+    },
+    "webview": {
+      "allow": "yes",
+      "allowLocalRendering": "yes",
+      "domains": "all",
+      "enableMessageBridge": "localAndRemote"
+    }
+  },
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "sd-ppp",
+      "label": {
+        "default": "SD-PPP 2.0-preview.0"
+      },
+      "minimumSize": {
+        "width": 330,
+        "height": 100
+      },
+      "maximumSize": {
+        "width": 3440,
+        "height": 1440
+      },
+      "preferredDockedSize": {
+        "width": 330,
+        "height": 540
+      },
+      "preferredFloatingSize": {
+        "width": 330,
+        "height": 540
+      },
+      "icons": [
+        {
+          "width": 23,
+          "height": 23,
+          "path": "icons/sdppp_D.png",
+          "scale": [
+            1,
+            2
+          ],
+          "theme": [
+            "darkest",
+            "dark",
+            "medium"
+          ]
+        },
+        {
+          "width": 23,
+          "height": 23,
+          "path": "icons/sdppp_L.png",
+          "scale": [
+            1,
+            2
+          ],
+          "theme": [
+            "lightest",
+            "light"
+          ]
+        }
+      ]
+    }
+  ],
+  "icons": [
+    {
+      "width": 23,
+      "height": 23,
+      "path": "icons/sdppp_D.png",
+      "scale": [
+        1,
+        2
+      ],
+      "theme": [
+        "darkest",
+        "dark",
+        "medium"
+      ],
+      "species": [
+        "pluginList"
+      ]
+    },
+    {
+      "width": 48,
+      "height": 48,
+      "path": "icons/sdppp_L.png",
+      "scale": [
+        1,
+        2
+      ],
+      "theme": [
+        "lightest",
+        "light"
+      ],
+      "species": [
+        "pluginList"
+      ]
+    }
+  ]
+}

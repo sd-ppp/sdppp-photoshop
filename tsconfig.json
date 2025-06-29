@@ -1,0 +1,8 @@
+{
+    "files": ["./vite.config.ts"],
+    "compilerOptions": {
+        "noEmit": true,
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext"
+    }
+}

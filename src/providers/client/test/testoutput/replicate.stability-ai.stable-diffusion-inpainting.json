@@ -1,0 +1,399 @@
+{
+  "cover_image_url": "https://replicate.delivery/pbxt/xs0pPOUM6HKmPlJJBXqKfE1YsiMzgNsCuGedlX0VqvPYifLgA/out-0.png",
+  "created_at": "2022-12-02T17:40:01.152489Z",
+  "default_example": {
+    "completed_at": "2022-12-02T18:40:24.805380Z",
+    "created_at": "2022-12-02T18:40:22.058556Z",
+    "data_removed": false,
+    "error": null,
+    "id": "xkyxrm6j3jb3llitusuf4hycoa",
+    "input": {
+      "mask": "https://replicate.delivery/pbxt/HtGQBqO9MtVbPm0G0K43nsvvjBB0E0PaWOhuNRrRBBT4ttbf/mask.png",
+      "image": "https://replicate.delivery/pbxt/HtGQBfA5TrqFYZBf0UL18NTqHrzt8UiSIsAkUuMHtjvFDO6p/overture-creations-5sI6fQgYIuo.png",
+      "prompt": "Face of a yellow cat, high resolution, sitting on a park bench",
+      "num_outputs": 1,
+      "guidance_scale": 7.5,
+      "prompt_strength": 0.8,
+      "num_inference_steps": 25
+    },
+    "is_free_trial_prediction": false,
+    "logs": "Using seed: 62372\n  0%|          | 0/26 [00:00<?, ?it/s]\n  8%|▊         | 2/26 [00:00<00:01, 14.22it/s]\n 15%|█▌        | 4/26 [00:00<00:01, 15.62it/s]\n 23%|██▎       | 6/26 [00:00<00:01, 15.98it/s]\n 31%|███       | 8/26 [00:00<00:01, 16.07it/s]\n 38%|███▊      | 10/26 [00:00<00:00, 16.14it/s]\n 46%|████▌     | 12/26 [00:00<00:00, 16.29it/s]\n 54%|█████▍    | 14/26 [00:00<00:00, 16.39it/s]\n 62%|██████▏   | 16/26 [00:00<00:00, 16.40it/s]\n 69%|██████▉   | 18/26 [00:01<00:00, 16.42it/s]\n 77%|███████▋  | 20/26 [00:01<00:00, 16.49it/s]\n 85%|████████▍ | 22/26 [00:01<00:00, 16.31it/s]\n 92%|█████████▏| 24/26 [00:01<00:00, 16.37it/s]\n100%|██████████| 26/26 [00:01<00:00, 16.47it/s]\n100%|██████████| 26/26 [00:01<00:00, 16.26it/s]",
+    "metrics": {
+      "predict_time": 2.711119,
+      "total_time": 2.746824
+    },
+    "model": "stability-ai/stable-diffusion-inpainting",
+    "output": [
+      "https://replicate.delivery/pbxt/xs0pPOUM6HKmPlJJBXqKfE1YsiMzgNsCuGedlX0VqvPYifLgA/out-0.png"
+    ],
+    "started_at": "2022-12-02T18:40:22.094261Z",
+    "status": "succeeded",
+    "urls": {
+      "get": "https://api.replicate.com/v1/predictions/xkyxrm6j3jb3llitusuf4hycoa",
+      "cancel": "https://api.replicate.com/v1/predictions/xkyxrm6j3jb3llitusuf4hycoa/cancel"
+    },
+    "version": "e5a34f913de0adc560d20e002c45ad43a80031b62caacc3d84010c6b6a64870c"
+  },
+  "description": "Fill in masked parts of images with Stable Diffusion",
+  "github_url": "https://github.com/replicate/cog-stable-diffusion-inpainting",
+  "latest_version": {
+    "id": "95b7223104132402a9ae91cc677285bc5eb997834bd2349fa486f53910fd68b3",
+    "created_at": "2024-02-14T16:55:15.877089Z",
+    "cog_version": "0.9.4",
+    "openapi_schema": {
+      "info": {
+        "title": "Cog",
+        "version": "0.1.0"
+      },
+      "paths": {},
+      "openapi": "3.0.2",
+      "components": {
+        "schemas": {
+          "Input": {
+            "type": "object",
+            "title": "Input",
+            "required": [
+              "image",
+              "mask"
+            ],
+            "properties": {
+              "mask": {
+                "type": "string",
+                "title": "Mask",
+                "format": "uri",
+                "x-order": 2,
+                "description": "Black and white image to use as mask for inpainting over the image provided. White pixels are inpainted and black pixels are preserved."
+              },
+              "seed": {
+                "type": "integer",
+                "title": "Seed",
+                "x-order": 10,
+                "description": "Random seed. Leave blank to randomize the seed"
+              },
+              "image": {
+                "type": "string",
+                "title": "Image",
+                "format": "uri",
+                "x-order": 1,
+                "description": "Initial image to generate variations of. Will be resized to height x width"
+              },
+              "width": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/width"
+                  }
+                ],
+                "default": 512,
+                "x-order": 4,
+                "description": "Width of generated image in pixels. Needs to be a multiple of 64"
+              },
+              "height": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/height"
+                  }
+                ],
+                "default": 512,
+                "x-order": 3,
+                "description": "Height of generated image in pixels. Needs to be a multiple of 64"
+              },
+              "prompt": {
+                "type": "string",
+                "title": "Prompt",
+                "default": "a vision of paradise. unreal engine",
+                "x-order": 0,
+                "description": "Input prompt"
+              },
+              "scheduler": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/scheduler"
+                  }
+                ],
+                "default": "DPMSolverMultistep",
+                "x-order": 9,
+                "description": "Choose a scheduler."
+              },
+              "num_outputs": {
+                "type": "integer",
+                "title": "Num Outputs",
+                "default": 1,
+                "maximum": 4,
+                "minimum": 1,
+                "x-order": 6,
+                "description": "Number of images to generate."
+              },
+              "guidance_scale": {
+                "type": "number",
+                "title": "Guidance Scale",
+                "default": 7.5,
+                "maximum": 20,
+                "minimum": 1,
+                "x-order": 8,
+                "description": "Scale for classifier-free guidance"
+              },
+              "negative_prompt": {
+                "type": "string",
+                "title": "Negative Prompt",
+                "x-order": 5,
+                "description": "Specify things to not see in the output"
+              },
+              "num_inference_steps": {
+                "type": "integer",
+                "title": "Num Inference Steps",
+                "default": 50,
+                "maximum": 500,
+                "minimum": 1,
+                "x-order": 7,
+                "description": "Number of denoising steps"
+              },
+              "disable_safety_checker": {
+                "type": "boolean",
+                "title": "Disable Safety Checker",
+                "default": false,
+                "x-order": 11,
+                "description": "Disable safety checker for generated images. This feature is only available through the API. See [https://replicate.com/docs/how-does-replicate-work#safety](https://replicate.com/docs/how-does-replicate-work#safety)"
+              }
+            }
+          },
+          "width": {
+            "enum": [
+              64,
+              128,
+              192,
+              256,
+              320,
+              384,
+              448,
+              512,
+              576,
+              640,
+              704,
+              768,
+              832,
+              896,
+              960,
+              1024
+            ],
+            "type": "integer",
+            "title": "width",
+            "description": "An enumeration."
+          },
+          "Output": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "title": "Output"
+          },
+          "Status": {
+            "enum": [
+              "starting",
+              "processing",
+              "succeeded",
+              "canceled",
+              "failed"
+            ],
+            "type": "string",
+            "title": "Status",
+            "description": "An enumeration."
+          },
+          "height": {
+            "enum": [
+              64,
+              128,
+              192,
+              256,
+              320,
+              384,
+              448,
+              512,
+              576,
+              640,
+              704,
+              768,
+              832,
+              896,
+              960,
+              1024
+            ],
+            "type": "integer",
+            "title": "height",
+            "description": "An enumeration."
+          },
+          "scheduler": {
+            "enum": [
+              "DDIM",
+              "K_EULER",
+              "DPMSolverMultistep",
+              "K_EULER_ANCESTRAL",
+              "PNDM",
+              "KLMS"
+            ],
+            "type": "string",
+            "title": "scheduler",
+            "description": "An enumeration."
+          },
+          "WebhookEvent": {
+            "enum": [
+              "start",
+              "output",
+              "logs",
+              "completed"
+            ],
+            "type": "string",
+            "title": "WebhookEvent",
+            "description": "An enumeration."
+          },
+          "ValidationError": {
+            "type": "object",
+            "title": "ValidationError",
+            "required": [
+              "loc",
+              "msg",
+              "type"
+            ],
+            "properties": {
+              "loc": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "title": "Location"
+              },
+              "msg": {
+                "type": "string",
+                "title": "Message"
+              },
+              "type": {
+                "type": "string",
+                "title": "Error Type"
+              }
+            }
+          },
+          "PredictionRequest": {
+            "type": "object",
+            "title": "PredictionRequest",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "webhook": {
+                "type": "string",
+                "title": "Webhook",
+                "format": "uri",
+                "maxLength": 65536,
+                "minLength": 1
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "output_file_prefix": {
+                "type": "string",
+                "title": "Output File Prefix"
+              },
+              "webhook_events_filter": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WebhookEvent"
+                },
+                "default": [
+                  "start",
+                  "output",
+                  "logs",
+                  "completed"
+                ]
+              }
+            }
+          },
+          "PredictionResponse": {
+            "type": "object",
+            "title": "PredictionResponse",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "logs": {
+                "type": "string",
+                "title": "Logs",
+                "default": ""
+              },
+              "error": {
+                "type": "string",
+                "title": "Error"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "output": {
+                "$ref": "#/components/schemas/Output"
+              },
+              "status": {
+                "$ref": "#/components/schemas/Status"
+              },
+              "metrics": {
+                "type": "object",
+                "title": "Metrics"
+              },
+              "version": {
+                "type": "string",
+                "title": "Version"
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": "string",
+                "title": "Started At",
+                "format": "date-time"
+              },
+              "completed_at": {
+                "type": "string",
+                "title": "Completed At",
+                "format": "date-time"
+              }
+            }
+          },
+          "HTTPValidationError": {
+            "type": "object",
+            "title": "HTTPValidationError",
+            "properties": {
+              "detail": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ValidationError"
+                },
+                "title": "Detail"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "license_url": "https://huggingface.co/stabilityai/stable-diffusion-2/blob/main/LICENSE-MODEL",
+  "name": "stable-diffusion-inpainting",
+  "owner": "stability-ai",
+  "paper_url": null,
+  "run_count": 20149144,
+  "url": "https://replicate.com/stability-ai/stable-diffusion-inpainting",
+  "visibility": "public",
+  "weights_url": null
+}

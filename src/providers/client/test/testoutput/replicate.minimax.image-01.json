@@ -1,0 +1,295 @@
+{
+  "cover_image_url": "https://tjzk.replicate.delivery/models_models_cover_image/926994db-2c8e-4b7d-934f-2f86b2480e55/43b05178-4b2a-42d9-9130-4fedae65.webp",
+  "created_at": "2025-03-03T14:05:29.816962Z",
+  "default_example": {
+    "completed_at": "2025-03-03T14:21:14.828367Z",
+    "created_at": "2025-03-03T14:20:44.301000Z",
+    "data_removed": false,
+    "error": null,
+    "id": "w4agaakfhnrme0cnbhgtyfmstc",
+    "input": {
+      "prompt": "A close-up portrait of a leopard with distinctive spotted pattern and intense eyes",
+      "aspect_ratio": "3:4",
+      "number_of_images": 1,
+      "prompt_optimizer": true
+    },
+    "is_free_trial_prediction": false,
+    "logs": "Moderating content...\nModeration complete in 0.23sec\nRunning prediction...\nDownloading 412876 bytes\nDownloaded 0.39MB in 0.12sec\nGenerated 1 image",
+    "metrics": {
+      "image_count": 1,
+      "predict_time": 30.493822198,
+      "total_time": 30.527367
+    },
+    "model": "minimax/image-01",
+    "output": [
+      "https://replicate.delivery/xezq/DIW1tQHSNXY2Lhlk22V8fQsEqx5sDfqilWuNbciQTmf1mtpoA/tmpf6p003az.jpeg"
+    ],
+    "started_at": "2025-03-03T14:20:44.334545Z",
+    "status": "succeeded",
+    "urls": {
+      "stream": "https://stream.replicate.com/v1/files/bcwr-ustoljd7enrpatb34fxhhkru5cvfteijmzs3ggu7atqz6cx2hoja",
+      "get": "https://api.replicate.com/v1/predictions/w4agaakfhnrme0cnbhgtyfmstc",
+      "cancel": "https://api.replicate.com/v1/predictions/w4agaakfhnrme0cnbhgtyfmstc/cancel"
+    },
+    "version": "hidden"
+  },
+  "description": "Minimax's first image model, with character reference support",
+  "github_url": null,
+  "latest_version": {
+    "id": "abbfceebd9f32eba5a69624c59fe3d434ed8d8208aa858f9734040062c03d8c9",
+    "created_at": "2025-04-25T09:52:19.696259Z",
+    "cog_version": "0.14.7",
+    "openapi_schema": {
+      "info": {
+        "title": "Cog",
+        "version": "0.1.0"
+      },
+      "paths": {},
+      "openapi": "3.0.2",
+      "components": {
+        "schemas": {
+          "Input": {
+            "type": "object",
+            "title": "Input",
+            "required": [
+              "prompt"
+            ],
+            "properties": {
+              "prompt": {
+                "type": "string",
+                "title": "Prompt",
+                "x-order": 0,
+                "description": "Text prompt for generation"
+              },
+              "aspect_ratio": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/aspect_ratio"
+                  }
+                ],
+                "default": "1:1",
+                "x-order": 1,
+                "description": "Image aspect ratio"
+              },
+              "number_of_images": {
+                "type": "integer",
+                "title": "Number Of Images",
+                "default": 1,
+                "maximum": 9,
+                "minimum": 1,
+                "x-order": 2,
+                "description": "Number of images to generate"
+              },
+              "prompt_optimizer": {
+                "type": "boolean",
+                "title": "Prompt Optimizer",
+                "default": true,
+                "x-order": 3,
+                "description": "Use prompt optimizer"
+              },
+              "subject_reference": {
+                "type": "string",
+                "title": "Subject Reference",
+                "format": "uri",
+                "x-order": 4,
+                "description": "An optional character reference image (human face) to use as the subject in the generated image(s)."
+              }
+            }
+          },
+          "Output": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "title": "Output"
+          },
+          "Status": {
+            "enum": [
+              "starting",
+              "processing",
+              "succeeded",
+              "canceled",
+              "failed"
+            ],
+            "type": "string",
+            "title": "Status",
+            "description": "An enumeration."
+          },
+          "WebhookEvent": {
+            "enum": [
+              "start",
+              "output",
+              "logs",
+              "completed"
+            ],
+            "type": "string",
+            "title": "WebhookEvent",
+            "description": "An enumeration."
+          },
+          "aspect_ratio": {
+            "enum": [
+              "1:1",
+              "16:9",
+              "4:3",
+              "3:2",
+              "2:3",
+              "3:4",
+              "9:16",
+              "21:9"
+            ],
+            "type": "string",
+            "title": "aspect_ratio",
+            "description": "An enumeration."
+          },
+          "ValidationError": {
+            "type": "object",
+            "title": "ValidationError",
+            "required": [
+              "loc",
+              "msg",
+              "type"
+            ],
+            "properties": {
+              "loc": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "title": "Location"
+              },
+              "msg": {
+                "type": "string",
+                "title": "Message"
+              },
+              "type": {
+                "type": "string",
+                "title": "Error Type"
+              }
+            }
+          },
+          "PredictionRequest": {
+            "type": "object",
+            "title": "PredictionRequest",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "webhook": {
+                "type": "string",
+                "title": "Webhook",
+                "format": "uri",
+                "maxLength": 65536,
+                "minLength": 1
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "output_file_prefix": {
+                "type": "string",
+                "title": "Output File Prefix"
+              },
+              "webhook_events_filter": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/WebhookEvent"
+                },
+                "default": [
+                  "start",
+                  "output",
+                  "logs",
+                  "completed"
+                ]
+              }
+            }
+          },
+          "PredictionResponse": {
+            "type": "object",
+            "title": "PredictionResponse",
+            "properties": {
+              "id": {
+                "type": "string",
+                "title": "Id"
+              },
+              "logs": {
+                "type": "string",
+                "title": "Logs",
+                "default": ""
+              },
+              "error": {
+                "type": "string",
+                "title": "Error"
+              },
+              "input": {
+                "$ref": "#/components/schemas/Input"
+              },
+              "output": {
+                "$ref": "#/components/schemas/Output"
+              },
+              "status": {
+                "$ref": "#/components/schemas/Status"
+              },
+              "metrics": {
+                "type": "object",
+                "title": "Metrics"
+              },
+              "version": {
+                "type": "string",
+                "title": "Version"
+              },
+              "created_at": {
+                "type": "string",
+                "title": "Created At",
+                "format": "date-time"
+              },
+              "started_at": {
+                "type": "string",
+                "title": "Started At",
+                "format": "date-time"
+              },
+              "completed_at": {
+                "type": "string",
+                "title": "Completed At",
+                "format": "date-time"
+              }
+            }
+          },
+          "HTTPValidationError": {
+            "type": "object",
+            "title": "HTTPValidationError",
+            "properties": {
+              "detail": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ValidationError"
+                },
+                "title": "Detail"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "license_url": null,
+  "name": "image-01",
+  "owner": "minimax",
+  "paper_url": null,
+  "run_count": 509150,
+  "url": "https://replicate.com/minimax/image-01",
+  "visibility": "public",
+  "weights_url": null
+}

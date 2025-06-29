@@ -1,0 +1,140 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Ant Design React Less Component Guidelines
+
+## Overview
+This project uses Ant Design (antd) with React and Less for styling. Follow these guidelines when writing components.
+
+## Dependencies
+The project already includes the necessary dependencies:
+- `antd`: ^5.25.4
+- `@ant-design/icons`: ^6.0.0  
+- `less`: ^4.3.0
+- `react`: ^18.3.1
+
+## Component Structure
+
+### 1. Component File Organization
+- Create component files with `.tsx` extension
+- Create corresponding Less files with `.less` extension
+- Use the same base name for both files (e.g., `MyComponent.tsx` and `MyComponent.less`)
+
+### 2. Import Pattern
+```tsx
+import React from 'react';
+import { ComponentName } from 'antd';
+import './ComponentName.less';
+
+interface ComponentNameProps {
+  // Define your props here
+}
+
+export default function ComponentName(props: ComponentNameProps) {
+  return (
+    <div className="component-name">
+      {/* Your component content */}
+    </div>
+  );
+}
+```
+
+### 3. Less Styling Guidelines
+
+#### File Structure
+```less
+// ComponentName.less
+.component-name {
+  // Component styles
+  
+  &__element {
+    // BEM-style nested elements
+  }
+  
+  &--modifier {
+    // BEM-style modifiers
+  }
+}
+```
+
+#### Ant Design Integration
+- Use Ant Design's CSS variables for consistent theming
+- Override Ant Design styles using the component's class prefix
+- Example:
+```less
+.component-name {
+  .ant-btn {
+    // Override button styles
+  }
+  
+  .ant-input {
+    // Override input styles
+  }
+}
+```
+
+#### Best Practices
+- Use BEM methodology for class naming
+- Leverage Less variables for consistent spacing and colors
+- Use Ant Design's built-in responsive utilities
+- Avoid inline styles - use Less classes instead
+
+### 4. Component Examples
+
+#### Basic Component
+```tsx
+import React from 'react';
+import { Button, Input } from 'antd';
+import './MyForm.less';
+
+interface MyFormProps {
+  onSubmit: (data: any) => void;
+}
+
+export default function MyForm({ onSubmit }: MyFormProps) {
+  return (
+    <div className="my-form">
+      <Input className="my-form__input" placeholder="Enter text" />
+      <Button className="my-form__button" type="primary">
+        Submit
+      </Button>
+    </div>
+  );
+}
+```
+
+#### Corresponding Less
+```less
+.my-form {
+  padding: 16px;
+  
+  &__input {
+    margin-bottom: 12px;
+  }
+  
+  &__button {
+    width: 100%;
+  }
+}
+```
+
+### 5. Ant Design Component Usage
+- Use Ant Design components as the foundation
+- Customize appearance through Less classes
+- Follow Ant Design's design principles and patterns
+- Use Ant Design's form validation and state management
+
+### 6. File References
+- Main package configuration: [package.json](mdc:packages/aidoobee/package.json)
+- Example component: [liblib.tsx](mdc:packages/aidoobee/src/providers/renderer/liblib.tsx)
+- Example styles: [liblib.less](mdc:packages/aidoobee/src/providers/renderer/liblib.less)
+
+### 7. Development Workflow
+1. Create the `.tsx` component file
+2. Create the corresponding `.less` file
+3. Import the Less file in the component
+4. Use BEM-style class naming
+5. Leverage Ant Design components and utilities
+6. Test responsive behavior and accessibility

@@ -1,0 +1,445 @@
+.image-select-container {
+  border-radius: 8px;
+  transition: all 0.3s;
+
+  // 确保Upload组件的包装器撑满容器
+  .ant-upload-wrapper {
+    width: 100%;
+    .ant-upload {
+      width: 100%;
+      display: flex;
+    }
+  }
+
+  .image-select-empty {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--sdppp-widget-border-color);
+    border-radius: 6px;
+    margin-bottom: 16px;
+
+    .empty-content {
+      text-align: center;
+    }
+  }
+
+  .image-preview-container {
+    position: relative;
+    margin-bottom: 8px;
+    min-height: 115px;
+    border: 1px solid var(--sdppp-widget-border-color);
+    border-radius: 8px;
+    padding: 8px;
+
+    .preview-action-buttons {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 2;
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    &:hover .preview-action-buttons {
+      opacity: 1;
+    }
+
+    // 空状态样式
+    .image-preview-empty {
+      height: 100%;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .empty-content {
+        text-align: center;
+        color: var(--sdppp-host-text-color-secondary);
+      }
+    }
+
+    .image-preview-row {
+      height: 100%;
+      min-height: 100px;
+
+      &.single-image {
+        .image-info-col {
+          display: flex;
+          align-items: stretch;
+        }
+
+        .image-info-panel {
+          width: 100%;
+          height: 100px;
+          padding: 8px;
+          background-color: var(--sdppp-widget-background-color);
+          border: 1px solid var(--sdppp-widget-border-color);
+          border-radius: 4px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+
+          .info-header {
+            .info-title {
+              font-size: 13px;
+              font-weight: 500;
+              color: var(--sdppp-host-text-color);
+              margin-bottom: 2px;
+            }
+
+            .info-status {
+              font-size: 10px;
+              color: var(--sdppp-host-text-color-secondary);
+              padding: 1px 6px;
+              background-color: var(--sdppp-widget-border-color);
+              border-radius: 8px;
+              display: inline-block;
+            }
+          }
+
+          .info-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 4px;
+            margin: 6px 0;
+
+            .info-item {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              font-size: 11px;
+
+              .info-label {
+                color: var(--sdppp-host-text-color-secondary);
+                font-weight: normal;
+              }
+
+              .info-value {
+                color: var(--sdppp-host-text-color);
+                font-weight: 500;
+              }
+            }
+          }
+
+          .info-actions {
+            .ant-btn {
+              height: 24px;
+              font-size: 11px;
+              border-radius: 3px;
+            }
+          }
+        }
+
+        .preview-image-col {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 0;
+        }
+      }
+
+      .preview-image-col {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 0; // 关键：防止flex子项超出容器
+      }
+
+      .preview-image-wrapper {
+        width: 100%;
+        height: 100px;
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+        transition: border-color 0.2s ease-in-out;
+        position: relative;
+
+        &:hover {
+          border-color: var(--sdppp-widget-border-color);
+        }
+
+        // 为所有图片包装器添加hover遮罩效果
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0, 0, 0, 0.3);
+          opacity: 0;
+          transition: opacity 0.2s ease-in-out;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        &:hover::after {
+          opacity: 1;
+        }
+
+        // 添加点击提示图标
+        &::before {
+          content: '🔍';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 16px;
+          color: white;
+          opacity: 0;
+          transition: opacity 0.2s ease-in-out;
+          z-index: 2;
+          pointer-events: none;
+        }
+
+        &:hover::before {
+          opacity: 1;
+        }
+
+        &.single {
+          background-color: var(--sdppp-widget-background-color);
+          border: 1px solid var(--sdppp-widget-border-color);
+        }
+
+        &.ellipsis {
+          border: 1px dashed var(--sdppp-widget-border-color);
+          color: var(--sdppp-host-text-color-secondary);
+          flex-direction: column;
+          gap: 4px;
+          cursor: pointer;
+          transition: all 0.2s ease-in-out;
+
+          // 省略图标不需要遮罩效果
+          &::after,
+          &::before {
+            display: none;
+          }
+
+          &:hover {
+            background-color: var(--sdppp-widget-border-color);
+            border-color: var(--sdppp-host-text-color-secondary);
+            color: var(--sdppp-host-text-color);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+
+          .ellipsis-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 16px;
+            transition: all 0.2s ease-in-out;
+
+            .ellipsis-count {
+              font-size: 12px;
+              opacity: 0.7;
+              transition: opacity 0.2s ease-in-out;
+            }
+          }
+
+          &:hover .ellipsis-content {
+            .ellipsis-count {
+              opacity: 1;
+            }
+          }
+        }
+
+        .preview-image {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+
+        // Image组件的预览遮罩样式
+        .ant-image-mask {
+          background-color: rgba(255, 255, 255, 0.5);
+          opacity: 0;
+          transition: opacity 0.2s ease-in-out;
+
+          .ant-image-mask-info {
+            color: var(--sdppp-host-text-color);
+            font-size: 14px;
+          }
+        }
+
+        &:hover .ant-image-mask {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .button-group-row {
+    .ant-col {
+      display: flex;
+      align-items: stretch;
+    }
+  }
+
+  @media screen and (max-width: 400px) {
+    .image-preview-container {
+      padding: 6px;
+      min-height: 110px;
+
+      .image-preview-row {
+        min-height: 110px;
+
+        &.single-image {
+          .image-info-col {
+            flex: 0 0 35%;
+            max-width: 35%;
+          }
+
+          .preview-image-col {
+            flex: 0 0 65%;
+            max-width: 65%;
+          }
+
+          .image-info-panel {
+            height: 110px;
+            padding: 4px;
+
+            .info-header {
+              .info-title {
+                font-size: 11px;
+                margin-bottom: 1px;
+              }
+
+              .info-status {
+                font-size: 8px;
+                padding: 1px 3px;
+              }
+            }
+
+            .info-details {
+              margin: 3px 0;
+              gap: 1px;
+
+              .info-item {
+                font-size: 9px;
+
+                .info-label,
+                .info-value {
+                  display: block;
+                  text-align: left;
+                }
+
+                .info-label {
+                  font-size: 8px;
+                  margin-bottom: 1px;
+                }
+              }
+            }
+
+            .info-actions {
+              .ant-btn {
+                height: 18px;
+                font-size: 9px;
+                padding: 0 4px;
+              }
+            }
+          }
+        }
+
+        .preview-image-wrapper {
+          height: 110px;
+
+          &.ellipsis {
+            .ellipsis-content {
+              font-size: 12px;
+
+              .ellipsis-count {
+                font-size: 9px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 保留原有样式以防向后兼容
+  .button-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  .image-select-preview {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+
+    .image-item {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 6px;
+      overflow: hidden;
+
+      &:hover {
+        border-color: #1890ff;
+        
+        .image-actions {
+          opacity: 1;
+        }
+      }
+
+      .image-actions {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        opacity: 0;
+        transition: opacity 0.2s;
+
+        .delete-btn {
+          width: 20px;
+          height: 20px;
+          padding: 0;
+          color: var(--sdppp-host-text-color);
+          border: none;
+
+          &:hover {
+            color: var(--sdppp-host-text-color);
+          }
+        }
+      }
+
+      &.more-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed var(--sdppp-widget-border-color);
+        color: var(--sdppp-host-text-color);
+
+        .more-content {
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  .image-select-actions {
+    display: flex;
+    justify-content: flex-start;
+    
+    .ant-space {
+      width: 100%;
+    }
+  }
+}
