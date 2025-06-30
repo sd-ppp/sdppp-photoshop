@@ -4,7 +4,9 @@ import externalGlobalPlugin from "esbuild-plugin-external-global";
 import { fileURLToPath } from "url";
 import JavaScriptObfuscator from 'javascript-obfuscator'
 import { writeFileSync, readFileSync } from "fs";
+import { createRequire } from "module";
 const __dirname = dirname(fileURLToPath(import.meta.url))
+const require = createRequire(import.meta.url)
 
 export const config = {
     ...commonConfig,
@@ -14,18 +16,50 @@ export const config = {
         'photoshop-internal': join(__dirname, './src/global.mts')
     },
     outdir: join(projectRoot, 'plugins/photoshop/dist'),
-    external: ['uxp', 'photoshop', 'os', 'fs', 'react', 'react-dom/client', 'jimp', 'socket.io-client', 'react/jsx-runtime', 'buffer'],
+    external: ['uxp', 'photoshop', 'os', 'fs', 'react', 'react-dom/client', 'jimp', 'socket.io-client', 'react/jsx-runtime'],
     define: {
         'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development')
     },
     plugins: [
+        {
+            name: 'crypto-browserify-resolver',
+            setup(build: any) {
+                build.onResolve({ filter: /^crypto$/ }, (args: any) => {
+                    return {
+                        path: require.resolve('crypto-browserify')
+                    }
+                })
+                build.onResolve({ filter: /^buffer$/ }, (args: any) => {
+                    return {
+                        path: require.resolve('buffer/')
+                    }
+                })
+                build.onResolve({ filter: /^events$/ }, (args: any) => {
+                    return {
+                        path: require.resolve('events/')
+                    }
+                })
+                build.onResolve({ filter: /^util$/ }, (args: any) => {
+                    return {
+                        path: require.resolve('util/')
+                    }
+                })
+                build.onResolve({ filter: /^stream$/ }, (args: any) => {
+                    return {
+                        path: require.resolve('stream-browserify')
+                    }
+                })
+            }
+        },
         externalGlobalPlugin.externalGlobalPlugin({
             'react': 'window.React',
             'react/jsx-runtime': 'window.ReactJSXRuntime',
             'react-dom/client': 'window.ReactDOMClient',
             'jimp': 'window.Jimp',
             'socket.io-client': 'window.socketIO',
-            'buffer': 'window.Buffer'
+            'util': 'window.util',
+            'assert': 'window.assert',
+            'events': 'window.events'
         }),
         SDPPPTestResolvePlugin(join(typescriptSrcRoot, './modules/photoshop-internal/test/entry.mts')),
         {

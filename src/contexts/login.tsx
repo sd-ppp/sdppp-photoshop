@@ -1,7 +1,6 @@
 import { useEffect, useState, createContext, useContext, ReactNode, useCallback, useRef, useMemo } from "react";
 import i18n from "../../../../src/common/i18n.mts";
-import { sdpppX } from "../../../../src/common/sdpppX.mts";
-
+import { decrypt } from "./decrypt";
 const verifyInterval = 15000
 
 export type LoginResult = {
@@ -38,29 +37,30 @@ interface LogixContextType {
 export const SDPPPLoginContext = createContext({} as LogixContextType);
 
 export function SDPPPLoginProvider({
-    children, 
-    // loginAppID, 
+    children,
+    loginAppID,
     loginStyle,
     loginBannerTop,
     loginBannerBottom,
 }: {
-    children: ReactNode, 
-    loginAppID: string, 
+    children: ReactNode,
+    loginAppID: string,
     loginStyle?: 'invitation' | 'password',
     loginBannerTop?: ReactNode,
     loginBannerBottom?: ReactNode,
 }) {
-    const [isLogin, setIsLogin] = useState(!sdpppX.sdpppID);
+    const descyptedAppId = loginAppID && decrypt(loginAppID);
+    const [isLogin, setIsLogin] = useState(!descyptedAppId);
     const [isTrialing, setIsTrialing] = useState(false);
 
     const authingLogin = useCallback(async (username: string, password: string = 'sdppp123456'): Promise<LoginResult> => {
         try {
-            const response = await fetch('https://sdppp.zombee.tech/api/authing/api/v3/signin', {
+            const response = await fetch('https://api.authing.cn/api/v3/signin', {
                 method: 'POST',
                 headers: {
-                    'x-authing-sdk-version': 'web:3.0.0',
                     'Content-Type': 'application/json',
-                    'x-sdppp-appid': sdpppX.sdpppID,
+                    'x-authing-app-id': descyptedAppId,
+                    'x-authing-sdk-version': 'web:3.0.0'
                 },
                 body: JSON.stringify({
                     connection: 'PASSWORD',
@@ -102,13 +102,44 @@ export function SDPPPLoginProvider({
         }
     }, [])
 
+    const verifyToken = useCallback(async (token: string) => {
+        if (!token) {
+            throw new Error('Token is required');
+        }
+        const tokenType = 'access_token'
+        // 构建请求URL和参数
+        const url = `https://api.authing.cn/oidc/token/introspection`;
+
+        // 构建表单数据 - 不使用URLSearchParams
+        const formData = `token=${encodeURIComponent(token)}&token_type_hint=${encodeURIComponent(tokenType)}&client_id=${encodeURIComponent(descyptedAppId)}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`Verification failed with status: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Token verification error:', error);
+            throw error;
+        }
+    }, [])
+
     const getUserInfo = useCallback(async (token: string): Promise<UserInfoResult> => {
         try {
-            const response = await fetch('https://sdppp.zombee.tech/api/authing/api/v3/get-profile', {
+            const response = await fetch('https://api.authing.cn/api/v3/get-profile', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'x-sdppp-appid': sdpppX.sdpppID
+                    'x-authing-app-id': descyptedAppId
                 }
             });
 
@@ -149,15 +180,19 @@ export function SDPPPLoginProvider({
         if (!localStorage.getItem('lastLogin')) {
             return false
         }
-        const userInfo = await getUserInfo(token)
-        if (userInfo.success) {
-            const remoteLastLogin = new Date(userInfo.data.lastLogin).getTime().toString()
-            const localLastLogin = localStorage.getItem('lastLogin')
-            return remoteLastLogin === localLastLogin;
+        const verifyResult = await verifyToken(token)
+        if (verifyResult.active) {
+            const userInfo = await getUserInfo(token)
+            if (userInfo.success) {
+                const remoteLastLogin = new Date(userInfo.data.lastLogin).getTime().toString()
+                const localLastLogin = localStorage.getItem('lastLogin')
+                return remoteLastLogin === localLastLogin;
 
-        } else {
-            return false;
+            } else {
+                return false;
+            }
         }
+        return false
     }
     useEffect(() => {
         if (!isLogin) {
@@ -168,8 +203,8 @@ export function SDPPPLoginProvider({
                     if (result) {
                         setIsLogin(true)
                     }
-                }) 
-        } else if (sdpppX.sdpppID) { 
+                })
+        } else if (descyptedAppId) {
             const interval = setInterval(() => {
                 const usertoken = localStorage.getItem('token')
                 if (!usertoken) return;
@@ -187,7 +222,7 @@ export function SDPPPLoginProvider({
     }, [isLogin])
 
     return <SDPPPLoginContext.Provider value={{
-        hasAuthingLogin: !!sdpppX.sdpppID,
+        hasAuthingLogin: !!descyptedAppId,
         loginStyle: loginStyle || 'none',
         loginBannerBottom: loginBannerBottom || null,
         loginBannerTop: loginBannerTop || null,
